@@ -22,7 +22,7 @@ builder.Services.AddDbContext<EcommercePerfumesDbContext>(dbContextOptions => db
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+
 
 // Configuración de servicios de aplicación e infraestructura
 #region
@@ -39,12 +39,16 @@ builder.Services.AddScoped<IMayoristaRepository, MayoristaRepository>();
 builder.Services.AddScoped<ISuperAdminRepository, SuperAdminRepository>();
 #endregion
 
+var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
 
 app.UseHttpsRedirection();
 
