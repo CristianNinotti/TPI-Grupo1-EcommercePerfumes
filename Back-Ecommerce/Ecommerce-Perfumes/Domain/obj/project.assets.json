@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\facus\\.nuget\\packages\\": {}
+    "C:\\Users\\Nahuel\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\facus\\OneDrive\\Escritorio\\Proyecto PPS\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Domain\\Domain.csproj",
+      "projectUniqueName": "C:\\Users\\Nahuel\\Desktop\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Domain\\Domain.csproj",
       "projectName": "Domain",
-      "projectPath": "C:\\Users\\facus\\OneDrive\\Escritorio\\Proyecto PPS\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Domain\\Domain.csproj",
-      "packagesPath": "C:\\Users\\facus\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\facus\\OneDrive\\Escritorio\\Proyecto PPS\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Domain\\obj\\",
+      "projectPath": "C:\\Users\\Nahuel\\Desktop\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Domain\\Domain.csproj",
+      "packagesPath": "C:\\Users\\Nahuel\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Nahuel\\Desktop\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Domain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\facus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Nahuel\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

@@ -22,3 +22,15 @@ C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Bac
 C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\refint\Domain.dll
 C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\Domain.pdb
 C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\ref\Domain.dll
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\bin\Debug\net8.0\Domain.deps.json
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\bin\Debug\net8.0\Domain.dll
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\bin\Debug\net8.0\Domain.pdb
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\Domain.sourcelink.json
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\Domain.dll
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\refint\Domain.dll
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\Domain.pdb
+C:\Users\Nahuel\Desktop\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Domain\obj\Debug\net8.0\ref\Domain.dll

@@ -28,6 +28,7 @@ var app = builder.Build();
 #region
 builder.Services.AddScoped<IMinoristaService, MinoristaService>();
 builder.Services.AddScoped<IMayoristaService, MayoristaService>();
+builder.Services.AddScoped<ISuperAdminService, SuperAdminService>();
 #endregion
 
 
@@ -35,6 +36,7 @@ builder.Services.AddScoped<IMayoristaService, MayoristaService>();
 #region
 builder.Services.AddScoped<IMinoristaRepository, MinoristaRepository>();
 builder.Services.AddScoped<IMayoristaRepository, MayoristaRepository>();
+builder.Services.AddScoped<ISuperAdminRepository, SuperAdminRepository>();
 #endregion
 
 // Configure the HTTP request pipeline.
