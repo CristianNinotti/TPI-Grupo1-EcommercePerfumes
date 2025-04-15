@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "7yEyLkpMT0KtcDaLX6lEnd+BIRy4KAHoLy5h945fug4=",
+  "Hash": "I45YKMxdLd4rSIfiy4Jy7K87CK1wxLboE3ngw90NHmQ=",
   "Source": "Web",
   "BasePath": "_content/Web",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }

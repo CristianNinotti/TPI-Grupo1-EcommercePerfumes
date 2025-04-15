@@ -2,7 +2,7 @@
 using Domain.Interfaces;
 using Infrastructure.Context;
 
-namespace Infraestructure.Data
+namespace Infrastructure.Data
 {
     public class MinoristaRepository : IMinoristaRepository
     {

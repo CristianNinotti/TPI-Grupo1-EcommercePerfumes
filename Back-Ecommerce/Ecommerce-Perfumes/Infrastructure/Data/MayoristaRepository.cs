@@ -1,11 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
@@ -22,8 +17,8 @@ namespace Infrastructure.Data
             return _mayorista.Mayoristas.ToList();
         }
 
-        public Mayorista? GetMayoristaById(int id) 
-        { 
+        public Mayorista? GetMayoristaById(int id)
+        {
             return _mayorista.Mayoristas.FirstOrDefault(m => m.Id == id);
         }
 
@@ -39,13 +34,13 @@ namespace Infrastructure.Data
             _mayorista.SaveChanges();
         }
 
-        public void SoftDeleteMayorista (Mayorista mayorista)
+        public void SoftDeleteMayorista(Mayorista mayorista)
         {
             mayorista.Available = false;
             _mayorista.SaveChanges();
         }
 
-        public void HardDeleteMayorista (Mayorista mayorista)
+        public void HardDeleteMayorista(Mayorista mayorista)
         {
             _mayorista.Mayoristas.Remove(mayorista);
             _mayorista.SaveChanges();

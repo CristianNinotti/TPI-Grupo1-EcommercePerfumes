@@ -18,3 +18,23 @@ C:\Users\crist\Desktop\TPI-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\I
 C:\Users\crist\Desktop\TPI-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.pdb
 C:\Users\crist\Desktop\TPI-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.genruntimeconfig.cache
 C:\Users\crist\Desktop\TPI-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\ref\Infrastructure.dll
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\bin\Debug\net8.0\Infrastructure.deps.json
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\bin\Debug\net8.0\Infrastructure.runtimeconfig.json
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\bin\Debug\net8.0\Infrastructure.dll
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\bin\Debug\net8.0\Infrastructure.pdb
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\bin\Debug\net8.0\Application.dll
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\bin\Debug\net8.0\Domain.dll
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\bin\Debug\net8.0\Application.pdb
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\bin\Debug\net8.0\Domain.pdb
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.csproj.AssemblyReference.cache
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.AssemblyInfoInputs.cache
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.AssemblyInfo.cs
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.sourcelink.json
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastr.15EFFBFE.Up2Date
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.dll
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\refint\Infrastructure.dll
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.pdb
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\Infrastructure.genruntimeconfig.cache
+C:\Users\facus\OneDrive\Escritorio\Proyecto PPS\TPI-Grupo1-EcommercePerfumes\Back-Ecommerce\Ecommerce-Perfumes\Infrastructure\obj\Debug\net8.0\ref\Infrastructure.dll

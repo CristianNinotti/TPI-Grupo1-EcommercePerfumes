@@ -1,7 +1,7 @@
 using Application.Interfaces;
 using Application.Services;
 using Domain.Interfaces;
-using Infraestructure.Data;
+using Infrastructure.Data;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,12 +27,14 @@ var app = builder.Build();
 // Configuración de servicios de aplicación e infraestructura
 #region
 builder.Services.AddScoped<IMinoristaService, MinoristaService>();
+builder.Services.AddScoped<IMayoristaService, MayoristaService>();
 #endregion
 
 
 // Configuración de repositorios de aplicación e infraestructura
 #region
 builder.Services.AddScoped<IMinoristaRepository, MinoristaRepository>();
+builder.Services.AddScoped<IMayoristaRepository, MayoristaRepository>();
 #endregion
 
 // Configure the HTTP request pipeline.
