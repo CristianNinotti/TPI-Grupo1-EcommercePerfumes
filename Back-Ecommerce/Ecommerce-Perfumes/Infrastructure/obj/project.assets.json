@@ -3265,19 +3265,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\facus\\.nuget\\packages\\": {}
+    "C:\\Users\\Juani\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\facus\\OneDrive\\Escritorio\\Proyecto PPS\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Infrastructure\\Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\Juani\\Desktop\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Infrastructure\\Infrastructure.csproj",
       "projectName": "Infrastructure",
-      "projectPath": "C:\\Users\\facus\\OneDrive\\Escritorio\\Proyecto PPS\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Infrastructure\\Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\facus\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\facus\\OneDrive\\Escritorio\\Proyecto PPS\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Infrastructure\\obj\\",
+      "projectPath": "C:\\Users\\Juani\\Desktop\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Infrastructure\\Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\Juani\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Juani\\Desktop\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\facus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Juani\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3292,8 +3292,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\facus\\OneDrive\\Escritorio\\Proyecto PPS\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Application\\Application.csproj": {
-              "projectPath": "C:\\Users\\facus\\OneDrive\\Escritorio\\Proyecto PPS\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Application\\Application.csproj"
+            "C:\\Users\\Juani\\Desktop\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Application\\Application.csproj": {
+              "projectPath": "C:\\Users\\Juani\\Desktop\\TPI-Grupo1-EcommercePerfumes\\Back-Ecommerce\\Ecommerce-Perfumes\\Application\\Application.csproj"
             }
           }
         }
