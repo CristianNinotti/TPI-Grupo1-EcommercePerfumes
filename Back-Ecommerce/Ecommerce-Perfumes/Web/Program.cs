@@ -110,6 +110,7 @@ builder.Services.AddScoped<IMinoristaService, MinoristaService>();
 builder.Services.AddScoped<IMayoristaService, MayoristaService>();
 builder.Services.AddScoped<ISuperAdminService, SuperAdminService>();
 builder.Services.AddScoped<IUserAvailableService, UserAvailableService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 #endregion
 

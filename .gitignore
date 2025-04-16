@@ -30,8 +30,8 @@ Thumbs.db
 *.nuspec
 packages/
 
-# EF Core
-Migrations/
+# Backup folder for Package Reference Convert tool in Visual Studio 2017
+MigrationBackup/
 
 # dotnet-generated files
 project.lock.json
