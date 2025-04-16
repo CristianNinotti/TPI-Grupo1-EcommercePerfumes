@@ -5,8 +5,6 @@ using Application.Mappings;
 using Application.Interfaces;
 
 
-// Comentaroi prueba
-
 namespace Application.Services
 {
     public class MayoristaService : IMayoristaService
