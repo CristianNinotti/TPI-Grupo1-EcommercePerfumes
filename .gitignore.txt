@@ -1,0 +1,41 @@
+.vs
+# Build results
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.app
+*.log
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VSCode files
+.vscode/
+
+# Rider files
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+
+# EF Core
+Migrations/
+
+# dotnet-generated files
+project.lock.json
+project.fragment.lock.json
+
+# Web
+wwwroot/lib/
