@@ -10,10 +10,12 @@ namespace Application.Services
     public class MayoristaService : IMayoristaService
     {
         private readonly IMayoristaRepository _mayoristaRepository;
+        private readonly IUserAvailableService _userAvailableService;
 
-        public MayoristaService(IMayoristaRepository mayoristaRepository)
+        public MayoristaService(IMayoristaRepository mayoristaRepository, IUserAvailableService userAvailableService)
         {
             _mayoristaRepository = mayoristaRepository;
+            _userAvailableService = userAvailableService;
         }
 
         public MayoristaResponse? GetMayoristaById(int id)
@@ -35,27 +37,38 @@ namespace Application.Services
             }
             return null;
         }
-
-        public void CreateMayorista(MayoristaRequest mayoristaRequest)
+        public void CreateMayorista(MayoristaRequest mayorista)
         {
-            var mayoristaEntity = MayoristaProfile.ToMayoristaEntity(mayoristaRequest);
-            if (mayoristaEntity != null)
+            if (_userAvailableService.UserExists(mayorista.NameAccount, mayorista.Email))
             {
-                _mayoristaRepository.CreateMayorista(mayoristaEntity);
+                throw new InvalidOperationException("El NameAccount o Email ya están en uso.");
             }
+
+            var mayoristaEntity = MayoristaProfile.ToMayoristaEntity(mayorista);
+            _mayoristaRepository.CreateMayorista(mayoristaEntity);
         }
 
-        public bool UpdateMayorista(int id, MayoristaRequest mayoristaRequest)
+        public bool UpdateMayorista(int id, MayoristaRequest mayorista)
         {
             var mayoristaEntity = _mayoristaRepository.GetMayoristaById(id);
-            if (mayoristaEntity != null)
+            if (mayoristaEntity == null)
             {
-                MayoristaProfile.ToUpdateMayorista(mayoristaEntity, mayoristaRequest);
-                _mayoristaRepository.UpdateMayorista(mayoristaEntity);
-                return true;
+                return false;  // No se encontró el mayorista, no se puede actualizar
             }
-            return false;
+
+            // Validar que el NameAccount o Email no estén en uso por otro usuario
+            if (_userAvailableService.UserExists(mayorista.NameAccount, mayorista.Email, id))
+            {
+                throw new InvalidOperationException("El NameAccount o Email ya están en uso por otro usuario.");
+            }
+
+            MayoristaProfile.ToUpdateMayorista(mayoristaEntity, mayorista);
+            _mayoristaRepository.UpdateMayorista(mayoristaEntity);
+
+            return true;  // La actualización fue exitosa
         }
+
+
 
         public bool SoftDeleteMayorista(int id)
         {
