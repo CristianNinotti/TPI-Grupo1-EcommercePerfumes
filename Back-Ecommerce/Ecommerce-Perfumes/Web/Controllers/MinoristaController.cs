@@ -17,6 +17,7 @@ namespace Web.Controllers
             _minoristaService = minoristaService;
         }
         [HttpGet("All Minoristas")]
+        [Authorize(Policy = "MinoristaOrSuperAdmin")]
         public IActionResult GetAllMinoristas()
         {
             try
@@ -35,7 +36,7 @@ namespace Web.Controllers
         }
 
         [HttpGet("All Minoristas Available")]
-
+        [Authorize(Policy = "MinoristaOrSuperAdmin")]
         public IActionResult GetAllMinoristasAvailable()
         {
             try
@@ -76,7 +77,7 @@ namespace Web.Controllers
             }
         }
         [HttpPut("UpdateMinorista/{id}")]
-
+        [Authorize(Policy = "MinoristaOrSuperAdmin")]
         public IActionResult UpdateMinorista([FromRoute] int id, MinoristaRequest minorista)
         {
             try
@@ -98,7 +99,7 @@ namespace Web.Controllers
             }
         }
         [HttpDelete("SoftDeleteMinorista/{id}")]
-
+        [Authorize(Policy = "MinoristaOrSuperAdmin")]
         public IActionResult SoftDeleteMinorista([FromRoute] int id)
         {
             try
@@ -121,7 +122,7 @@ namespace Web.Controllers
         }
 
         [HttpDelete("HardDeleteMinorista/{id}")]
-
+        [Authorize(Policy = "MinoristaOrSuperAdmin")]
         public IActionResult HardDeleteMinorista([FromRoute] int id)
         {
             try

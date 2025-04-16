@@ -134,10 +134,13 @@ if (app.Environment.IsDevelopment())
 
 // Configuración de Middleware previo al uso de controladores
 
+app.UseMiddleware<UserValidationMiddleware>();
 
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.UseMiddleware<UserValidationMiddleware>();
 
 
 // Habilitación de CORS
