@@ -11,10 +11,12 @@ namespace Web.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IProductService productService)
         {
             _categoryService = categoryService;
+            _productService = productService;
         }
 
         [HttpGet("All Categories")]
@@ -74,6 +76,26 @@ namespace Web.Controllers
             catch (ArgumentException ex)
             {
                 return BadRequest($"Se obtuvieron datos inesperados. Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno en el servidor. Error: {ex.Message}");
+            }
+
+        }
+
+        [HttpGet("CategoryWithProducts/{id}")]
+        [Authorize(Policy = "SuperAdminOnly")]
+        public ActionResult<ProductResponse?> GetAllProducts([FromRoute] int id)
+        {
+            try
+            {
+                var productInCategory = _productService.GetAllProducts().Where(m => m.CategoryId == id).ToList();
+                if (!productInCategory.Any())
+                {
+                    return BadRequest($"No se encontraron productos en ese Category");
+                }
+                return Ok(productInCategory);
             }
             catch (Exception ex)
             {

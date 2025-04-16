@@ -10,5 +10,7 @@ namespace Infrastructure.Context
         public DbSet<Mayorista> Mayoristas { get; set; }
         public DbSet<SuperAdmin> SuperAdmins { get; set; }
         public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Product> Products { get; set; }
     }
 }

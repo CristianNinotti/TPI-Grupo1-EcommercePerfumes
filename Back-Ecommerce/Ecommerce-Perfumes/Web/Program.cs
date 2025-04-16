@@ -111,6 +111,8 @@ builder.Services.AddScoped<IMayoristaService, MayoristaService>();
 builder.Services.AddScoped<ISuperAdminService, SuperAdminService>();
 builder.Services.AddScoped<IUserAvailableService, UserAvailableService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductOrCategoryService, ProductOrCategoryService>();
 
 #endregion
 
@@ -120,6 +122,7 @@ builder.Services.AddScoped<IMinoristaRepository, MinoristaRepository>();
 builder.Services.AddScoped<IMayoristaRepository, MayoristaRepository>();
 builder.Services.AddScoped<ISuperAdminRepository, SuperAdminRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 #endregion
 
 

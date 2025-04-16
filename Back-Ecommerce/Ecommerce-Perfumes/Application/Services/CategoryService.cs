@@ -2,6 +2,7 @@
 using Application.Mappings;
 using Application.Models.Request;
 using Application.Models.Response;
+using Domain.Entities;
 using Domain.Interfaces;
 
 namespace Application.Services
@@ -9,10 +10,14 @@ namespace Application.Services
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IProductOrCategoryService _productOrCategoryService;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, IProductRepository productRepository, IProductOrCategoryService productOrCategoryService)
         {
             _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
+            _productOrCategoryService = productOrCategoryService;
         }
 
         public List<CategoryResponse> GetAllCategories()
@@ -33,6 +38,10 @@ namespace Application.Services
 
         public void CreateCategory(CategoryRequest category)
         {
+            if (_productOrCategoryService.CategoryExists(category.Name))
+            {
+                throw new InvalidOperationException($"Ya existe una Category con ese nombre");
+            }
             var CategoryEntity = CategoryProfile.ToCategoryEntity(category);
             _categoryRepository.CreateCategory(CategoryEntity);
         }
@@ -43,6 +52,10 @@ namespace Application.Services
             if (CategoryEntity == null)
             {
                 return false;
+            }
+            if (_productOrCategoryService.CategoryExists(category.Name) && category.Name != CategoryEntity.Name)
+            {
+                throw new InvalidOperationException($"Ya existe una Category con ese nombre");
             }
             CategoryProfile.ToCategoryEntityUpdate(CategoryEntity, category);
             _categoryRepository.UpdateCategory(CategoryEntity);
@@ -62,8 +75,18 @@ namespace Application.Services
             // Marcar la categoría como eliminada
             categoryEntity.Available = false;
 
+            // Obtener todos los productos asociados y marcarlos como eliminados
+            var products = _productRepository.GetProductsByCategoryId(id);
+            foreach (var product in products)
+            {
+                product.Available = false;
+            }
+
             // Guardar cambios en la categoría (soft delete)
             _categoryRepository.SoftDeleteCategory(categoryEntity);
+
+            // Guardar cambios en los productos (soft delete)
+            _productRepository.SoftDeleteProductsRepository(products);
 
             return true;
         }
