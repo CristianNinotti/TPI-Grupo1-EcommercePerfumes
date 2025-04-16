@@ -9,5 +9,6 @@ namespace Infrastructure.Context
         public DbSet<Minorista> Minoristas { get; set; }
         public DbSet<Mayorista> Mayoristas { get; set; }
         public DbSet<SuperAdmin> SuperAdmins { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }
