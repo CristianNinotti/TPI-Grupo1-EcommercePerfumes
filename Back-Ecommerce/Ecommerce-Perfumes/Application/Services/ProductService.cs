@@ -12,14 +12,14 @@ namespace Application.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
-        
+        private readonly IOrderItemRepository _orderItemRepository;
         private readonly IProductOrCategoryService _productOrCategoryService;
 
-        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IProductOrCategoryService productOrCategoryService)
+        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IOrderItemRepository orderItemRepository, IProductOrCategoryService productOrCategoryService)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
-            
+            _orderItemRepository = orderItemRepository;
             _productOrCategoryService = productOrCategoryService;
         }
         public List<ProductResponse> GetAllProducts()
@@ -99,7 +99,12 @@ namespace Application.Services
             productEntity.Available = false;
             _productRepository.SoftDeleteProductsRepository(new List<Product> { productEntity });
 
-            
+            var orderItems = _orderItemRepository.GetAllOrderItemsByProductIdRepository(id);
+            foreach (var orderItem in orderItems)
+            {
+                orderItem.Available = false;
+                _orderItemRepository.SoftDeleteOrderItemRepository(orderItem);
+            }
 
             return true;
 
