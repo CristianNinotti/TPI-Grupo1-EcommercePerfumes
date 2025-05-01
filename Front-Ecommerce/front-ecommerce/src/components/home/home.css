@@ -1,0 +1,22 @@
+.hero {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8f9fa;
+}
+
+.products {
+    padding: 2rem;
+}
+
+.product-list {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    text-align: center;
+    width: 200px;
+}

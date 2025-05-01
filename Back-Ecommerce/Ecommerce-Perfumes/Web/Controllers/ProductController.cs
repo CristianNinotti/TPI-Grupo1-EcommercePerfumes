@@ -15,7 +15,6 @@ namespace Web.Controllers
             _productService = productService;
         }
         [HttpGet("All Products")]
-        [Authorize(Policy = "SuperAdminOnly")]
         public IActionResult GetAllProducts()
         {
             try
