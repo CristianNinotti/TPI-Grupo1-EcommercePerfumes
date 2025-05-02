@@ -1,0 +1,188 @@
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+
+const Register = () => {
+    const { register } = useContext(AuthContext);
+
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        nameAccount: "",
+        password: "",
+        email: "",
+        dni: "",
+        phoneNumber: "",
+        address: "",
+        categoria: "",
+        cuit: "",
+    });
+
+    const [typeUser, setTypeUser] = useState("");
+    const [error, setError] = useState("");
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (typeUser !== "Mayorista" && typeUser !== "Minorista") {
+                setError("Selecciona un tipo de usuario válido");
+                return;
+            }
+
+            await register(formData, typeUser); // ✅ usar register
+
+            alert(`${typeUser} registrado exitosamente`);
+
+            setFormData({
+                firstName: "",
+                lastName: "",
+                nameAccount: "",
+                password: "",
+                email: "",
+                dni: "",
+                phoneNumber: "",
+                address: "",
+                categoria: "",
+                cuit: "",
+            });
+            setTypeUser("");
+            setError("");
+        } catch (error) {
+            console.error(error);
+            setError(error.message || "Error al registrar");
+        }
+    };
+
+  return (
+    <div className="max-w-md mx-auto p-8 border border-gray-300 rounded-lg shadow-lg bg-white">
+      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Crear Cuenta</h2>
+
+      <div className="flex justify-center mb-6 gap-4">
+        <button
+          className={`px-6 py-2 rounded-full font-semibold ${typeUser === "Minorista" ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700"}`}
+          onClick={() => setTypeUser("Minorista")}
+        >
+          Minorista
+        </button>
+        <button
+          className={`px-6 py-2 rounded-full font-semibold ${typeUser === "Mayorista" ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700"}`}
+          onClick={() => setTypeUser("Mayorista")}
+        >
+          Mayorista
+        </button>
+      </div>
+
+      {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
+
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="firstName"
+          placeholder="Nombre"
+          value={formData.firstName}
+          onChange={handleChange}
+          required
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Apellido"
+          value={formData.lastName}
+          onChange={handleChange}
+          required
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
+          name="nameAccount"
+          placeholder="Nombre de usuario"
+          value={formData.nameAccount}
+          onChange={handleChange}
+          required
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Correo electrónico"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Contraseña"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="number"
+          name="dni"
+          placeholder="DNI"
+          value={formData.dni}
+          onChange={handleChange}
+          required
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
+          name="phoneNumber"
+          placeholder="Teléfono"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          required
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
+          name="address"
+          placeholder="Dirección"
+          value={formData.address}
+          onChange={handleChange}
+          required
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        {typeUser === "Mayorista" && (
+          <>
+            <input
+              type="text"
+              name="categoria"
+              placeholder="Categoría de Mayorista"
+              value={formData.categoria}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="number"
+              name="cuit"
+              placeholder="CUIT"
+              value={formData.cuit}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </>
+        )}
+
+        <button
+          type="submit"
+          className="w-full p-3 bg-green-500 text-black rounded-md font-semibold hover:bg-green-600 transition duration-200"
+        >
+          Registrarme
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default Register;
