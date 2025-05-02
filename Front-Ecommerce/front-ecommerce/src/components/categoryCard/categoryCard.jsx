@@ -1,7 +1,7 @@
 const CategoryCard = ({categoryId, categoryName}) => {
 
         return (
-            <div>
+            <div> 
                 <h1>{categoryName}</h1>
             </div>
         );
