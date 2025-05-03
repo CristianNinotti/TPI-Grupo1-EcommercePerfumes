@@ -4,6 +4,7 @@ import Footer from '../footer/Footer';
 import './home.css';
 import CategoryCard from '../categoryCard/categoryCard';
 import imagenInicio from '../../assets/image/inicio/maison.jpg';
+imort 
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
@@ -63,13 +64,13 @@ const Home = () => {
 
           <div className="flex justify-center gap-6">
             <button
-              onClick={() => navigate('/login/minorista')}
+              onClick={() => navigate('/login')}
               className="bg-gray-800 text-white uppercase px-6 py-3 font-semibold tracking-wide rounded hover:bg-gray-700 transition"
             >
               Ingreso Minorista
             </button>
             <button
-              onClick={() => navigate('/login/mayorista')}
+              onClick={() => navigate('/login')}
               className="bg-gray-800 text-white uppercase px-6 py-3 font-semibold tracking-wide rounded hover:bg-gray-700 transition"
             >
               Ingreso Mayorista
