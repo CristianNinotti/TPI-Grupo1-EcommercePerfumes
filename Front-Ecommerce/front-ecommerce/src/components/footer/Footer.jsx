@@ -2,10 +2,11 @@ import React from "react";
 import HowToBuy from "../modals/HowToBuy";
 import Delivery from "../modals/Delivery";
 import Questions from "../modals/Questions";
+import Contact from "../modals/Contact";
 import { useState } from "react";
 const Footer = () => {
   const [isHowToBuyOpen, setIsHowToBuyOpen] = useState(false); // Estado para controlar la modal
-
+  const [isContactOpen, setIsContactOpen] = useState(false);
   const openHowToBuy = () => setIsHowToBuyOpen(true); // Función para abrir la modal
   const closeHowToBuy = () => setIsHowToBuyOpen(false); // Función para cerrar la modal
 
@@ -18,6 +19,10 @@ const Footer = () => {
 
   const openModalQuestions = ()=> setIsQuestionsOpen(true);
   const closeModalQuestions = ()=> setIsQuestionsOpen(false);
+
+  const openModalContact = ()=> setIsContactOpen(true);
+  const closeModalContact = ()=> setIsContactOpen(false);
+
   return (
     <footer className="w-full bg-black text-white p-4">
       <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row justify-between gap-8">
@@ -68,7 +73,7 @@ const Footer = () => {
             <li><a href="#" className="hover:text-green-400" onClick={openModalQuestions}>Preguntas frecuentes</a></li>
             <li><a href="#" className="hover:text-green-400" onClick={openHowToBuy}>¿Cómo comprar?</a></li>
             <li><a href="#" className="hover:text-green-400" onClick={openModalDelivery}>Plazos de entrega </a></li>
-            <li><a href="#" className="hover:text-green-400">Contactanos</a></li>
+            <li><a href="#" className="hover:text-green-400" onClick={openModalContact}>Contáctanos </a></li>
           </ul>
         </div>
       </div>
@@ -77,6 +82,7 @@ const Footer = () => {
       <HowToBuy isOpen={isHowToBuyOpen} onClose={closeHowToBuy} />
       <Delivery isOpen={isDeliveryOpen} onClose={closeModalDelivery} />
       <Questions isOpen={isQuestionsOpen} onClose={closeModalQuestions} />
+      <Contact isOpen={isContactOpen} onClose={closeModalContact} />
     </footer>
   );
 };
