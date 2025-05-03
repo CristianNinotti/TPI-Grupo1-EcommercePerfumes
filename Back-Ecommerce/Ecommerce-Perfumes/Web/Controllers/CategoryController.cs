@@ -20,7 +20,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("All Categories")]
-        [Authorize(Policy = "SuperAdminOnly")]
         public IActionResult GetAllCategories()
         {
             try

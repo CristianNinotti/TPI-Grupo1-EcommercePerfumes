@@ -1,16 +1,34 @@
+import React from "react";
+import HowToBuy from "../modals/HowToBuy";
+import Delivery from "../modals/Delivery";
+import Questions from "../modals/Questions";
+import { useState } from "react";
 const Footer = () => {
+  const [isHowToBuyOpen, setIsHowToBuyOpen] = useState(false); // Estado para controlar la modal
+
+  const openHowToBuy = () => setIsHowToBuyOpen(true); // Función para abrir la modal
+  const closeHowToBuy = () => setIsHowToBuyOpen(false); // Función para cerrar la modal
+
+  const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
+
+  const openModalDelivery = () => setIsDeliveryOpen(true);
+  const closeModalDelivery = () => setIsDeliveryOpen(false);
+
+  const[isQuestionsOpen, setIsQuestionsOpen]= useState(false);
+
+  const openModalQuestions = ()=> setIsQuestionsOpen(true);
+  const closeModalQuestions = ()=> setIsQuestionsOpen(false);
   return (
-    <footer className="w-full bg-black text-white p-4 ">
+    <footer className="w-full bg-black text-white p-4">
       <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row justify-between gap-8">
         {/* Contacto */}
         <div>
           <h2 style={{ color: '#6B7280' }} className="font-bold text-lg mb-4">¡Contactanos!</h2>
           <p>Salta 2949<br />Rosario - Santa Fe</p>
           <p className="mt-2">
-            Compras mayoristas: <span class="italic">341-2553003</span><br />
-            Compras minoristas: <span class="italic">341-2553080</span><br />
-            Proveedores: <span class="italic">341-2553084</span><br />
-            
+            Compras mayoristas: <span className="italic">341-2553003</span><br />
+            Compras minoristas: <span className="italic">341-2553080</span><br />
+            Proveedores: <span className="italic">341-2553084</span><br />
           </p>
           <div className="flex gap-4 mt-4">
             <a href="#" aria-label="Facebook" className="hover:text-green-400">
@@ -47,15 +65,20 @@ const Footer = () => {
         <div>
           <h2 style={{ color: '#6B7280' }} className="font-bold text-lg mb-4">Sobre el almacén</h2>
           <ul className="space-y-2">
-            <li><a href="#" className="hover:text-green-400">Preguntas frecuentes</a></li>
-            <li><a href="#" className="hover:text-green-400">Cómo comprar</a></li>            
-            <li><a href="#" className="hover:text-green-400">Plazos de entrega</a></li>
+            <li><a href="#" className="hover:text-green-400" onClick={openModalQuestions}>Preguntas frecuentes</a></li>
+            <li><a href="#" className="hover:text-green-400" onClick={openHowToBuy}>¿Cómo comprar?</a></li>
+            <li><a href="#" className="hover:text-green-400" onClick={openModalDelivery}>Plazos de entrega </a></li>
             <li><a href="#" className="hover:text-green-400">Contactanos</a></li>
           </ul>
         </div>
       </div>
+
+      {/* Modal */}
+      <HowToBuy isOpen={isHowToBuyOpen} onClose={closeHowToBuy} />
+      <Delivery isOpen={isDeliveryOpen} onClose={closeModalDelivery} />
+      <Questions isOpen={isQuestionsOpen} onClose={closeModalQuestions} />
     </footer>
   );
-}
+};
 
 export default Footer;
