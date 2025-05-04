@@ -1,67 +1,59 @@
-import React, { useEffect } from "react";
+// src/components/MercadoPagoBrick.jsx
+import { useEffect, useState } from "react";
 
-const PaymentBrick = ({ preferenceId, amount }) => {
+export default function MercadoPagoBrick({ preferenceUrl }) {
+  const [preferenceId, setPreferenceId] = useState(null);
+
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://sdk.mercadopago.com/js/v2";
-    script.onload = () => {
-      const mp = new window.MercadoPago("TU_PUBLIC_KEY", {
-        locale: "es-AR", // o tu localización
+    const fetchPreference = async () => {
+      try {
+        const response = await fetch(preferenceUrl, {
+          method: "POST",
+        });
+        const data = await response.json();
+        setPreferenceId(data.preferenceId);
+      } catch (error) {
+        console.error("Error al obtener la preferencia:", error);
+      }
+    };
+
+    fetchPreference();
+  }, [preferenceUrl]);
+
+  useEffect(() => {
+    if (preferenceId) {
+      const mp = new window.MercadoPago("TEST-629cd2b0-3587-415b-aac4-f2889e5d9386", {
+        locale: "es-AR",
       });
 
-      const renderBrick = async () => {
-        const bricksBuilder = mp.bricks();
-        await bricksBuilder.create("payment", "paymentBrick_container", {
-          initialization: {
-            amount: amount,
-            preferenceId: preferenceId,
+      mp.bricks().create("wallet", "wallet_container", {
+        initialization: { preferenceId },
+        customization: {
+          paymentMethods: {
+            ticket: "all",
+            creditCard: "all",
+            prepaidCard: "all",
+            debitCard: "all",
+            mercadoPago: "all",
           },
-          customization: {
-            paymentMethods: {
-              ticket: "all",
-              creditCard: "all",
-              prepaidCard: "all",
-              debitCard: "all",
-              mercadoPago: "all",
-            },
-          },
-          callbacks: {
-            onSubmit: async ({ selectedPaymentMethod, formData }) => {
-              return new Promise((resolve, reject) => {
-                fetch("/process_payment", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(formData),
-                })
-                  .then((res) => res.json())
-                  .then((data) => {
-                    console.log("Pago procesado:", data);
-                    resolve();
-                  })
-                  .catch((err) => {
-                    console.error("Error al procesar pago", err);
-                    reject();
-                  });
-              });
-            },
-            onError: async (error) => {
-              console.error("Error en el Brick", error);
-            },
-            onReady: async () => {
-              console.log("Brick listo");
-            },
-          },
-        });
-      };
+        },
+        onSubmit: async ({ selectedPaymentMethod, formData }) => {
+          return fetch("/process_payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          })
+            .then((res) => res.json())
+            .catch((err) => {
+              console.error("Error al procesar pago:", err);
+              throw err;
+            });
+        },
+        onError: (error) => console.error("Error en el Brick:", error),
+        onReady: () => console.log("Brick listo"),
+      });
+    }
+  }, [preferenceId]);
 
-      renderBrick();
-    };
-    document.body.appendChild(script);
-  }, [preferenceId, amount]);
-
-  return <div id="paymentBrick_container" />;
-};
-
-export default PaymentBrick;
+  return <div id="wallet_container" />;
+}

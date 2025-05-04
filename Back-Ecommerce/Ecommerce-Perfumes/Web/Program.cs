@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using MercadoPago.Config;
+using Infrastructure.ThirstService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,6 +105,8 @@ builder.Services.AddAuthorization(options =>
 
 //Servicios de terceros
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
+
 
 
 // Configuración de servicios de aplicación e infraestructura

@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
 
+// esto se va a usar solo si manejamos el carrito por el front, ignorar
+
 const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);

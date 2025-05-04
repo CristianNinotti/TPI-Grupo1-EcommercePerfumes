@@ -1,4 +1,5 @@
-﻿using Application.Models.Request;
+﻿using Application.Models.Dtos;
+using Application.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Application.Interfaces
 {
     public interface IMercadoPagoService
     {
-        Task<string> CreatePreferenceAsync(PaymentRequest request);
+        Task<string> CreatePreferenceAsync(CreatePreferenceDto dto);
     }
 }
