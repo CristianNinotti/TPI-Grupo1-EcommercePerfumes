@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
-import './home.css';
-import CategoryCard from '../categoryCard/categoryCard';
+import './Home.css';
+import CategoryCard from '../categoryCard/CategoryCard';
 import imagenInicio from '../../assets/image/inicio/maison.jpg';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../navbar/Navbar'; // Asegurate de ajustar la ruta si es necesario
@@ -49,25 +49,6 @@ const Home = () => {
         <Navbar />
 
         <main className="flex-grow bg-white">
-
-
-          <section className="categories">
-            {loading ? (
-              <p className="text-center mt-4 text-gray-600">Cargando categorías...</p>
-            ) : (
-              <ul className="flex flex-wrap justify-around gap-y-6 p-4">
-                {categories.map(category => (
-                  <li key={category.id}>
-                    <CategoryCard
-                      categoryId={category.id}
-                      categoryName={category.name}
-                    />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-
           <section className="flex justify-center my-10">
             <div className="flex justify-center gap-6">
               <button
@@ -98,6 +79,24 @@ const Home = () => {
             <button className="bg-black text-gray px-6 py-2 rounded hover:bg-gray-800 transition">
               Explorar ahora
             </button>
+          </section>
+          
+          <section className="categories">
+            {loading ? (
+              <p className="text-center mt-4 text-gray-600">Cargando categorías...</p>
+            ) : (
+              <ul className='category-cards'>
+                {categories.map(category => (
+                  <li key={category.id} className='category-card'>
+                    <CategoryCard
+                      categoryId={category.id}
+                      categoryName={category.name}
+                      categoryAvailable={category.available}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         </main>
       </div>

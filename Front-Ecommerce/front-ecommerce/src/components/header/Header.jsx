@@ -12,7 +12,7 @@ const Header = () => {
     <header className="w-full bg-black text-white">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo a la izquierda */}
-        <img src={logo3} alt="logo3" className="h-35 w-auto object-contain" />
+        <img src={logo3} alt="logo3" className="h-35 w-auto object-contain" onClick={() => navigateTo('/')}/>
   
         {/* Navegación a la derecha */}
         <nav>
