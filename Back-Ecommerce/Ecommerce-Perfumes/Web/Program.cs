@@ -104,6 +104,7 @@ builder.Services.AddAuthorization(options =>
 //Servicios de terceros
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
+
 // Configuración de servicios de aplicación e infraestructura
 #region
 builder.Services.AddScoped<IMinoristaService, MinoristaService>();

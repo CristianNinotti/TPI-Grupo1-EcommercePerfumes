@@ -35,6 +35,15 @@ const Header = () => {
                 Productos
               </a>
             </li>
+            <li>
+              <a
+                href="#"
+                onClick={() => navigateTo('/cart')}
+                className="text-white hover:text-green-400"
+              >
+                Carrito
+              </a>
+            </li>
           </ul>
         </nav>
       </div>
