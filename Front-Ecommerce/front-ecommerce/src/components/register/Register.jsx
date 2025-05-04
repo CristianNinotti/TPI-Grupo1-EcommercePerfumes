@@ -1,8 +1,10 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
     const { register } = useContext(AuthContext);
+    const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
         firstName: "",
@@ -50,6 +52,7 @@ const Register = () => {
             });
             setTypeUser("");
             setError("");
+            navigate("/login")
         } catch (error) {
             console.error(error);
             setError(error.message || "Error al registrar");

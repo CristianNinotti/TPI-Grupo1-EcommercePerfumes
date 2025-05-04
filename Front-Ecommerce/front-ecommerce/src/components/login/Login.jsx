@@ -13,9 +13,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
-      await login({ nameAccount, password });
+      const accountType = localStorage.getItem('accountType'); 
+      console.log("cuenta", accountType); 
+  
+      await login({ nameAccount, password, accountType }); 
+  
       alert("¡Ingreso exitoso!");
       navigate("/");
     } catch (error) {
@@ -25,6 +29,10 @@ const Login = () => {
     }
   };
 
+  const handleRegisterRedirect = () => {
+    navigate("/registro");
+  };
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
@@ -63,6 +71,20 @@ const Login = () => {
             {isLoading ? "Cargando..." : "Iniciar sesión"}
           </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-600 text-sm">
+            ¿No estás registrado?{" "}
+            <button
+              type="button"
+              onClick={handleRegisterRedirect}
+              className="text-blue-500 hover:underline font-semibold"
+            >
+              Crea una cuenta
+            </button>
+          </p>
+        </div>
+
       </div>
     </div>
   );

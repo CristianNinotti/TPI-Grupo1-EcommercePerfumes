@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
   };
   
 
-  const login = async ({ nameAccount, password }) => {
+  const login = async ({ nameAccount, password, accountType }) => {
     try {
       const response = await fetch(`${URL}Authentication/authenticate`, {
         method: "POST",
@@ -67,10 +67,38 @@ export const AuthProvider = ({ children }) => {
       }
 
       const token = await response.text();
-      setUser(token); // Almacena el token
-      localStorage.setItem("token", token); // Guarda el token en el localStorage
 
-      // Setea el estado de autenticación
+      const userResponse = await fetch(`${URL}${accountType === "Minorista" ? "Minorista/AllMinoristas" : "Mayorista/AllMayoristas"}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,  
+        }
+      });      
+      
+      const users = await userResponse.json();
+
+      const loggedUser = users.find(user => user.nameAccount === nameAccount);
+
+      if (!loggedUser) {
+        throw new Error("Usuario no encontrado")
+      }
+
+      setUser({
+        token,
+        accountType,
+        id: loggedUser?.id,
+        address: loggedUser?.address,
+        available: loggedUser?.available,
+        dni: loggedUser?.dni,
+        email: loggedUser?.email,  
+        nameAccount: loggedUser?.nameAccount,
+        firstName: loggedUser?.firstName,
+        lastName: loggedUser?.lastName,
+        phoneNumber: loggedUser?.phoneNumber,
+      });
+  
+      localStorage.setItem("token", token);
+      localStorage.setItem("accountType", accountType) 
+      localStorage.setItem("nameAccount", nameAccount)
       setAuth({ loggedIn: true, token });
 
       return true;
@@ -86,14 +114,71 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
   };
 
-  // Verifica el token en el localStorage al cargar la app
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setUser(token);
-      setAuth({ loggedIn: true, token });
+      const accountType = localStorage.getItem("accountType"); 
+      console.log(accountType, 'account')
+      const fetchUserData = async () => {
+        try {
+          let userResponse;
+  
+          if (accountType === "Minorista") {
+            userResponse = await fetch(`${URL}Minorista/AllMinoristas`, {
+              headers: {
+                "Authorization": `Bearer ${token}`,
+              }
+            });
+          } else if (accountType === "Mayorista") {
+            userResponse = await fetch(`${URL}Mayorista/AllMayoristas`, {
+              headers: {
+                "Authorization": `Bearer ${token}`,
+              }
+            });
+          } else {
+            throw new Error("Tipo de cuenta no especificado");
+          }
+  
+          if (!userResponse.ok) {
+            throw new Error("No se pudo obtener los datos del usuario");
+          }
+  
+          const users = await userResponse.json();
+          
+          console.log(localStorage.getItem("nameAccount"), 'localstoreage'); 
+          const loggedUser = users.find(user => user.nameAccount === localStorage.getItem("nameAccount"));
+            
+          if (!loggedUser) {
+            throw new Error("Usuario no encontrado");
+          }
+  
+          setUser({
+            token,
+            accountType,
+            id: loggedUser.id,
+            address: loggedUser.address,
+            available: loggedUser.available,
+            dni: loggedUser.dni,
+            email: loggedUser.email,
+            nameAccount: loggedUser.nameAccount,
+            firstName: loggedUser.firstName,
+            lastName: loggedUser.lastName,
+            phoneNumber: loggedUser.phoneNumber,
+          });
+          console.log(user, 'user')
+          setAuth({ loggedIn: true, token });
+        } catch (error) {
+          console.error("Error al cargar los datos del usuario", error);
+          setAuth({ loggedIn: false });
+        }
+      };
+  
+      fetchUserData();
+    } else {
+      setAuth({ loggedIn: false });
     }
   }, []);
+  
 
   return (
     <AuthContext.Provider value={{ user, auth, register, login, logout }}>

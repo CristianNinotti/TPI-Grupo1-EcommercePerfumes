@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
 import './home.css';
@@ -6,12 +6,14 @@ import CategoryCard from '../categoryCard/categoryCard';
 import imagenInicio from '../../assets/image/inicio/maison.jpg';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../navbar/Navbar'; // Asegurate de ajustar la ruta si es necesario
+import { AuthContext } from '../../context/AuthContext';
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  const {user} = useContext(AuthContext)
+  console.log(user)
   useEffect(() => {
     fetch('https://localhost:7174/api/Category/All%20Categories', {
       method: 'GET',
@@ -69,14 +71,20 @@ const Home = () => {
           <section className="flex justify-center my-10">
             <div className="flex justify-center gap-6">
               <button
-                onClick={() => navigate('/login')}
-                className="bg-gray-800 text-white uppercase px-6 py-3 font-semibold tracking-wide rounded hover:bg-gray-700 transition"
+                onClick={() => {
+                  localStorage.setItem('accountType', 'Minorista');
+                  navigate('/login')}
+                }
+                className="bg-gray-800 text-black uppercase px-6 py-3 font-semibold tracking-wide rounded hover:bg-gray-700 transition"
               >
                 Ingreso Minorista
               </button>
               <button
-                onClick={() => navigate('/login')}
-                className="bg-gray-800 text-white uppercase px-6 py-3 font-semibold tracking-wide rounded hover:bg-gray-700 transition"
+                onClick={() => {
+                  localStorage.setItem('accountType', 'Mayorista');
+                  navigate('/login')}
+                }
+                className="bg-gray-800 text-black uppercase px-6 py-3 font-semibold tracking-wide rounded hover:bg-gray-700 transition"
               >
                 Ingreso Mayorista
               </button>
@@ -87,7 +95,7 @@ const Home = () => {
             <p className="text-lg text-gray-800 mb-4">
               Descubre las mejores fragancias para cada ocasión
             </p>
-            <button className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition">
+            <button className="bg-black text-gray px-6 py-2 rounded hover:bg-gray-800 transition">
               Explorar ahora
             </button>
           </section>
