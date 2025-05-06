@@ -9,7 +9,7 @@ function Productos() {
     const token = localStorage.getItem("token");
 
     // Fetch de productos
-    fetch("https://localhost:7174/api/product/All%20Products", {
+    fetch("https://localhost:7174/api/product/AllProducts", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

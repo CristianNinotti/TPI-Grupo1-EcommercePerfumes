@@ -17,7 +17,7 @@ public class SuperAdminController : ControllerBase
         _superAdminService = superAdminService;
     }
 
-    [HttpGet("All SuperAdmins")]
+    [HttpGet("AllSuperAdmins")]
     [Authorize(Policy = "SuperAdminOnly")]
     public IActionResult GetAllSuperAdmin()
     {
@@ -36,7 +36,7 @@ public class SuperAdminController : ControllerBase
         }
     }
 
-    [HttpGet("All SuperAdmins Available")]
+    [HttpGet("AllSuperAdminsAvailable")]
     [Authorize(Policy = "SuperAdminOnly")]
     public IActionResult GetAllSuperAdminAvailable()
     {

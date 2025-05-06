@@ -16,7 +16,7 @@ namespace Web.Controllers
             _mayoristaService = mayoristaService;
         }
 
-        [HttpGet("All Mayoristas")]
+        [HttpGet("AllMayoristas")]
         [Authorize(Policy = "MayoristaOrSuperAdmin")]
         public IActionResult GetAllMayoristas()
         {
@@ -37,7 +37,7 @@ namespace Web.Controllers
         }
 
 
-        [HttpGet("All Mayoristas Available")]
+        [HttpGet("AllMayoristasAvailable")]
         [Authorize(Policy = "MayoristaOrSuperAdmin")]
         public IActionResult GetAllMayoristasAvailable()
         {

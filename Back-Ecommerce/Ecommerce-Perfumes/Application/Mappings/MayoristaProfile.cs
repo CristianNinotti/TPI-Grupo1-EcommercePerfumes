@@ -24,7 +24,7 @@ namespace Application.Mappings
                 Password = request.Password,
                 Email = request.Email,
                 Dni = request.Dni,
-                PhoneNumber = request.PhoneNumer,
+                PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
             };
         }
@@ -42,7 +42,7 @@ namespace Application.Mappings
                 Password = mayoristaEntity.Password,
                 Email = mayoristaEntity.Email,
                 Dni = mayoristaEntity.Dni,
-                PhoneNumer = mayoristaEntity.PhoneNumber,
+                PhoneNumber = mayoristaEntity.PhoneNumber,
                 Address = mayoristaEntity.Address,
                 Available = mayoristaEntity.Available
             };
@@ -61,7 +61,7 @@ namespace Application.Mappings
                 Password = m.Password,
                 Email = m.Email,
                 Dni = m.Dni,
-                PhoneNumer = m.PhoneNumber,
+                PhoneNumber = m.PhoneNumber,
                 Address = m.Address,
                 Available = m.Available
             }).ToList();
@@ -77,7 +77,7 @@ namespace Application.Mappings
             mayoristaEntity.Password = request.Password;
             mayoristaEntity.Email = request.Email;
             mayoristaEntity.Dni = request.Dni;
-            mayoristaEntity.PhoneNumber = request.PhoneNumer;
+            mayoristaEntity.PhoneNumber = request.PhoneNumber;
             mayoristaEntity.Address = request.Address;
         }
     }

@@ -16,7 +16,7 @@ namespace Web.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpGet("All Payments")]
+        [HttpGet("AllPayments")]
         [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public IActionResult GetAllPayments()
         {
@@ -55,7 +55,7 @@ namespace Web.Controllers
             }
         }
 
-        [HttpPost("Create Payment")]
+        [HttpPost("CreatePayment")]
         [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public IActionResult CreatePayment([FromBody] PaymentRequest request)
         {

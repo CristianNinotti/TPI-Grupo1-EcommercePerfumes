@@ -20,3 +20,40 @@
     text-align: center;
     width: 200px;
 }
+
+.categories {
+    container-type: inline-size;
+}
+
+.category-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    justify-self: center;
+    margin: 25px;
+}
+
+@container (max-width: calc(200px * 3 + 25px * 4)) {
+    .category-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@container (max-width: calc(200px * 2 + 25px * 3)) {
+    .category-cards {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+.category-card {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    border: #333 solid 3px;
+    color: #333;
+    width: 200px;
+    height: 200px;
+    word-wrap: break-word;
+    background-color: #dbdbdb;
+}

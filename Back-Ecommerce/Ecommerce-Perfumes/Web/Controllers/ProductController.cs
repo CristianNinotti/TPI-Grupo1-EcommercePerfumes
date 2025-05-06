@@ -14,7 +14,7 @@ namespace Web.Controllers
         {
             _productService = productService;
         }
-        [HttpGet("All Products")]
+        [HttpGet("AllProducts")]
         public IActionResult GetAllProducts()
         {
             try
@@ -32,7 +32,7 @@ namespace Web.Controllers
             }
         }
 
-        [HttpGet("All Products Available")]
+        [HttpGet("AllProductsAvailable")]
         [Authorize(Policy = "SuperAdminOnly")]
         public IActionResult GetAllProductsAvailable()
         {
