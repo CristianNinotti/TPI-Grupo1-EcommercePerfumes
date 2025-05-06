@@ -55,7 +55,7 @@ namespace Web.Controllers
 
 
         }
-        [HttpPost("Create Minorista")]
+        [HttpPost("CreateMinorista")]
         public IActionResult CreateMinorista([FromBody] MinoristaRequest minorista)
         {
             try

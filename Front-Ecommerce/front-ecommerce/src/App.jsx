@@ -1,19 +1,20 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './App.css'
-import Home from './components/home/Home'
-import Productos from './components/productos/Productos'
+import "./App.css";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import RoutesComponent from "./components/routes/Routes";
+import { CartProvider } from "./context/CartContext";
+
 
 function App() {
-  const router = createBrowserRouter([
-    { path: '/', element: <Home /> },
-    { path: "/productos", element: <Productos /> },
-  ])
-
   return (
-    <div>
-      <RouterProvider router={router} />
-    </div>
-  )
+    <AuthProvider>
+      <BrowserRouter>
+        <CartProvider>
+          <RoutesComponent />
+        </CartProvider>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;

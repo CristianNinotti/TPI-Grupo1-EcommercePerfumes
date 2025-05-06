@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useCart } from "../../context/CartContext";
 
 function ProductCard({ product }) {
   const [quantity, setQuantity] = useState(1);
@@ -6,6 +7,7 @@ function ProductCard({ product }) {
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const {addToCart} = useCart();
 
   // Verificar si el usuario está logueado y obtener las órdenes
   useEffect(() => {
@@ -146,7 +148,7 @@ function ProductCard({ product }) {
               className="w-20 p-2 border rounded"
             />
             <button
-              onClick={handleBuy}
+              onClick={() => addToCart(product)}
               className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
             >
               Comprar producto
