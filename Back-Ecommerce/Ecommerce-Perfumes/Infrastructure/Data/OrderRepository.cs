@@ -46,7 +46,6 @@ namespace Infrastructure.Data
         {
             _order.Orders.Update(order);
             _order.SaveChanges();
-
         }
 
         //SoftDelete

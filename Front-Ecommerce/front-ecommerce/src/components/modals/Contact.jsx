@@ -1,5 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
+import { playCloseSound } from '../sounds/Sounds';
 
 const Contact = ({ isOpen, onClose }) => {
   const formRef = useRef();
@@ -41,7 +42,8 @@ const Contact = ({ isOpen, onClose }) => {
             email: "",
             message: "",
           });
-          onClose?.();
+          playCloseSound(); // Reproduce el sonido al cerrar la modal
+          onClose(); // Llama a la función onClose para cerrar la modal
         },
         (error) => {
           setLoading(false);
@@ -105,7 +107,7 @@ const Contact = ({ isOpen, onClose }) => {
           </button>
           <button
             type="button"
-            onClick={onClose}
+            onClick={onClose} // Aquí utilizas la función pasada por prop
             className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded mt-2"
           >
             Cerrar

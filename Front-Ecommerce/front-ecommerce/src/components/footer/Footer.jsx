@@ -1,27 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import HowToBuy from "../modals/HowToBuy";
 import Delivery from "../modals/Delivery";
 import Questions from "../modals/Questions";
 import Contact from "../modals/Contact";
-import { useState } from "react";
+import { playOpenSound, playCloseSound } from '../sounds/Sounds';
+
 const Footer = () => {
-  const [isHowToBuyOpen, setIsHowToBuyOpen] = useState(false); // Estado para controlar la modal
+  const [isHowToBuyOpen, setIsHowToBuyOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
-  const openHowToBuy = () => setIsHowToBuyOpen(true); // Función para abrir la modal
-  const closeHowToBuy = () => setIsHowToBuyOpen(false); // Función para cerrar la modal
-
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
+  const [isQuestionsOpen, setIsQuestionsOpen] = useState(false);
 
-  const openModalDelivery = () => setIsDeliveryOpen(true);
-  const closeModalDelivery = () => setIsDeliveryOpen(false);
+  const openModal = (setState) => {
+    playOpenSound();
+    setState(true);
+  };
 
-  const[isQuestionsOpen, setIsQuestionsOpen]= useState(false);
-
-  const openModalQuestions = ()=> setIsQuestionsOpen(true);
-  const closeModalQuestions = ()=> setIsQuestionsOpen(false);
-
-  const openModalContact = ()=> setIsContactOpen(true);
-  const closeModalContact = ()=> setIsContactOpen(false);
+  const closeModal = (setState) => {
+    playCloseSound();
+    setState(false);
+  };
 
   return (
     <footer className="w-full bg-black text-white p-4">
@@ -70,19 +68,19 @@ const Footer = () => {
         <div>
           <h2 style={{ color: '#6B7280' }} className="font-bold text-lg mb-4">Sobre el almacén</h2>
           <ul className="space-y-2">
-            <li><a href="#" className="hover:text-green-400" onClick={openModalQuestions}>Preguntas frecuentes</a></li>
-            <li><a href="#" className="hover:text-green-400" onClick={openHowToBuy}>¿Cómo comprar?</a></li>
-            <li><a href="#" className="hover:text-green-400" onClick={openModalDelivery}>Plazos de entrega </a></li>
-            <li><a href="#" className="hover:text-green-400" onClick={openModalContact}>Contáctanos </a></li>
+            <li><a href="#" className="hover:text-green-400" onClick={() => openModal(setIsQuestionsOpen)}>Preguntas frecuentes</a></li>
+            <li><a href="#" className="hover:text-green-400" onClick={() => openModal(setIsHowToBuyOpen)}>¿Cómo comprar?</a></li>
+            <li><a href="#" className="hover:text-green-400" onClick={() => openModal(setIsDeliveryOpen)}>Plazos de entrega </a></li>
+            <li><a href="#" className="hover:text-green-400" onClick={() => openModal(setIsContactOpen)}>Contáctanos </a></li>
           </ul>
         </div>
       </div>
 
-      {/* Modal */}
-      <HowToBuy isOpen={isHowToBuyOpen} onClose={closeHowToBuy} />
-      <Delivery isOpen={isDeliveryOpen} onClose={closeModalDelivery} />
-      <Questions isOpen={isQuestionsOpen} onClose={closeModalQuestions} />
-      <Contact isOpen={isContactOpen} onClose={closeModalContact} />
+      {/* Modales */}
+      <HowToBuy isOpen={isHowToBuyOpen} onClose={() => closeModal(setIsHowToBuyOpen)} />
+      <Delivery isOpen={isDeliveryOpen} onClose={() => closeModal(setIsDeliveryOpen)} />
+      <Questions isOpen={isQuestionsOpen} onClose={() => closeModal(setIsQuestionsOpen)} />
+      <Contact isOpen={isContactOpen} onClose={() => closeModal(setIsContactOpen)} />
     </footer>
   );
 };
