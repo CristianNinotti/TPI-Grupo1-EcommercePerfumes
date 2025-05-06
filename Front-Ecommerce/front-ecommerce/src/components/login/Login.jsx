@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext"; 
 import { useNavigate } from "react-router-dom"; 
+import Swal from 'sweetalert2';
 
 const Login = () => {
   const { login } = useAuth(); 
@@ -9,21 +10,35 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const accountType = localStorage.getItem('accountType'); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
   
     try {
-      const accountType = localStorage.getItem('accountType'); 
-      console.log("cuenta", accountType); 
+      const accountType = localStorage.getItem('accountType');
+      console.log("cuenta", accountType);
   
-      await login({ nameAccount, password, accountType }); 
+      await login({ nameAccount, password, accountType });
   
-      alert("¡Ingreso exitoso!");
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Ingreso exitoso!',
+        text: 'Bienvenido de nuevo',
+        confirmButtonColor: '#3085d6',
+      });
+  
       navigate("/");
     } catch (error) {
       setError(error.message);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al ingresar',
+        text: error.message || 'Hubo un problema al iniciar sesión',
+        confirmButtonColor: '#d33',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -32,11 +47,22 @@ const Login = () => {
   const handleRegisterRedirect = () => {
     navigate("/registro");
   };
+
+  const handleBackHome = () => {
+    navigate("/");
+  };
+  
   
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <button
+        onClick={handleBackHome}
+        className="mb-8 px-6 py-2 bg-black-500 hover:bg-black-600 text-black font-semibold rounded-md transition duration-200"
+      >
+        Volver al Home
+      </button>
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Iniciar sesión</h2>
+        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Iniciar sesión - {accountType}</h2>
         
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         

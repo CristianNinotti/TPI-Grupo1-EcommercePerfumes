@@ -18,6 +18,8 @@ const PerfilUsuario = () => {
         dni: user?.dni || '',
         nameAccount: user?.nameAccount || '',
         phoneNumber: user?.phoneNumber || '',
+        cuit: user?.accountType === 'Mayorista' ? user?.cuit : '', 
+        categoria: user?.accountType === 'Mayorista' ? user?.categoria : '',
     });
     const navigate = useNavigate()
 
@@ -35,32 +37,37 @@ const PerfilUsuario = () => {
     };
 
     const handleSave = async () => {
+        const updatedData = { ...formData };
+        if (!updatedData.password) {
+            delete updatedData.password;
+        }
+    
         const endpoint = user?.accountType === 'Minorista'
           ? `https://localhost:7174/api/Minorista/UpdateMinorista/${user.id}`
-          : `/api/Mayorista/UpdateMayorista/${user.id}`;
+          : `https://localhost:7174/api/Mayorista/UpdateMayorista/${user.id}`;
     
         try {
-          const response = await fetch(endpoint, {
-            method: 'PUT',
-            headers: {
-                "Authorization": `Bearer ${user?.token}`,
-                'Content-Type': 'application/json',
-              
-            },
-            body: JSON.stringify(formData),
-          });
+            const response = await fetch(endpoint, {
+                method: 'PUT',
+                headers: {
+                    "Authorization": `Bearer ${user?.token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedData),
+            });
     
-          if (!response.ok) {
-            throw new Error('Error actualizando usuario');
-          }
+            if (!response.ok) {
+                throw new Error('Error actualizando usuario');
+            }
     
-          alert('Datos actualizados correctamente');
-          setIsEditing(false);
+            alert('Datos actualizados correctamente');
+            setIsEditing(false);
         } catch (error) {
-          console.error('Error al actualizar:', error);
-          alert('Error al actualizar los datos');
+            console.error('Error al actualizar:', error);
+            alert('Error al actualizar los datos');
         }
     };
+    
     
 
     const handleCancel = () => {
@@ -87,7 +94,6 @@ const PerfilUsuario = () => {
                 </div>
                 
                 {!isEditing ? (
-                    // Modo vista - Tarjeta mejorada
                     <div className="p-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="bg-gray-100 p-4 rounded-lg border border-gray-200">
@@ -111,6 +117,18 @@ const PerfilUsuario = () => {
                                             {user?.accountType}
                                         </span>
                                     </p>
+                                    {user?.accountType === 'Mayorista' && (
+                                        <>
+                                            <p>
+                                                <span className="font-medium text-gray-700">CUIT:</span>
+                                                <span className="ml-2 text-gray-900">{user?.cuit || 'No especificado'}</span>
+                                            </p>
+                                            <p>
+                                                <span className="font-medium text-gray-700">Categoría:</span>
+                                                <span className="ml-2 text-gray-900">{user?.categoria || 'No especificada'}</span>
+                                            </p>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                             
@@ -133,6 +151,7 @@ const PerfilUsuario = () => {
                                         <span className="font-medium text-gray-700">Teléfono:</span>
                                         <span className="ml-2 text-gray-900">{user?.phoneNumber || 'No especificado'}</span>
                                     </p>
+                                 
                                 </div>
                             </div>
                         </div>
@@ -159,7 +178,6 @@ const PerfilUsuario = () => {
                         </div>
                     </div>
                 ) : (
-                    // Modo edición - Formulario mejorado
                     <div className="p-6">
                         <form className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -251,13 +269,39 @@ const PerfilUsuario = () => {
                                         className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent transition duration-200"
                                     />
                                 </div>
+                                {formData.accountType === 'Mayorista' && (
+                                        <>
+                                            <div className="flex flex-col">
+                                                <label htmlFor="cuit" className="text-gray-700 font-medium">CUIT:</label>
+                                                <input
+                                                    type="text"
+                                                    name="cuit"
+                                                    id="cuit"
+                                                    value={formData.cuit}
+                                                    onChange={handleChange}
+                                                    className="p-2 rounded border border-gray-300 mt-1"
+                                                />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <label htmlFor="categoria" className="text-gray-700 font-medium">Categoría:</label>
+                                                <input
+                                                    type="text"
+                                                    name="categoria"
+                                                    id="categoria"
+                                                    value={formData.categoria}
+                                                    onChange={handleChange}
+                                                    className="p-2 rounded border border-gray-300 mt-1"
+                                                />
+                                            </div>
+                                        </>
+                                    )}
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-4 pt-4">
                                 <button 
                                     type="button"
                                     onClick={handleSave}
-                                    className="flex-1 flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:shadow-lg"
+                                    className="flex-1 flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-black py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:shadow-lg"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -267,7 +311,7 @@ const PerfilUsuario = () => {
                                 <button 
                                     type="button"
                                     onClick={handleCancel}
-                                    className="flex-1 flex items-center justify-center gap-2 bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:shadow-lg"
+                                    className="flex-1 flex items-center justify-center gap-2 bg-gray-500 hover:bg-gray-600 text-black py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:shadow-lg"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />

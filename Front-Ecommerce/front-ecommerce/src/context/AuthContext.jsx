@@ -16,31 +16,31 @@ export const AuthProvider = ({ children }) => {
         endpoint = "Minorista/CreateMinorista";
       } else if (tipoCuenta === "Mayorista") {
         endpoint = "Mayorista/CreateMayorista";
+  
+        valores.cuit = Number(valores.cuit);
+        valores.dni = Number(valores.dni);
       } else {
         throw new Error("Tipo de cuenta inválido");
       }
+  
+      console.log("Valores antes de enviar:", valores);
+  
+      const bodyData = tipoCuenta === "Mayorista" ? valores  : valores;
+  
+      console.log("Body final:", JSON.stringify(bodyData));
   
       const response = await fetch(`${URL}${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(valores),
+        body: JSON.stringify(bodyData),
       });
   
       if (!response.ok) {
-        const contentType = response.headers.get("content-type");
-  
-        let data;
-        if (contentType && contentType.includes("application/json")) {
-          // Si la respuesta es JSON, la parseamos
-          data = await response.json();
-        } else {
-          // Si no es JSON, usamos el texto plano
-          data = await response.text();
-        }
-  
-        throw new Error(data.message || data || "Error al crear el usuario");
+        const text = await response.text();
+        const data = text ? JSON.parse(text) : {}; 
+        throw new Error(data.message || text || "Error al crear el usuario");
       }
   
       return true;
@@ -49,6 +49,7 @@ export const AuthProvider = ({ children }) => {
       throw new Error(error.message || "Error al registrar usuario");
     }
   };
+  
   
 
   const login = async ({ nameAccount, password, accountType }) => {
@@ -94,6 +95,8 @@ export const AuthProvider = ({ children }) => {
         firstName: loggedUser?.firstName,
         lastName: loggedUser?.lastName,
         phoneNumber: loggedUser?.phoneNumber,
+        cuit: loggedUser?.cuit,         
+        categoria: loggedUser?.categoria, 
       });
   
       localStorage.setItem("token", token);
@@ -164,6 +167,8 @@ export const AuthProvider = ({ children }) => {
             firstName: loggedUser.firstName,
             lastName: loggedUser.lastName,
             phoneNumber: loggedUser.phoneNumber,
+            cuit: loggedUser?.cuit,       
+            categoria: loggedUser?.categoria, 
           });
           console.log(user, 'user')
           setAuth({ loggedIn: true, token });

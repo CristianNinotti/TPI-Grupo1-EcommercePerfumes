@@ -15,7 +15,7 @@ const Home = () => {
   const {user} = useContext(AuthContext)
   console.log(user)
   useEffect(() => {
-    fetch('https://localhost:7174/api/Category/All%20Categories', {
+    fetch('https://localhost:7174/api/Category/AllCategories', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

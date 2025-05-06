@@ -19,7 +19,7 @@ namespace Web.Controllers
             _productService = productService;
         }
 
-        [HttpGet("All Categories")]
+        [HttpGet("AllCategories")]
         public IActionResult GetAllCategories()
         {
             try
@@ -39,7 +39,7 @@ namespace Web.Controllers
         }
 
 
-        [HttpGet("All Categories Available")]
+        [HttpGet("AllCategoriesAvailable")]
         [Authorize(Policy = "SuperAdminOnly")]
         public IActionResult GetAllCategoriesAvailable()
         {
