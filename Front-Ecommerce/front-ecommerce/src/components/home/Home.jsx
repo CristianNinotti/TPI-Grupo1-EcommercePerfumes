@@ -7,6 +7,7 @@ import imagenInicio from '../../assets/image/inicio/maison.jpg';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../navbar/Navbar'; // Asegurate de ajustar la ruta si es necesario
 import { AuthContext } from '../../context/AuthContext';
+import Productos from '../productos/Productos';
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
@@ -98,6 +99,9 @@ const Home = () => {
               </ul>
             )}
           </section>
+          <>
+            <Productos limit={3} />
+          </>
         </main>
       </div>
 

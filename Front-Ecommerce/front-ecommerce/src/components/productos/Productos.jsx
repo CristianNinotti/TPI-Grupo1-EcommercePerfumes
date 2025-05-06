@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import ProductCard from '../productCard/ProductCard';
+// import ProductCard from '../productCard/ProductCard';
+import PerfumeCard from "../perfumeCard/PerfumeCard";
+import Perfume from "../../assets/image/inicio/aa.webp"
 
-function Productos() {
+function Productos({ limit = null }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const displayProducts = limit ? products.slice(0, limit) : products;
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -24,20 +26,41 @@ function Productos() {
       .catch(err => console.error("Error:", err))
       .finally(() => setLoading(false));
   }, []);
-
+  console.log(products)
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Todos los productos</h2>
-      {loading ? (
-        <p>Cargando productos...</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+    <>
+      <div>
+        <div className="flex justify-center mb-6">
+          <h2 className="text-2xl font-bold">
+            Perfumes y Fragancias para Mujer y Hombre
+          </h2>
         </div>
-      )}
-    </div>
+        {loading ? (
+          <p>Cargando productos...</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ml-70">
+            {displayProducts.map(p => (
+              <PerfumeCard
+              key={p.id}
+              image={Perfume}   
+              volume="100 ML"                              
+              brand="Marca Genérica"                       
+              name={p.name}
+              originalPrice={p.price.toFixed(2)}          
+              discountedPrice={p.price.toFixed(2)}
+              discountPercentage={0}                      
+              installments={{
+                count: 1,
+                perInstallment: p.price.toFixed(2)
+              }}
+              cftea="CFTEA: 0%"
+              priceWithoutTax=""                          
+            />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
