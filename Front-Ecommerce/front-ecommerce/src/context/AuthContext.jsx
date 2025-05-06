@@ -69,11 +69,19 @@ export const AuthProvider = ({ children }) => {
 
       const token = await response.text();
 
-      const userResponse = await fetch(`${URL}${accountType === "Minorista" ? "Minorista/AllMinoristas" : "Mayorista/AllMayoristas"}`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,  
+      const userResponse = await fetch(
+        `${URL}${
+           accountType === "Minorista"   ? "Minorista/AllMinoristas"
+         : accountType === "Mayorista"   ? "Mayorista/AllMayoristas"
+         : accountType === "SuperAdmin"  ? "superAdmin/AllSuperAdmins"
+         : /* fallback */                ""
+        }`,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
         }
-      });      
+      );     
       
       const users = await userResponse.json();
 
@@ -138,6 +146,12 @@ export const AuthProvider = ({ children }) => {
                 "Authorization": `Bearer ${token}`,
               }
             });
+          } else if (accountType === "SuperAdmin") {
+            userResponse = await fetch(`${URL}superAdmin/AllSuperAdmins`, {
+              headers: {
+                "Authorization": `Bearer ${token}`,
+              }
+            });
           } else {
             throw new Error("Tipo de cuenta no especificado");
           }
@@ -150,6 +164,7 @@ export const AuthProvider = ({ children }) => {
           
           console.log(localStorage.getItem("nameAccount"), 'localstoreage'); 
           const loggedUser = users.find(user => user.nameAccount === localStorage.getItem("nameAccount"));
+          console.log(loggedUser, 'logged')
             
           if (!loggedUser) {
             throw new Error("Usuario no encontrado");

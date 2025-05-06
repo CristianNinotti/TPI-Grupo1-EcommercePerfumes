@@ -26,7 +26,7 @@ function Productos({ limit = null }) {
       .catch(err => console.error("Error:", err))
       .finally(() => setLoading(false));
   }, []);
-  console.log(products)
+
   return (
     <>
       <div>
