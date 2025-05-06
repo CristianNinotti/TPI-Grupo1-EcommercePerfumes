@@ -14,8 +14,11 @@ namespace Application.Mappings
                 Description = product.Description,
                 Price = product.Price,
                 Stock = product.Stock,
+                Marca = product.Marca,
+                Genero = product.Genero,
                 CategoryId = product.CategoryId,
-                Photos = product.Photos,
+                Photos = product.Photos
+
 
             };
         }
@@ -28,6 +31,8 @@ namespace Application.Mappings
                 Description = product.Description,
                 Price = product.Price,
                 Stock = product.Stock,
+                Marca = product.Marca,
+                Genero = product.Genero,
                 CategoryId = product.CategoryId,
                 Photos = product.Photos,
                 Available = product.Available,
@@ -43,6 +48,8 @@ namespace Application.Mappings
                 Description = c.Description,
                 Price = c.Price,
                 Stock = c.Stock,
+                Marca = c.Marca,
+                Genero = c.Genero,
                 CategoryId = c.CategoryId,
                 Photos = c.Photos,
                 Available = c.Available
@@ -57,6 +64,8 @@ namespace Application.Mappings
             product.Description = request.Description;
             product.Price = request.Price;
             product.Stock = request.Stock;
+            product.Marca = request.Marca;
+            product.Genero = request.Genero;
             product.CategoryId = product.CategoryId;
             product.Photos = request.Photos;
 
