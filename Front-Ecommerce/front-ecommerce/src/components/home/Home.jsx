@@ -31,11 +31,9 @@ const Home = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  console.log(categories)
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="w-full shadow-md">
-        <Header />
-      </header>
 
       <section className="hero">
         <img
@@ -77,37 +75,39 @@ const Home = () => {
             <p className="text-lg text-gray-800 mb-4">
               Descubre las mejores fragancias para cada ocasión
             </p>
-            <button className="bg-black text-gray px-6 py-2 rounded hover:bg-gray-800 transition">
+            <button 
+              className="bg-black text-gray px-6 py-2 rounded hover:bg-gray-800 transition"
+                onClick={() => {navigate("/productos")}}
+            >
               Explorar ahora
             </button>
           </section>
           
-          <section className="categories">
+          {/* <div className="categories">
             {loading ? (
-              <p className="text-center mt-4 text-gray-600">Cargando categorías...</p>
+              <p className="text-center mt-4 text-gray-600">
+                Cargando categorías...
+              </p>
             ) : (
-              <ul className='category-cards'>
-                {categories.map(category => (
-                  <li key={category.id} className='category-card'>
-                    <CategoryCard
-                      categoryId={category.id}
-                      categoryName={category.name}
-                      categoryAvailable={category.available}
-                    />
-                  </li>
+              // aquí un flex wrap con gap para los chips
+              <div className="flex flex-wrap justify-center gap-3 mt-4">
+                {categories.map((category) => (
+                  <CategoryCard
+                    key={category.id}
+                    categoryName={category.name}
+                    categoryAvailable={category.available}
+                  />
                 ))}
-              </ul>
+              </div>
             )}
-          </section>
+          </div> */}
           <>
-            <Productos limit={3} />
+            <Productos limit={4} />
           </>
         </main>
       </div>
 
-      <footer className="mt-auto">
-        <Footer />
-      </footer>
+
     </div>
   );
 };

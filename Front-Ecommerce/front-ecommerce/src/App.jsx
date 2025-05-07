@@ -4,7 +4,6 @@ import { AuthProvider } from "./context/AuthContext";
 import RoutesComponent from "./components/routes/Routes";
 import { CartProvider } from "./context/CartContext";
 
-
 function App() {
   return (
     <AuthProvider>
