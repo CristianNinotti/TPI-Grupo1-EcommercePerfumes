@@ -1,8 +1,8 @@
-// src/components/productos/Productos.jsx
 import { useEffect, useState } from "react";
 import CategoryCard from "../categoryCard/CategoryCard";
 import PerfumeCard from "../perfumeCard/PerfumeCard";
 import Perfume from "../../assets/image/inicio/aa.webp";
+import "./Products.css";
 
 function Productos({ limit = null }) {
   const [products, setProducts] = useState([]);
