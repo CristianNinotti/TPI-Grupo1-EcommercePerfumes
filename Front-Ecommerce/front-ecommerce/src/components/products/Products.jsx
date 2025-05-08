@@ -50,7 +50,7 @@ function Productos({ limit = null }) {
   const displayProducts = limit ? filtered.slice(0, limit) : filtered;
 
   return (
-    <div>
+    <div className="w-full">
 
       <div className="flex justify-center mb-6">
         <h2 className="text-2xl font-bold">
@@ -81,7 +81,7 @@ function Productos({ limit = null }) {
       {loadingProducts
         ? <p className="text-center">Cargando productos…</p>
         : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 place-items-center">
             {displayProducts.map(p => (
               <PerfumeCard
                 key={p.id}

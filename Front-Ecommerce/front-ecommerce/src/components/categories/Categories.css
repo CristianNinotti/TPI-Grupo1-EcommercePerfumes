@@ -1,6 +1,5 @@
 .categories {
     flex-grow: 1;
-    container-type: inline-size;
     margin: 25px;
 }
 

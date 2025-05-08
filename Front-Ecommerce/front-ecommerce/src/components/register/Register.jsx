@@ -86,13 +86,13 @@ const Register = () => {
 
       <div className="flex justify-center mb-6 gap-4">
         <button
-          className={`px-6 py-2 rounded-full font-semibold ${typeUser === "Minorista" ? "bg-green-500 text-black" : "bg-gray-200 text-gray-700"}`}
+          className={`px-6 py-2 rounded-full font-semibold text-white ${typeUser === "Minorista" ? "bg-green-500 text-black" : "bg-gray-200 text-gray-700"}`}
           onClick={() => setTypeUser("Minorista")}
         >
           Minorista
         </button>
         <button
-          className={`px-6 py-2 rounded-full font-semibold ${typeUser === "Mayorista" ? "bg-green-500 text-black" : "bg-gray-200 text-gray-700"}`}
+          className={`px-6 py-2 rounded-full font-semibold text-white ${typeUser === "Mayorista" ? "bg-green-500 text-black" : "bg-gray-200 text-gray-700"}`}
           onClick={() => setTypeUser("Mayorista")}
         >
           Mayorista
@@ -109,7 +109,7 @@ const Register = () => {
           value={formData.firstName}
           onChange={handleChange}
           required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="text"
@@ -118,7 +118,7 @@ const Register = () => {
           value={formData.lastName}
           onChange={handleChange}
           required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="text"
@@ -127,7 +127,7 @@ const Register = () => {
           value={formData.nameAccount}
           onChange={handleChange}
           required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="email"
@@ -136,7 +136,7 @@ const Register = () => {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="password"
@@ -145,7 +145,7 @@ const Register = () => {
           value={formData.password}
           onChange={handleChange}
           required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="number"
@@ -154,7 +154,7 @@ const Register = () => {
           value={formData.dni}
           onChange={handleChange}
           required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="text"
@@ -163,7 +163,7 @@ const Register = () => {
           value={formData.phoneNumber}
           onChange={handleChange}
           required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="text"
@@ -172,7 +172,7 @@ const Register = () => {
           value={formData.address}
           onChange={handleChange}
           required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         {typeUser === "Mayorista" && (
@@ -184,7 +184,7 @@ const Register = () => {
               value={formData.categoria}
               onChange={handleChange}
               required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <input
               type="number"
@@ -193,14 +193,14 @@ const Register = () => {
               value={formData.cuit}
               onChange={handleChange}
               required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </>
         )}
 
         <button
           type="submit"
-          className="w-full p-3 bg-green-500 text-black rounded-md font-semibold hover:bg-green-600 transition duration-200"
+          className="w-full p-3 bg-green-500 rounded-md font-semibold hover:bg-green-600 transition duration-200"
         >
           Registrarme
         </button>
