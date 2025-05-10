@@ -15,7 +15,6 @@ namespace Web.Controllers
             _productService = productService;
         }
         [HttpGet("AllProducts")]
-        [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public IActionResult GetAllProducts()
         {
             try
@@ -34,7 +33,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("AllProductsAvailable")]
-        [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public IActionResult GetAllProductsAvailable()
         {
             try
@@ -53,7 +51,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("ProductById/{id}")]
-        [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public IActionResult GetProductById([FromRoute] int id)
         {
             try
@@ -76,7 +73,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("ProductsByCategory/{categoryId}")]
-        [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public IActionResult GetProductsByCategoryId([FromRoute] int categoryId)
         {
             try

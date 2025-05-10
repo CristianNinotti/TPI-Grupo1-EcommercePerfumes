@@ -20,7 +20,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("AllCategories")]
-        [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public IActionResult GetAllCategories()
         {
             try
@@ -41,7 +40,6 @@ namespace Web.Controllers
 
 
         [HttpGet("AllCategoriesAvailable")]
-        [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public IActionResult GetAllCategoriesAvailable()
         {
             try
@@ -61,7 +59,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("CategoryId/{id}")]
-        [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public ActionResult<CategoryResponse?> GetCategoryById([FromRoute] int id)
         {
             try
@@ -85,7 +82,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("CategoryWithProducts/{id}")]
-        [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
         public ActionResult<ProductResponse?> GetAllProducts([FromRoute] int id)
         {
             try
