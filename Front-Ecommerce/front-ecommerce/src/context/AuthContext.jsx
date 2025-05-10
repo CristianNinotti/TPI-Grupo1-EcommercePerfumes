@@ -33,11 +33,18 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify(bodyData),
       });
 
-      if (!response.ok) {
-        const text = await response.text();
-        const data = text ? JSON.parse(text) : {};
-        throw new Error(data.message || text || "Error al crear el usuario");
-      }
+      //Testing
+if (!response.ok) {
+  const contentType = response.headers.get("content-type");
+
+  if (contentType && contentType.includes("application/json")) {
+    const data = await response.json();
+    throw new Error(data.message || "Error al crear el usuario");
+  } else {
+    const text = await response.text();
+    throw new Error(text || "Error al crear el usuario");
+  }
+}
 
       return true;
     } catch (error) {
