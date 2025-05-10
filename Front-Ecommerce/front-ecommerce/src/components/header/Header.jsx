@@ -3,22 +3,25 @@ import logo3 from "../../assets/image/logo/logo3.png";
 import { AuthContext } from "../../context/AuthContext";
 import { playOpenSound, playCloseSound } from '../sounds/Sounds';
 import { useNavigate } from "react-router-dom";
+import { FaShoppingCart } from "react-icons/fa";
+import useCart from "../../hooks/useCart";
 
 const Header = () => {
 
-  const { auth, user} = useContext(AuthContext)
+  const { auth, user } = useContext(AuthContext)
+  const { cartItems, totalItems } = useCart();
   const navigate = useNavigate();
-  
+
   return (
     <header className="w-full bg-black text-white">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo a la izquierda */}
-        <img src={logo3} alt="logo3" className="h-35 w-auto object-contain cursor-pointer" onClick={(e)=> {e.preventDefault(); playOpenSound(); navigate('/')}}/>
-  
+        <img src={logo3} alt="logo3" className="h-35 w-auto object-contain cursor-pointer" onClick={(e) => { e.preventDefault(); playOpenSound(); navigate('/') }} />
+
 
         <nav>
           <ul className="flex gap-6">
-          {/*
+            {/*
             <li>
               <a
                 href="#"
@@ -66,18 +69,18 @@ const Header = () => {
               </a>
             </li>
           */}
-            { auth.loggedIn && (
+            {auth.loggedIn && (
               <li style={{ marginRight: 20 }}>
                 <a
                   href="#"
-                  onClick={(e)=> {e.preventDefault(); playOpenSound(); navigate("/profile")}}
+                  onClick={(e) => { e.preventDefault(); playOpenSound(); navigate("/profile") }}
                   className="text-white hover:text-green-400"
                 >
                   Perfil
                 </a>
               </li>
             )}
-            
+
             {/*
             <li>
               <a
@@ -106,6 +109,22 @@ const Header = () => {
                 </a>
               </li>
             )}
+            <li className="relative">
+              <button
+                onClick={() => {
+                  playOpenSound();
+                  navigate("/cart");
+                }}
+                className="relative"
+              >
+                <FaShoppingCart className="text-white w-6 h-6 hover:text-green-400 transition" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+            </li>
           </ul>
         </nav>
       </div>

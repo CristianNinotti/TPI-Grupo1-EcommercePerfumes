@@ -20,7 +20,6 @@ const RoutesComponent = () => {
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="products" element={<Products />} />
-        <Route path="cart" element={<Cart />} />
         <Route path="categories" element={<Categories />} />
         <Route 
           path="profile" 
@@ -31,6 +30,7 @@ const RoutesComponent = () => {
           }
         />
       </Route>
+      <Route path="cart" element={<Cart />} />
 
       <Route path="login" element={<Login />} />
       <Route path="login-admin" element={<LoginAdmin />} />
