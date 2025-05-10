@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+#Conflictos de archivos de DB
+
+*.db-shm
+*.db-wal
