@@ -1,9 +1,13 @@
-import React, { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import React, { useEffect, useState } from 'react';
+import emailjs from '@emailjs/browser';
+import { useAnimatedClose } from '../animations/UseAnimatedClose'; // Asegúrate de tener este hook de animaciones
 import { playCloseSound } from '../sounds/Sounds';
 
 const Contact = ({ isOpen, onClose }) => {
-  const formRef = useRef();
+  const { isVisible, isClosing, handleAnimatedClose, playSound } = useAnimatedClose(isOpen, () => {
+    onClose(); // Llamamos a onClose después de la animación
+  });
+  
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -22,47 +26,56 @@ const Contact = ({ isOpen, onClose }) => {
 
     emailjs
       .send(
-        "service_3oikwjk",
-        "template_1fovu2f",
+        'service_3oikwjk',
+        'template_1fovu2f',
         {
           from_name: form.name,
-          to_name: "Leo",
+          to_name: 'Leo',
           from_email: form.email,
-          to_email: "leomattsantana@gmail.com",
+          to_email: 'leomattsantana@gmail.com',
           message: form.message,
         },
-        "tR8m_NQ4tJRzUb666"
+        'tR8m_NQ4tJRzUb666'
       )
       .then(
         () => {
           setLoading(false);
-          alert("Gracias por contactarte, me comunicaré lo antes posible.");
+          alert('Gracias por contactarte, me comunicaré lo antes posible.');
           setForm({
-            name: "",
-            email: "",
-            message: "",
+            name: '',
+            email: '',
+            message: '',
           });
-          playCloseSound(); // Reproduce el sonido al cerrar la modal
-          onClose(); // Llama a la función onClose para cerrar la modal
+          handleAnimatedClose(); // Solo aquí se llama
         },
         (error) => {
           setLoading(false);
           console.log(error);
-          alert("Algo salió mal, pero no es culpa tuya c:");
+          alert('Algo salió mal, pero no es culpa tuya c:');
         }
       );
   };
 
-  if (!isOpen) return null;
+  // Reproducir el sonido de cierre cuando se indique
+  useEffect(() => {
+    if (playSound) {
+      const audio = new Audio('/sounds/close-sound.mp3'); // Ruta absoluta
+      audio.play();
+    }
+  }, [playSound]);
+
+  if (!isVisible) return null; // No renderiza nada si el modal no es visible
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-50"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
+      className={`fixed inset-0 flex items-center justify-center z-50 transition-opacity ${isClosing ? 'opacity-0' : 'opacity-100'}`}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
     >
-      <div className="bg-white p-6 rounded-xl border-2 border-gray-600 max-w-xl w-full shadow-lg overflow-y-auto max-h-[90vh]">
+      <div
+        className={`bg-white p-6 rounded-xl border-2 border-gray-600 max-w-xl w-full shadow-lg overflow-y-auto max-h-[90vh] transition-all transform ${isClosing ? 'scale-95' : 'scale-100'}`}
+      >
         <h1 className="text-xl font-bold mb-4 text-black">Contacto</h1>
-        <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="flex flex-col text-black font-medium">
             Tu nombre
             <input
@@ -103,11 +116,11 @@ const Contact = ({ isOpen, onClose }) => {
             type="submit"
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
           >
-            {loading ? "Enviando..." : "Enviar"}
+            {loading ? 'Enviando...' : 'Enviar'}
           </button>
           <button
             type="button"
-            onClick={onClose} // Aquí utilizas la función pasada por prop
+            onClick={handleAnimatedClose}
             className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded mt-2"
           >
             Cerrar

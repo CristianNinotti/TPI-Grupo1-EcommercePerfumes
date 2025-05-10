@@ -1,12 +1,15 @@
+import { useNavigate } from "react-router-dom";
+
 const CategoryCard = ({
   categoryName,
   categoryAvailable,
-  isSelected,
-  onClick
+  isSelected
 }) => {
+  const navigate = useNavigate();
+
   const baseClasses = `
     inline-block px-3 py-1 rounded-full text-sm font-medium
-    cursor-pointer select-none transition-colors
+    cursor-pointer select-none transition-colors 
   `;
 
   const availableClasses = isSelected
@@ -15,9 +18,15 @@ const CategoryCard = ({
 
   const unavailableClasses = 'bg-red-100 text-red-800 opacity-50 cursor-not-allowed';
 
+  const handleClick = () => {
+    if (categoryAvailable) {
+      navigate('/products', { state: { selectedCategoryName: categoryName } });
+    }
+  };
+
   return (
     <span
-      onClick={categoryAvailable ? onClick : undefined}
+      onClick={handleClick}
       className={`${baseClasses} ${
         categoryAvailable ? availableClasses : unavailableClasses
       }`}
@@ -29,3 +38,5 @@ const CategoryCard = ({
 };
 
 export default CategoryCard;
+
+
