@@ -2,6 +2,8 @@ import React from 'react';
 
 
 const PerfumeCard = ({
+  id,
+  onClick,
   image,
   volume = '100 ML',
   brand = 'CALVIN KLEIN',
@@ -13,7 +15,9 @@ const PerfumeCard = ({
   cftea = 'CFTEA: 0%',
   priceWithoutTax = 'Precio sin Impuestos Nacionales: $ 67.500',
 }) => (
-  <div className="bg-white rounded-xl shadow-md p-6 relative max-w-xs">
+  <div className="bg-white rounded-xl shadow-md p-6 relative max-w-xs"
+    onClick={onClick}
+  >
 
     <button className="absolute top-4 left-4 text-gray-400 hover:text-red-500 transition">
       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -52,6 +56,12 @@ const PerfumeCard = ({
 
       <button className="mt-4 w-full bg-black text-black uppercase text-sm font-semibold py-2 rounded-full hover:bg-gray-800 transition">
         Agregar al carrito
+      </button>
+      <button
+        onClick={e => { e.stopPropagation(); onClick(); }}
+        className="mt-4 w-full bg-black text-black uppercase text-sm font-semibold py-2 rounded-full hover:bg-gray-800 transition"
+      >
+        Ver detalles
       </button>
     </div>
   </div>

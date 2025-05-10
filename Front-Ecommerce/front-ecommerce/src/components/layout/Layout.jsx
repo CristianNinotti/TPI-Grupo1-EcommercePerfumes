@@ -10,13 +10,13 @@ const Layout = () => (
   <div className='flex flex-col min-h-screen'>
     <Header />
     
-    <section className="hero">
+    {/* <section className="hero">
       <img
         src={imagenInicio}
         alt="imagenInicio"
         className="w-full h-48 object-cover"
       />
-    </section>
+    </section> */}
 
     <div className="flex flex-grow">
       <Navbar />

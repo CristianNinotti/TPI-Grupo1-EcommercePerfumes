@@ -3,6 +3,7 @@ import CategoryCard from "../categoryCard/CategoryCard";
 import PerfumeCard from "../perfumeCard/PerfumeCard";
 import Perfume from "../../assets/image/inicio/aa.webp";
 import "./Products.css";
+import { useNavigate } from "react-router-dom";
 
 function Productos({ limit = null }) {
   const [products, setProducts] = useState([]);
@@ -10,7 +11,7 @@ function Productos({ limit = null }) {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-
+  const navigate = useNavigate();
   
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -98,7 +99,10 @@ function Productos({ limit = null }) {
                 }}
                 cftea="CFTEA: 0%"
                 priceWithoutTax=""
+                onClick={() => navigate(`/product/${p.id}`)}  
+                
               />
+              
             ))}
           </div>
       )}

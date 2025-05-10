@@ -12,6 +12,7 @@ import LoginAdmin from '../login/LoginAdmin';
 import Categories from '../categories/Categories';
 import RequireLogged from '../../requires/RequireLogged';
 import AccessDenied from '../accesDenied/AccesDenied';  
+import ProductDetail from '../productDetail/ProductDetail';
 
 const RoutesComponent = () => {
   return (
@@ -21,6 +22,7 @@ const RoutesComponent = () => {
         <Route index element={<Home />} />
         <Route path="products" element={<Products />} />
         <Route path="categories" element={<Categories />} />
+        <Route path="product/:id" element={<ProductDetail />} />
         <Route 
           path="profile" 
           element={
