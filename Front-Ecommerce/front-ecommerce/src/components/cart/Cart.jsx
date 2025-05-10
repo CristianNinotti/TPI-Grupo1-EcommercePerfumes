@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { initMercadoPago, Payment } from "@mercadopago/sdk-react";
+import CartHeader from "../../cartHeader/cartHeader";
 
 const CheckoutPage = () => {
   const [preferenceId, setPreferenceId] = useState(null);
@@ -74,6 +75,7 @@ const CheckoutPage = () => {
   console.log(preferenceId)
   return (
     <div>
+      <CartHeader/>
       <h2>Finalizar compra</h2>
       {!preferenceId ? (
         <p>Cargando Brick de MercadoPago...</p>

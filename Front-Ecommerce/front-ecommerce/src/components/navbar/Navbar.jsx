@@ -1,51 +1,42 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { playOpenSound, playCloseSound } from '../sounds/Sounds';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [showSubmenu, setShowSubmenu] = useState(false);
-
   const toggleSubmenu = () => {
     setShowSubmenu(prev => !prev);
   };
 
   return (
-    <nav className="w-48 min-h-screen bg-gray-100 p-4 shadow-lg border-r border-gray-300">
+    <nav className="w-48 bg-gray-100 p-4 shadow-lg border-r border-gray-300">
       <ul className="space-y-4">
         <li className="pb-2 border-b border-gray-300">
-          <Link to="/" className="text-black hover:text-blue-600">Inicio</Link>
+          <p onClick={(e) => {e.preventDefault(); playOpenSound(); navigate("/")}} className="text-black font-bold hover:text-gray-500 cursor-pointer">Inicio</p>
         </li>
 
         <li className="pb-2 border-b border-gray-300">
-          {/* Componente que actúa como botón, con cursor-pointer */}
           <div
-            onClick={toggleSubmenu}
-            className="text-black hover:text-blue-600 w-full text-left cursor-pointer"
+            onClick={(e) => {e.preventDefault(); playOpenSound(); toggleSubmenu()}}
+            className="text-black font-bold hover:text-gray-500 cursor-pointer"
           >
-            Perfumes
+            Productos
           </div>
           {showSubmenu && (
             <ul className="mt-2 space-y-2 pl-4">
               <li>
-                <Link to="/productos" className="text-sm text-gray-700 hover:text-blue-600">
-                  Hombre
-                </Link>
+                <p onClick={(e) => {e.preventDefault(); playOpenSound(); navigate("/products")}} className="text-black hover:text-gray-500 cursor-pointer">Perfumes</p>
               </li>
               <li>
-                <Link to="#" className="text-sm text-gray-700 hover:text-blue-600">
-                  Mujer
-                </Link>
-              </li>
-              <li>
-                <Link to="#" className="text-sm text-gray-700 hover:text-blue-600">
-                  Unisex
-                </Link>
+                <p onClick={(e) => {e.preventDefault(); playOpenSound(); navigate("/")}} className="text-black hover:text-gray-500 cursor-pointer">Maquillajes</p>
               </li>
             </ul>
           )}
         </li>
-        
-        <li className="pb-2 border-b border-gray-300">
-          <Link to="#" className="text-black hover:text-blue-600">Maquillajes</Link>
+          
+        <li>
+          <p onClick={(e)=> {e.preventDefault(); playOpenSound(); navigate("/categories")}} className="text-black font-bold hover:text-gray-500 cursor-pointer">Categorías</p>
         </li>
       </ul>
     </nav>

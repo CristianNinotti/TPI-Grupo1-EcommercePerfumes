@@ -1,10 +1,8 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 
-// esto se va a usar solo si manejamos el carrito por el front, ignorar
+// efectivamente vamos a manejar el carrito por el front
 
-const CartContext = createContext();
-
-export const useCart = () => useContext(CartContext);
+export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);

@@ -3,23 +3,21 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom"; 
 import Swal from 'sweetalert2';
 
-const Login = () => {
+const LoginAdmin = () => {
   const { login } = useAuth(); 
   const navigate = useNavigate();
   const [nameAccount, setNameAccount] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const accountType = localStorage.getItem('accountType'); 
+  const accountType = 'SuperAdmin'; 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
   
     try {
-      const accountType = localStorage.getItem('accountType');
-      console.log("cuenta", accountType);
-  
+        
       await login({ nameAccount, password, accountType });
   
       await Swal.fire({
@@ -44,17 +42,19 @@ const Login = () => {
     }
   };
 
-  const handleRegisterRedirect = () => {
-    navigate("/registro");
-  };
-
   const handleBackHome = () => {
     navigate("/");
   };
   
   
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <button
+        onClick={handleBackHome}
+        className="mb-8 px-6 py-2 bg-black-500 hover:bg-black-600 text-black font-semibold rounded-md transition duration-200"
+      >
+        Volver al Home
+      </button>
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Iniciar sesión - {accountType}</h2>
         
@@ -69,7 +69,7 @@ const Login = () => {
               value={nameAccount}
               onChange={(e) => setNameAccount(e.target.value)}
               required
-              className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
             />
           </div>
           <div className="mb-6">
@@ -80,40 +80,21 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
             />
           </div>
           <button 
             type="submit" 
-            className={`w-full p-3 font-semibold rounded-md ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} transition duration-200`}
+            className={`w-full p-3 text-black font-semibold rounded-md ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} transition duration-200`}
             disabled={isLoading}
           >
             {isLoading ? "Cargando..." : "Iniciar sesión"}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
-            ¿No estás registrado?{" "}
-            <button
-              type="button"
-              onClick={handleRegisterRedirect}
-              className="text-blue-500 hover:underline font-semibold"
-            >
-              Crea una cuenta
-            </button>
-          </p>
-        </div>
-
       </div>
-      <button
-        onClick={handleBackHome}
-        className="mb-8 px-6 py-2 bg-black-500 hover:bg-black-600 font-semibold rounded-md transition duration-200 mt-5"
-      >
-        Volver al Home
-      </button>
     </div>
   );
 };
 
-export default Login;
+export default LoginAdmin;

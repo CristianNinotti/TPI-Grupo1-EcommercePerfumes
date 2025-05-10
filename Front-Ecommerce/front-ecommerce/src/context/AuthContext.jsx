@@ -7,28 +7,24 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [auth, setAuth] = useState({ loggedIn: false });
+  const [loading, setLoading] = useState(true);
 
   const register = async (valores, tipoCuenta) => {
     try {
       let endpoint = "";
-  
+
       if (tipoCuenta === "Minorista") {
         endpoint = "Minorista/CreateMinorista";
       } else if (tipoCuenta === "Mayorista") {
         endpoint = "Mayorista/CreateMayorista";
-  
         valores.cuit = Number(valores.cuit);
         valores.dni = Number(valores.dni);
       } else {
         throw new Error("Tipo de cuenta inválido");
       }
-  
-      console.log("Valores antes de enviar:", valores);
-  
-      const bodyData = tipoCuenta === "Mayorista" ? valores  : valores;
-  
-      console.log("Body final:", JSON.stringify(bodyData));
-  
+
+      const bodyData = tipoCuenta === "Mayorista" ? valores : valores;
+
       const response = await fetch(`${URL}${endpoint}`, {
         method: "POST",
         headers: {
@@ -36,21 +32,19 @@ export const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify(bodyData),
       });
-  
+
       if (!response.ok) {
         const text = await response.text();
-        const data = text ? JSON.parse(text) : {}; 
+        const data = text ? JSON.parse(text) : {};
         throw new Error(data.message || text || "Error al crear el usuario");
       }
-  
+
       return true;
     } catch (error) {
       console.error(error);
       throw new Error(error.message || "Error al registrar usuario");
     }
   };
-  
-  
 
   const login = async ({ nameAccount, password, accountType }) => {
     try {
@@ -69,18 +63,31 @@ export const AuthProvider = ({ children }) => {
 
       const token = await response.text();
 
-      const userResponse = await fetch(`${URL}${accountType === "Minorista" ? "Minorista/AllMinoristas" : "Mayorista/AllMayoristas"}`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,  
+      const userResponse = await fetch(
+        `${URL}${
+          accountType === "Minorista"
+            ? "Minorista/AllMinoristas"
+            : accountType === "Mayorista"
+            ? "Mayorista/AllMayoristas"
+            : accountType === "SuperAdmin"
+            ? "superAdmin/AllSuperAdmins"
+            : ""
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });      
-      
+      );
+
       const users = await userResponse.json();
 
-      const loggedUser = users.find(user => user.nameAccount === nameAccount);
+      const loggedUser = users.find(
+        (user) => user.nameAccount === nameAccount
+      );
 
       if (!loggedUser) {
-        throw new Error("Usuario no encontrado")
+        throw new Error("Usuario no encontrado");
       }
 
       setUser({
@@ -90,18 +97,18 @@ export const AuthProvider = ({ children }) => {
         address: loggedUser?.address,
         available: loggedUser?.available,
         dni: loggedUser?.dni,
-        email: loggedUser?.email,  
+        email: loggedUser?.email,
         nameAccount: loggedUser?.nameAccount,
         firstName: loggedUser?.firstName,
         lastName: loggedUser?.lastName,
         phoneNumber: loggedUser?.phoneNumber,
-        cuit: loggedUser?.cuit,         
-        categoria: loggedUser?.categoria, 
+        cuit: loggedUser?.cuit,
+        categoria: loggedUser?.categoria,
       });
-  
+
       localStorage.setItem("token", token);
-      localStorage.setItem("accountType", accountType) 
-      localStorage.setItem("nameAccount", nameAccount)
+      localStorage.setItem("accountType", accountType);
+      localStorage.setItem("nameAccount", nameAccount);
       setAuth({ loggedIn: true, token });
 
       return true;
@@ -115,46 +122,56 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setAuth({ loggedIn: false });
     localStorage.removeItem("token");
+    localStorage.removeItem("accountType");
+    localStorage.removeItem("nameAccount");
   };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (token) {
-      const accountType = localStorage.getItem("accountType"); 
-      console.log(accountType, 'account')
+      const accountType = localStorage.getItem("accountType");
+
       const fetchUserData = async () => {
         try {
           let userResponse;
-  
+
           if (accountType === "Minorista") {
             userResponse = await fetch(`${URL}Minorista/AllMinoristas`, {
               headers: {
-                "Authorization": `Bearer ${token}`,
-              }
+                Authorization: `Bearer ${token}`,
+              },
             });
           } else if (accountType === "Mayorista") {
             userResponse = await fetch(`${URL}Mayorista/AllMayoristas`, {
               headers: {
-                "Authorization": `Bearer ${token}`,
-              }
+                Authorization: `Bearer ${token}`,
+              },
+            });
+          } else if (accountType === "SuperAdmin") {
+            userResponse = await fetch(`${URL}superAdmin/AllSuperAdmins`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             });
           } else {
             throw new Error("Tipo de cuenta no especificado");
           }
-  
+
           if (!userResponse.ok) {
             throw new Error("No se pudo obtener los datos del usuario");
           }
-  
+
           const users = await userResponse.json();
-          
-          console.log(localStorage.getItem("nameAccount"), 'localstoreage'); 
-          const loggedUser = users.find(user => user.nameAccount === localStorage.getItem("nameAccount"));
-            
+          const nameAccount = localStorage.getItem("nameAccount");
+          const loggedUser = users.find(
+            (user) => user.nameAccount === nameAccount
+          );
+
           if (!loggedUser) {
             throw new Error("Usuario no encontrado");
           }
-  
+
           setUser({
             token,
             accountType,
@@ -167,26 +184,30 @@ export const AuthProvider = ({ children }) => {
             firstName: loggedUser.firstName,
             lastName: loggedUser.lastName,
             phoneNumber: loggedUser.phoneNumber,
-            cuit: loggedUser?.cuit,       
-            categoria: loggedUser?.categoria, 
+            cuit: loggedUser?.cuit,
+            categoria: loggedUser?.categoria,
           });
-          console.log(user, 'user')
+
           setAuth({ loggedIn: true, token });
         } catch (error) {
           console.error("Error al cargar los datos del usuario", error);
           setAuth({ loggedIn: false });
+        } finally {
+          setLoading(false);
         }
       };
-  
+
       fetchUserData();
     } else {
       setAuth({ loggedIn: false });
+      setLoading(false);
     }
   }, []);
-  
 
   return (
-    <AuthContext.Provider value={{ user, auth, register, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, auth, loading, register, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
