@@ -64,15 +64,27 @@ const Register = () => {
           setTypeUser("");
           setError("");
           navigate("/login");
-      } catch (error) {
-          console.error(error);
-          setError(error.message || "Error al registrar");
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al registrar',
-            text: error.message || "Ocurrió un error durante el registro.",
-          });
-      }
+           // Testing
+}  catch (error) {
+  console.error(error);
+
+  let errorMessage = "Error al registrar";
+
+  if (error instanceof Response) {
+    const text = await error.text();
+    errorMessage = text;
+  } else if (error.message) {
+    errorMessage = error.message;
+  }
+
+  setError(errorMessage);
+  Swal.fire({
+    icon: 'error',
+    title: 'Error al registrar',
+    text: errorMessage,
+  });
+}
+
   };
   
   const handleLoginRedirect = () => {
