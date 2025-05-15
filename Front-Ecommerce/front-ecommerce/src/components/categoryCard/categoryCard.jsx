@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
 const CategoryCard = ({
+  categoryId,
   categoryName,
   categoryAvailable,
-  isSelected
+  isSelected,
+  onClick,
 }) => {
   const navigate = useNavigate();
 
@@ -20,13 +22,13 @@ const CategoryCard = ({
 
   const handleClick = () => {
     if (categoryAvailable) {
-      navigate('/products', { state: { selectedCategoryName: categoryName } });
+      navigate(`/products?categoryId=${categoryId}`);
     }
   };
 
   return (
     <span
-      onClick={handleClick}
+      onClick={categoryAvailable ? (onClick ? onClick : handleClick) : undefined}
       className={`${baseClasses} ${
         categoryAvailable ? availableClasses : unavailableClasses
       }`}
@@ -38,5 +40,4 @@ const CategoryCard = ({
 };
 
 export default CategoryCard;
-
 

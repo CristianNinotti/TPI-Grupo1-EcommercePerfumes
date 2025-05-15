@@ -117,6 +117,7 @@ if (!response.ok) {
       localStorage.setItem("accountType", accountType);
       localStorage.setItem("nameAccount", nameAccount);
       setAuth({ loggedIn: true, token });
+      localStorage.setItem("isLoggedIn", "true");
 
       return true;
     } catch (error) {
@@ -131,7 +132,8 @@ if (!response.ok) {
     localStorage.removeItem("token");
     localStorage.removeItem("accountType");
     localStorage.removeItem("nameAccount");
-  };
+    localStorage.setItem("isLoggedIn", "false");
+};
 
   useEffect(() => {
     const token = localStorage.getItem("token");

@@ -45,7 +45,7 @@ const Login = () => {
   };
 
   const handleRegisterRedirect = () => {
-    navigate("/registro");
+    navigate("/register");
   };
 
   const handleBackHome = () => {
