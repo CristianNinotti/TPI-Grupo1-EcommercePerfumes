@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { initMercadoPago, Payment } from "@mercadopago/sdk-react";
 import CartHeader from "../../cartHeader/cartHeader";
+import useCart from "../../hooks/useCart";
 
 const CheckoutPage = () => {
   const [preferenceId, setPreferenceId] = useState(null);
+  const { cartItems } = useCart()
 
   useEffect(() => {
     // Inicializa MercadoPago con tu PUBLIC KEY
@@ -33,16 +35,16 @@ const CheckoutPage = () => {
   }, []);
 
   const initialization = {
-    amount: 10.50, // puedes omitir esto si ya lo pasas por la preferencia
+    amount: 10.50, // formas de usar: pasar por preferencia o lo podemos sacar el total del carrito en localstorage(inseguro?)
     preferenceId: preferenceId,
   };
 
   const customization = {
     paymentMethods: {
-      ticket: "all",
-      creditCard: "all",
-      prepaidCard: "all",
-      debitCard: "all",
+      //ticket: "all",
+      //creditCard: "all",
+      //prepaidCard: "all",
+      //debitCard: "all",
       mercadoPago: "all",
     },
   };
@@ -75,19 +77,39 @@ const CheckoutPage = () => {
   console.log(preferenceId)
   return (
     <div>
-      <CartHeader/>
-      <h2>Finalizar compra</h2>
-      {!preferenceId ? (
-        <p>Cargando Brick de MercadoPago...</p>
-      ) : (
-        <Payment
-          initialization={initialization}
-          customization={customization}
-          onSubmit={onSubmit}
-          onReady={onReady}
-          onError={onError}
-        />
-      )}
+      <CartHeader />
+      <h2 className="text-2xl font-semibold mb-4">Finalizar compra</h2>
+
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex-1 bg-white rounded-lg shadow p-4">
+          <h3 className="text-lg font-bold mb-4">Resumen de productos</h3>
+          {cartItems.map((item) => (
+            <div key={item.id} className="flex gap-4 mb-4 border-b pb-4">
+              <img src={item.image} alt={item.title} className="w-20 h-20 object-cover rounded" />
+              <div>
+                <h4 className="font-semibold">{item.title}</h4>
+                <p className="text-gray-500 text-sm">{item.description}</p>
+                <p className="font-bold mt-1">${item.price}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex-1 bg-white rounded-lg shadow p-4">
+          <h3 className="text-lg font-bold mb-4">Pago seguro</h3>
+          {!preferenceId ? (
+            <p>Cargando Brick de MercadoPago...</p>
+          ) : (
+            <Payment
+              initialization={initialization}
+              customization={customization}
+              onSubmit={onSubmit}
+              onReady={onReady}
+              onError={onError}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React from "react";
 import logo3 from "../assets/image/logo/logo3.png";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import { playOpenSound } from "../components/sounds/Sounds";
 
 const CartHeader = () => {
     const navigate = useNavigate();
@@ -15,7 +16,8 @@ const CartHeader = () => {
                         playOpenSound();
                         setTimeout(() => navigate(-1), 200);
                     }}
-                    className="p-2 hover:bg-gray-800 rounded-full transition"
+                    style={{ backgroundColor: 'transparent' }}
+                    className="p-2 bg-transparent hover:bg-gray-800 rounded-full transition"
                 >
                     <FaArrowLeft className="text-white w-5 h-5" />
                 </button>

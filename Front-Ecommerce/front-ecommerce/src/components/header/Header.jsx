@@ -115,9 +115,10 @@ const Header = () => {
                   playOpenSound();
                   navigate("/cart");
                 }}
+                style={{ backgroundColor: 'transparent' }}
                 className="relative"
               >
-                <FaShoppingCart className="text-white w-6 h-6 hover:text-green-400 transition" />
+                <FaShoppingCart className="text-white w-6 h-6 transition" />
                 {totalItems > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
                     {totalItems}
