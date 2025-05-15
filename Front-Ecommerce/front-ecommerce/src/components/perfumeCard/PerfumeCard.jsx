@@ -18,7 +18,7 @@ const PerfumeCard = ({
   const { user } = useContext(AuthContext);  // Obtén el usuario desde el contexto
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 relative max-w-xs" onClick={onClick}>
+    <div className="bg-white rounded-xl shadow-md p-6 relative w-full" onClick={onClick}>
 
       <button className="absolute top-4 left-4 text-gray-400 hover:text-red-500 transition">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">

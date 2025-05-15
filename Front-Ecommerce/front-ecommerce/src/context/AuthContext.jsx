@@ -53,7 +53,7 @@ if (!response.ok) {
     }
   };
 
-  const login = async ({ nameAccount, password, accountType }) => {
+  const login = async ({ nameAccount, password }) => {
     try {
       const response = await fetch(`${URL}Authentication/authenticate`, {
         method: "POST",
@@ -70,28 +70,30 @@ if (!response.ok) {
 
       const token = await response.text();
 
-      const userResponse = await fetch(
-        `${URL}${
-          accountType === "Minorista"
-            ? "Minorista/AllMinoristas"
-            : accountType === "Mayorista"
-            ? "Mayorista/AllMayoristas"
-            : accountType === "SuperAdmin"
-            ? "superAdmin/AllSuperAdmins"
-            : ""
-        }`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      // Buscar en todas las colecciones
+      const endpoints = [
+        { type: "Minorista", url: `${URL}Minorista/AllMinoristas` },
+        { type: "Mayorista", url: `${URL}Mayorista/AllMayoristas` },
+        { type: "SuperAdmin", url: `${URL}superAdmin/AllSuperAdmins` },
+      ];
+
+      let loggedUser = null;
+      let accountType = null;
+
+      for (const endpoint of endpoints) {
+        const res = await fetch(endpoint.url, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const users = await res.json();
+          const found = users.find((u) => u.nameAccount === nameAccount);
+          if (found) {
+            loggedUser = found;
+            accountType = endpoint.type;
+            break;
+          }
         }
-      );
-
-      const users = await userResponse.json();
-
-      const loggedUser = users.find(
-        (user) => user.nameAccount === nameAccount
-      );
+      }
 
       if (!loggedUser) {
         throw new Error("Usuario no encontrado");
@@ -100,15 +102,15 @@ if (!response.ok) {
       setUser({
         token,
         accountType,
-        id: loggedUser?.id,
-        address: loggedUser?.address,
-        available: loggedUser?.available,
-        dni: loggedUser?.dni,
-        email: loggedUser?.email,
-        nameAccount: loggedUser?.nameAccount,
-        firstName: loggedUser?.firstName,
-        lastName: loggedUser?.lastName,
-        phoneNumber: loggedUser?.phoneNumber,
+        id: loggedUser.id,
+        address: loggedUser.address,
+        available: loggedUser.available,
+        dni: loggedUser.dni,
+        email: loggedUser.email,
+        nameAccount: loggedUser.nameAccount,
+        firstName: loggedUser.firstName,
+        lastName: loggedUser.lastName,
+        phoneNumber: loggedUser.phoneNumber,
         cuit: loggedUser?.cuit,
         categoria: loggedUser?.categoria,
       });

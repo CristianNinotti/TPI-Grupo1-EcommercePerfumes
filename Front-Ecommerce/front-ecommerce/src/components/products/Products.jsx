@@ -68,7 +68,7 @@ function Productos({ limit = null }) {
   };
 
   return (
-    <div className="w-full">
+    <div className="products">
       <div className="flex justify-center mb-6">
         <h2 className="text-2xl font-bold">Perfumes y Fragancias</h2>
       </div>
@@ -89,32 +89,33 @@ function Productos({ limit = null }) {
           ))
         )}
       </div>
-
       {loadingProducts ? (
         <p className="text-center">Cargando productos…</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 place-items-center">
+        <ul className="product-list">
           {displayProducts.map((p) => (
-            <PerfumeCard
-              key={p.id}
-              image={Perfume}
-              volume="100 ML"
-              brand={p.marca}
-              name={p.name}
-              originalPrice={p.price.toFixed(2)}
-              discountedPrice={p.price.toFixed(2)}
-              discountPercentage={0}
-              installments={{
-                count: 1,
-                perInstallment: p.price.toFixed(2),
-              }}
-              cftea="CFTEA: 0%"
-              priceWithoutTax=""
-              onClick={() => navigate(`/product/${p.id}`)}
-            />
+            <li key={p.id} className="product-card">
+              <PerfumeCard
+                image={Perfume}
+                volume="100 ML"
+                brand={p.marca}
+                name={p.name}
+                originalPrice={p.price.toFixed(2)}
+                discountedPrice={p.price.toFixed(2)}
+                discountPercentage={0}
+                installments={{
+                  count: 1,
+                  perInstallment: p.price.toFixed(2),
+                }}
+                cftea="CFTEA: 0%"
+                priceWithoutTax=""
+                onClick={() => navigate(`/product/${p.id}`)}
+              />
+            </li>
           ))}
-        </div>
+        </ul>
       )}
+
     </div>
   );
 }
