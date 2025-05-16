@@ -1,16 +1,16 @@
 .products {
-    padding: 2rem;
+    flex-grow: 1;
+    margin: 25px;
 }
 
 .product-list {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 25px;
+    width: 100%; 
+    place-items: center;
 }
 
 .product-card {
-    border: 1px solid #ddd;
-    padding: 1rem;
-    text-align: center;
-    width: 200px;
+    width: 100%;
 }

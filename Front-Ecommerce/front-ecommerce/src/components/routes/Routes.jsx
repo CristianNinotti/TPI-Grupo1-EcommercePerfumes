@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import RequireAdmin from '../../requires/RequireAdmin';
 import DashboardAdmin from '../dashboardAdmin/DashboardAdmin';
 import Layout from '../layout/Layout';        
 import Home from '../home/Home';
@@ -8,11 +7,10 @@ import Products from '../products/Products';
 import Register from '../register/Register';
 import Profile from '../profile/Profile';
 import Cart from '../cart/Cart';
-import LoginAdmin from '../login/LoginAdmin';
 import Categories from '../categories/Categories';
-import RequireLogged from '../../requires/RequireLogged';
-import AccessDenied from '../accesDenied/AccesDenied';  
+import AccessDenied from '../accessDenied/AccessDenied';  
 import ProductDetail from '../productDetail/ProductDetail';
+import ProtectedRoute from '../../requires/ProtectedRoute';
 
 const RoutesComponent = () => {
   return (
@@ -26,25 +24,24 @@ const RoutesComponent = () => {
         <Route 
           path="profile" 
           element={
-            <RequireLogged>
+            <ProtectedRoute accountType={["Minorista", "Mayorista", "SuperAdmin"]}>
               <Profile /> 
-            </RequireLogged>
+            </ProtectedRoute>
           }
         />
       </Route>
       <Route path="cart" element={<Cart />} />
 
       <Route path="login" element={<Login />} />
-      <Route path="login-admin" element={<LoginAdmin />} />
-      <Route path="registro" element={<Register />} />
+      <Route path="register" element={<Register />} />
       <Route path="AccessDenied" element={<AccessDenied />} />
 
       <Route
         path="admin/*"
         element={
-          <RequireAdmin>
+          <ProtectedRoute accountType={["SuperAdmin"]}>
             <DashboardAdmin />
-          </RequireAdmin>
+          </ProtectedRoute>
         }
       />
     </Routes>

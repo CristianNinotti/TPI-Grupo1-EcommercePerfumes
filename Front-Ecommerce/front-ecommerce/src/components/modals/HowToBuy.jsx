@@ -24,7 +24,7 @@ const HowToBuy = ({ isOpen, onClose }) => {
       <div
         className={`bg-white p-6 rounded-xl border-2 border-gray-600 max-w-xl w-full shadow-lg overflow-y-auto max-h-[90vh] transition-all transform ${isClosing ? 'scale-95' : 'scale-100'}`}
       >
-        <h2 className="text-xl font-bold mb-4 text-black">¿Cómo comprar?</h2>
+        <h1 className="text-xl font-bold mb-4 text-black">¿Cómo comprar?</h1>
         <p className="mb-2 text-black">
           En la página de “Inicio”, seleccione los artículos que desea comprar y agréguelos al carrito. El carrito le irá mostrando la cantidad de ítems agregados al mismo.
         </p>

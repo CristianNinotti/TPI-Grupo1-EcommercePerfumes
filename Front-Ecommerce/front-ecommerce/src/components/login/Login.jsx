@@ -10,29 +10,25 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const accountType = localStorage.getItem('accountType'); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+
     try {
-      const accountType = localStorage.getItem('accountType');
-      console.log("cuenta", accountType);
-  
-      await login({ nameAccount, password, accountType });
-  
+      await login({ nameAccount, password });
+
       await Swal.fire({
         icon: 'success',
         title: '¡Ingreso exitoso!',
         text: 'Bienvenido de nuevo',
         confirmButtonColor: '#3085d6',
       });
-  
+
       navigate("/");
     } catch (error) {
       setError(error.message);
-  
+
       Swal.fire({
         icon: 'error',
         title: 'Error al ingresar',
@@ -45,18 +41,17 @@ const Login = () => {
   };
 
   const handleRegisterRedirect = () => {
-    navigate("/registro");
+    navigate("/register");
   };
 
   const handleBackHome = () => {
     navigate("/");
   };
-  
-  
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Iniciar sesión - {accountType}</h2>
+        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Iniciar sesión</h2>
         
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         
@@ -88,7 +83,7 @@ const Login = () => {
             className={`w-full p-3 font-semibold rounded-md ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} transition duration-200`}
             disabled={isLoading}
           >
-            {isLoading ? "Cargando..." : "Iniciar sesión"}
+            {isLoading ? "Cargando..." : "Ingresar"}
           </button>
         </form>
 
@@ -100,11 +95,10 @@ const Login = () => {
               onClick={handleRegisterRedirect}
               className="text-blue-500 hover:underline font-semibold"
             >
-              Crea una cuenta
+              Registrarme
             </button>
           </p>
         </div>
-
       </div>
       <button
         onClick={handleBackHome}

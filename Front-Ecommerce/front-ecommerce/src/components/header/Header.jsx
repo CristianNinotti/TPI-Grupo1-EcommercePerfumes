@@ -69,6 +69,7 @@ const Header = () => {
               </a>
             </li>
           */}
+          
             {auth.loggedIn && (
               <li style={{ marginRight: 20 }}>
                 <a
@@ -77,6 +78,30 @@ const Header = () => {
                   className="text-white hover:text-green-400"
                 >
                   Perfil
+                </a>
+              </li>
+            )}
+
+            {!auth.loggedIn && (
+              <li style={{ marginRight: 20 }}>
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); playOpenSound(); navigate("/login") }}
+                  className="text-white hover:text-green-400"
+                >
+                  Ingresar
+                </a>
+              </li>
+            )}
+
+            {!auth.loggedIn && (
+              <li style={{ marginRight: 20 }}>
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); playOpenSound(); navigate("/register") }}
+                  className="text-white hover:text-green-400"
+                >
+                  Registrarse
                 </a>
               </li>
             )}
@@ -98,6 +123,7 @@ const Header = () => {
               </a>
             </li>
             */}
+
             {auth.loggedIn && user?.accountType === "SuperAdmin" && (
               <li>
                 <a
@@ -109,6 +135,7 @@ const Header = () => {
                 </a>
               </li>
             )}
+            
             <li className="relative">
               <button
                 onClick={() => {
