@@ -10,7 +10,7 @@ namespace Application.Models.Request
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
-        public int CUIT { get; set; }
+        public long CUIT { get; set; }
         public string Categoria { get; set; } = string.Empty;
         public string NameAccount { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;

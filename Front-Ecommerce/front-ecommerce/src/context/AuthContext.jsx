@@ -33,11 +33,18 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify(bodyData),
       });
 
-      if (!response.ok) {
-        const text = await response.text();
-        const data = text ? JSON.parse(text) : {};
-        throw new Error(data.message || text || "Error al crear el usuario");
-      }
+      //Testing
+if (!response.ok) {
+  const contentType = response.headers.get("content-type");
+
+  if (contentType && contentType.includes("application/json")) {
+    const data = await response.json();
+    throw new Error(data.message || "Error al crear el usuario");
+  } else {
+    const text = await response.text();
+    throw new Error(text || "Error al crear el usuario");
+  }
+}
 
       return true;
     } catch (error) {
@@ -46,7 +53,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async ({ nameAccount, password, accountType }) => {
+  const login = async ({ nameAccount, password }) => {
     try {
       const response = await fetch(`${URL}Authentication/authenticate`, {
         method: "POST",
@@ -63,28 +70,30 @@ export const AuthProvider = ({ children }) => {
 
       const token = await response.text();
 
-      const userResponse = await fetch(
-        `${URL}${
-          accountType === "Minorista"
-            ? "Minorista/AllMinoristas"
-            : accountType === "Mayorista"
-            ? "Mayorista/AllMayoristas"
-            : accountType === "SuperAdmin"
-            ? "superAdmin/AllSuperAdmins"
-            : ""
-        }`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      // Buscar en todas las colecciones
+      const endpoints = [
+        { type: "Minorista", url: `${URL}Minorista/AllMinoristas` },
+        { type: "Mayorista", url: `${URL}Mayorista/AllMayoristas` },
+        { type: "SuperAdmin", url: `${URL}superAdmin/AllSuperAdmins` },
+      ];
+
+      let loggedUser = null;
+      let accountType = null;
+
+      for (const endpoint of endpoints) {
+        const res = await fetch(endpoint.url, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const users = await res.json();
+          const found = users.find((u) => u.nameAccount === nameAccount);
+          if (found) {
+            loggedUser = found;
+            accountType = endpoint.type;
+            break;
+          }
         }
-      );
-
-      const users = await userResponse.json();
-
-      const loggedUser = users.find(
-        (user) => user.nameAccount === nameAccount
-      );
+      }
 
       if (!loggedUser) {
         throw new Error("Usuario no encontrado");
@@ -93,15 +102,15 @@ export const AuthProvider = ({ children }) => {
       setUser({
         token,
         accountType,
-        id: loggedUser?.id,
-        address: loggedUser?.address,
-        available: loggedUser?.available,
-        dni: loggedUser?.dni,
-        email: loggedUser?.email,
-        nameAccount: loggedUser?.nameAccount,
-        firstName: loggedUser?.firstName,
-        lastName: loggedUser?.lastName,
-        phoneNumber: loggedUser?.phoneNumber,
+        id: loggedUser.id,
+        address: loggedUser.address,
+        available: loggedUser.available,
+        dni: loggedUser.dni,
+        email: loggedUser.email,
+        nameAccount: loggedUser.nameAccount,
+        firstName: loggedUser.firstName,
+        lastName: loggedUser.lastName,
+        phoneNumber: loggedUser.phoneNumber,
         cuit: loggedUser?.cuit,
         categoria: loggedUser?.categoria,
       });
@@ -110,6 +119,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("accountType", accountType);
       localStorage.setItem("nameAccount", nameAccount);
       setAuth({ loggedIn: true, token });
+      localStorage.setItem("isLoggedIn", "true");
 
       return true;
     } catch (error) {
@@ -124,7 +134,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("accountType");
     localStorage.removeItem("nameAccount");
-  };
+    localStorage.setItem("isLoggedIn", "false");
+};
 
   useEffect(() => {
     const token = localStorage.getItem("token");

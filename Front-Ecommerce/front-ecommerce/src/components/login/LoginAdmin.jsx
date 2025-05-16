@@ -51,7 +51,7 @@ const LoginAdmin = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <button
         onClick={handleBackHome}
-        className="mb-8 px-6 py-2 bg-black-500 hover:bg-black-600 text-black font-semibold rounded-md transition duration-200"
+        className="mb-8 px-6 py-2 bg-black-500 hover:bg-black-600 text-white font-semibold rounded-md transition duration-200"
       >
         Volver al Home
       </button>
@@ -69,7 +69,7 @@ const LoginAdmin = () => {
               value={nameAccount}
               onChange={(e) => setNameAccount(e.target.value)}
               required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
+              className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
             />
           </div>
           <div className="mb-6">
@@ -80,12 +80,12 @@ const LoginAdmin = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
+              className="w-full p-3 border  text-black bg-black-500 hover:bg-black-600 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
             />
           </div>
           <button 
             type="submit" 
-            className={`w-full p-3 text-black font-semibold rounded-md ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} transition duration-200`}
+            className={`w-full p-3 text-white font-semibold rounded-md ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} transition duration-200`}
             disabled={isLoading}
           >
             {isLoading ? "Cargando..." : "Iniciar sesión"}

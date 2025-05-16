@@ -40,7 +40,6 @@ namespace Web.Controllers
 
 
         [HttpGet("AllCategoriesAvailable")]
-        [Authorize(Policy = "SuperAdminOnly")]
         public IActionResult GetAllCategoriesAvailable()
         {
             try
@@ -60,7 +59,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("CategoryId/{id}")]
-        [Authorize(Policy = "SuperAdminOnly")]
         public ActionResult<CategoryResponse?> GetCategoryById([FromRoute] int id)
         {
             try
@@ -84,7 +82,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("CategoryWithProducts/{id}")]
-        [Authorize(Policy = "SuperAdminOnly")]
         public ActionResult<ProductResponse?> GetAllProducts([FromRoute] int id)
         {
             try
@@ -104,7 +101,7 @@ namespace Web.Controllers
         }
 
         [HttpPost("CreateCategory")]
-
+        [Authorize(Policy = "SuperAdminOnly")]
         public IActionResult CreateCategory([FromBody] CategoryRequest request)
         {
             try

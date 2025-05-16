@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { initMercadoPago, Payment } from "@mercadopago/sdk-react";
-import CartHeader from "../../cartHeader/cartHeader";
 import useCart from "../../hooks/useCart";
+import CartHeader from "../cartHeader/cartHeader"; 
 
 const CheckoutPage = () => {
   const [preferenceId, setPreferenceId] = useState(null);

@@ -9,7 +9,7 @@ const Home = () => {
   
   return (
     <main className="flex-grow bg-white">
-      { !auth.loggedIn && (
+      {/*{ !auth.loggedIn && (
       <section className="flex justify-center my-10">
         <div className="flex justify-center gap-6">
           <button
@@ -32,8 +32,8 @@ const Home = () => {
           </button>
         </div>
       </section>
-      )}
-      <section className="hero text-center py-8">
+      )}*/}
+      <section className="hero text-center py-8 m-25">
         <p className="text-lg text-gray-800 mb-4">
           Descubre las mejores fragancias para cada ocasión
         </p>

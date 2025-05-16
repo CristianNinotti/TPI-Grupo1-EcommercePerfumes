@@ -33,7 +33,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("AllProductsAvailable")]
-        [Authorize(Policy = "SuperAdminOnly")]
         public IActionResult GetAllProductsAvailable()
         {
             try
@@ -52,7 +51,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("ProductById/{id}")]
-        [Authorize(Policy = "SuperAdminOnly")]
         public IActionResult GetProductById([FromRoute] int id)
         {
             try
@@ -75,7 +73,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("ProductsByCategory/{categoryId}")]
-        [Authorize(Policy = "SuperAdminOnly")]
         public IActionResult GetProductsByCategoryId([FromRoute] int categoryId)
         {
             try
@@ -104,6 +101,8 @@ namespace Web.Controllers
 
 
         [HttpPost("CreateProduct")]
+        [Authorize(Policy = "SuperAdminOnly")]
+
         public IActionResult CreateProduct([FromBody] ProductRequest product)
         {
             try
