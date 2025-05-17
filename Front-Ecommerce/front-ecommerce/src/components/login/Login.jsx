@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext"; 
 import { useNavigate } from "react-router-dom"; 
 import Swal from 'sweetalert2';
+import { playOpenSound } from '../sounds/Sounds';
 
 const Login = () => {
   const { login } = useAuth(); 
@@ -14,6 +15,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    playOpenSound();
 
     try {
       await login({ nameAccount, password });
@@ -42,15 +44,17 @@ const Login = () => {
 
   const handleRegisterRedirect = () => {
     navigate("/register");
+    playOpenSound();
   };
 
   const handleBackHome = () => {
     navigate("/");
+    playOpenSound();
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="bg-gray-200 p-8 rounded-lg shadow-lg w-full max-w-sm">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Iniciar sesión</h2>
         
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
@@ -80,31 +84,32 @@ const Login = () => {
           </div>
           <button 
             type="submit" 
-            className={`w-full p-3 font-semibold rounded-md ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} transition duration-200`}
+            className={`w-full p-3 font-semibold rounded-md ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-400 hover:bg-blue-600 hover:text-white"} transition duration-200`}
             disabled={isLoading}
           >
             {isLoading ? "Cargando..." : "Ingresar"}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
+        <div className="mt-6 flex flex-row justify-center items-center gap-2">
+          <p className="text-sm">
             ¿No estás registrado?{" "}
-            <button
-              type="button"
-              onClick={handleRegisterRedirect}
-              className="text-blue-500 hover:underline font-semibold"
-            >
-              Registrarme
-            </button>
           </p>
+          <button
+            type="button"
+            onClick={handleRegisterRedirect}
+            className="p-3 bg-blue-400  hover:bg-blue-600 hover:text-white font-semibold rounded-md transition duration-200"
+          >
+            Registrarme
+          </button>
+          
         </div>
       </div>
       <button
         onClick={handleBackHome}
-        className="mb-8 px-6 py-2 bg-black-500 hover:bg-black-600 font-semibold rounded-md transition duration-200 mt-5"
+        className="p-3 bg-green-400 hover:bg-green-600 hover:text-white font-semibold rounded-md transition duration-200 m-5"
       >
-        Volver al Home
+        Volver al Inicio
       </button>
     </div>
   );

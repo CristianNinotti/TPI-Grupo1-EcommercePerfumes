@@ -26,13 +26,14 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row justify-between gap-8">
         {/* Contacto */}
         <div>
-          <h2 style={{ color: '#6B7280' }} className="font-bold text-lg mb-4">¡Contactanos!</h2>
+          <h2 className="text-gray-600 font-bold text-lg mb-4">¡Contactanos!</h2>
           <p>Salta 2949<br />Rosario - Santa Fe</p>
           <p className="mt-2">
             Compras mayoristas: <span className="italic">341-2553003</span><br />
             Compras minoristas: <span className="italic">341-2553080</span><br />
             Proveedores: <span className="italic">341-2553084</span><br />
           </p>
+          {/* 
           <div className="flex gap-4 mt-4">
             <a href="#" aria-label="Facebook" className="hover:text-green-400">
               <i className="fab fa-facebook-f"></i>
@@ -41,11 +42,12 @@ const Footer = () => {
               <i className="fab fa-instagram"></i>
             </a>
           </div>
+          */}
         </div>
 
         {/* Horarios de Atención */}
         <div>
-          <h2 style={{ color: '#6B7280' }} className="font-bold text-lg mb-4 ml-12">Horarios de atención</h2>
+          <h2 className="text-gray-600 font-bold text-lg mb-4 ml-12">Horarios de atención</h2>
           <div className="grid grid-cols-2 gap-8">
             {/* Minorista */}
             <div className="w-40">
@@ -66,12 +68,12 @@ const Footer = () => {
 
         {/* Sobre el almacén */}
         <div>
-          <h2 style={{ color: '#6B7280' }} className="font-bold text-lg mb-4">Sobre el almacén</h2>
+          <h2 className="text-gray-600 font-bold text-lg mb-4">Sobre el almacén</h2>
           <ul className="space-y-2">
-            <li><a href="#" className="hover:text-green-400" onClick={() => openModal(setIsQuestionsOpen)}>Preguntas frecuentes</a></li>
-            <li><a href="#" className="hover:text-green-400" onClick={() => openModal(setIsHowToBuyOpen)}>¿Cómo comprar?</a></li>
-            <li><a href="#" className="hover:text-green-400" onClick={() => openModal(setIsDeliveryOpen)}>Plazos de entrega </a></li>
-            <li><a href="#" className="hover:text-green-400" onClick={() => openModal(setIsContactOpen)}>Contáctanos </a></li>
+            <li><p className="hover:text-green-400 cursor-pointer" onClick={() => openModal(setIsQuestionsOpen)}>Preguntas frecuentes</p></li>
+            <li><p className="hover:text-green-400 cursor-pointer" onClick={() => openModal(setIsHowToBuyOpen)}>¿Cómo comprar?</p></li>
+            <li><p className="hover:text-green-400 cursor-pointer" onClick={() => openModal(setIsDeliveryOpen)}>Plazos de entrega </p></li>
+            <li><p className="hover:text-green-400 cursor-pointer" onClick={() => openModal(setIsContactOpen)}>Contáctanos </p></li>
           </ul>
         </div>
       </div>

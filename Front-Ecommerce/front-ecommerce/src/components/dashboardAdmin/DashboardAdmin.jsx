@@ -8,12 +8,12 @@ import { FaBan } from 'react-icons/fa';
 const URL = "https://localhost:7174/api/";
 
 export default function DashboardAdmin() {
-    const { auth } = useAuth();
+    const { auth, loading: authLoading } = useAuth();
     const token = auth?.token;
 
     const [activeTab, setActiveTab] = useState(null);
 
-    const [clientFilter, setClientFilter] = useState("MinoristaAll");
+    const [clientFilter, setClientFilter] = useState(null); // Empieza desactivado
     const [clients, setClients] = useState([]);
 
     const [prodFilter, setProdFilter] = useState("AllProducts");
@@ -71,13 +71,26 @@ export default function DashboardAdmin() {
 
     const fetchClients = async () => {
         try {
-            const res = await fetch(readClientEndpoint(), {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (!res.ok) 
-                throw new Error();
-            const data = await res.json();
-            setClients(data);
+            if (!clientFilter) {
+                // Trae todos los minoristas y mayoristas y los combina
+                const [minoristasRes, mayoristasRes] = await Promise.all([
+                    fetch(`${URL}Minorista/AllMinoristas`, { headers: { Authorization: `Bearer ${token}` } }),
+                    fetch(`${URL}Mayorista/AllMayoristas`, { headers: { Authorization: `Bearer ${token}` } }),
+                ]);
+                if (!minoristasRes.ok || !mayoristasRes.ok) throw new Error();
+                const [minoristas, mayoristas] = await Promise.all([
+                    minoristasRes.json(),
+                    mayoristasRes.json(),
+                ]);
+                setClients([...minoristas, ...mayoristas]);
+            } else {
+                const res = await fetch(readClientEndpoint(), {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                setClients(data);
+            }
         } catch {
             Swal.fire("Error", "No se pudieron cargar los clientes", "error");
         }
@@ -198,15 +211,23 @@ export default function DashboardAdmin() {
   const currentClient = clients.find((u) => u.id === modal.id);
   const currentProd   = products.find((p) => p.id === modal.id);
 
-    return (
-        <>
-            <Header />
+    const deleteEndpoint = (id) =>
+        (filterOption && filterOption.startsWith("Minorista")) || (!filterOption && users.find(u => u.id === id)?.tipo === "Minorista")
+        ? `${URL}Minorista/SoftDeleteMinorista/${id}`
+        : `${URL}Mayorista/SoftDelete/${id}`;
 
+    const editEndpoint = (id) =>
+        (filterOption && filterOption.startsWith("Minorista")) || (!filterOption && users.find(u => u.id === id)?.tipo === "Minorista")
+        ? `${URL}Minorista/UpdateMinorista/${id}`
+        : `${URL}Mayorista/UpdateMayorista/${id}`;
+
+    return (
+        <div className="w-full">
             <div className="p-6 max-w-5xl mx-auto">
                 <h1 className="text-3xl font-bold mb-2 text-center">
                     Panel Administrador
                 </h1>
-                <p className="text-center text-gray-700 mb-6">
+                <p className="text-center text-gray-800 mb-6">
                     En este panel puedes gestionar <strong>Clientes</strong> (Minoristas,
                     Mayoristas) y <strong>Productos</strong>.<br />
                     Crea, deshabilita, edita o elimina ítems según necesites.
@@ -218,7 +239,7 @@ export default function DashboardAdmin() {
                         className={
                             activeTab === "clientes"
                             ? "px-4 py-2 bg-blue-600 text-white rounded"
-                            : "px-4 py-2 bg-gray-200 rounded"
+                            : "px-4 py-2 bg-gray-200 hover:bg-blue-400 rounded"
                         }
                     >
                         Clientes
@@ -228,7 +249,7 @@ export default function DashboardAdmin() {
                         className={
                             activeTab === "productos"
                             ? "px-4 py-2 bg-blue-600 text-white rounded"
-                            : "px-4 py-2 bg-gray-200 rounded"
+                            : "px-4 py-2 bg-gray-200 hover:bg-blue-400 rounded"
                         }
                     >
                         Productos
@@ -252,14 +273,14 @@ export default function DashboardAdmin() {
                             ].map((opt) => (
                                 <button
                                     key={opt}
-                                    onClick={() => setClientFilter(opt)}
+                                    onClick={() => setClientFilter(clientFilter === opt ? null : opt)}
                                     className={
-                                    clientFilter === opt
+                                        clientFilter === opt
                                         ? "px-3 py-1 bg-green-600 text-white rounded"
-                                        : "px-3 py-1 bg-gray-200 rounded"
+                                        : "px-3 py-1 bg-gray-200 hover:bg-green-400 rounded"
                                     }
                                 >
-                                    {opt.replace("All", "").replace("Available", " Available")}
+                                    {opt.replace("All", "").replace("Available", " Disponibles").replace("Minorista", "Minoristas").replace("Mayorista", "Mayoristas")}
                                 </button>
                             ))}
                         </div>
@@ -268,7 +289,7 @@ export default function DashboardAdmin() {
                             {clients.map((u) => (
                                 <div
                                     key={u.id}
-                                    className="border p-4 rounded shadow flex flex-col justify-between"
+                                    className="border p-4 rounded shadow flex flex-col justify-between bg-gray-200"
                                 >
                                     <div>
                                         <p className="font-semibold">{u.nameAccount}</p>
@@ -289,7 +310,7 @@ export default function DashboardAdmin() {
                                             }
                                             aria-label="Deshabilitar cliente"
                                         >
-                                            <FaBan size={16} title="Deshabilitar" />
+                                            <FaBan className="w-6 h-6 text-yellow-400 hover:text-yellow-600 hover:scale-110" title="Deshabilitar" />
                                         </button>
                                         <button
                                             onClick={() =>
@@ -302,7 +323,7 @@ export default function DashboardAdmin() {
                                             }
                                             aria-label="Editar cliente"
                                         >
-                                            <MdEdit className="w-6 h-6 text-blue-600" title='Editar'/>
+                                            <MdEdit className="w-6 h-6 text-blue-400 hover:text-blue-600 hover:scale-110" title='Editar' />
                                         </button>
                                         <button
                                             onClick={() =>
@@ -315,7 +336,7 @@ export default function DashboardAdmin() {
                                             }
                                             aria-label="Eliminar cliente"
                                         >
-                                            <MdDelete className="w-6 h-6 text-red-600" />
+                                            <MdDelete className="w-6 h-6 text-red-400 hover:text-red-600 hover:scale-110" title="Eliminar" />
                                         </button>
                                     </div>
                                 </div>
@@ -335,7 +356,7 @@ export default function DashboardAdmin() {
                                     type: "create",
                                     })
                                 }
-                                className="flex items-center px-4 py-2 bg-blue-600 text-black rounded"
+                                className="flex items-center px-4 py-2 bg-blue-400 hover:bg-blue-600 hover:text-white text-black rounded"
                             >
                                 <MdAdd className="w-5 h-5 mr-2" />
                                 Crear Producto
@@ -347,11 +368,11 @@ export default function DashboardAdmin() {
                                         onClick={() => setProdFilter(opt)}
                                         className={
                                             prodFilter === opt
-                                            ? "px-3 py-1 bg-green-600 text-white rounded"
-                                            : "px-3 py-1 bg-gray-200 rounded"
+                                            ? "px-4 py-2 bg-green-600 text-white rounded"
+                                            : "px-4 py-2 bg-gray-200 hover:bg-green-400 rounded"
                                         }
                                     >
-                                        {opt === "AllProducts" ? "All" : "Available"}
+                                        {opt === "AllProducts" ? "Todos" : "Disponibles"}
                                     </button>
                                 ))}
                             </div>
@@ -361,7 +382,7 @@ export default function DashboardAdmin() {
                             {products.map((p) => (
                                 <div
                                     key={p.id}
-                                    className="border p-4 rounded shadow flex flex-col justify-between"
+                                    className="border p-4 rounded shadow flex flex-col justify-between bg-gray-200"
                                 >
                                     <div>
                                         <p className="font-semibold">{p.name}</p>
@@ -381,7 +402,7 @@ export default function DashboardAdmin() {
                                             }
                                             aria-label="Deshabilitar producto"
                                         >
-                                            <FaBan className="w-6 h-6 text-gray-600" title='Deshabilitar' />
+                                            <FaBan className="w-6 h-6 text-yellow-400 hover:text-yellow-600 hover:scale-110" title='Deshabilitar' />
                                         </button>
                                         <button
                                             onClick={() =>
@@ -394,7 +415,7 @@ export default function DashboardAdmin() {
                                             }
                                             aria-label="Editar producto"
                                         >
-                                            <MdEdit className="w-6 h-6 text-blue-600" />
+                                            <MdEdit className="w-6 h-6 text-blue-400 hover:text-blue-600 hover:scale-110" title="Editar" />
                                         </button>
                                         <button
                                             onClick={() =>
@@ -407,7 +428,7 @@ export default function DashboardAdmin() {
                                             }
                                             aria-label="Eliminar producto"
                                         >
-                                            <MdDelete className="w-6 h-6 text-red-600" />
+                                            <MdDelete className="w-6 h-6 text-red-400 hover:text-red-600 hover:scale-110" title="Eliminar" />
                                         </button>
                                     </div>
                                 </div>
@@ -417,7 +438,7 @@ export default function DashboardAdmin() {
                 )}
 
                 {modal.open && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
                         <div className="bg-white p-6 rounded w-11/12 max-w-lg">
                             {modal.type === "delete" || modal.type === "disable" ? (
                             <>
@@ -435,8 +456,8 @@ export default function DashboardAdmin() {
                                 </button>
                                 <button
                                     onClick={confirmDelete}
-                                    className={`px-4 py-2 rounded text-white ${
-                                    modal.type === "delete" ? "bg-red-600" : "bg-yellow-600"
+                                    className={`px-4 py-2 rounded ${
+                                    modal.type === "delete" ? "bg-red-400 hover:bg-red-600 hover:text-white" : "bg-yellow-400 hover:bg-yellow-600 hover:text-white"
                                     }`}
                                 >
                                     {modal.type === "delete" ? "Eliminar" : "Deshabilitar"}
@@ -552,7 +573,7 @@ export default function DashboardAdmin() {
                                             </button>
                                             <button
                                                 type="submit"
-                                                className="px-4 py-2 bg-blue-600 text-white rounded"
+                                                className="px-4 py-2 bg-blue-400 hover:bg-blue-600 hover:text-white rounded"
                                             >
                                                 {modal.type === "create"
                                                     ? "Crear"
@@ -566,7 +587,6 @@ export default function DashboardAdmin() {
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
-
 }

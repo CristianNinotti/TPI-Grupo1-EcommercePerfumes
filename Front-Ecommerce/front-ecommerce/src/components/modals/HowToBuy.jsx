@@ -46,7 +46,7 @@ const HowToBuy = ({ isOpen, onClose }) => {
         <p className="text-black">
           Automáticamente le llegará a la casilla de correo proporcionada un comprobante de compra. El Almacén se estará contactando con usted dentro de las próximas horas para coordinar la entrega y el pago del pedido.
         </p>
-        <button onClick={handleAnimatedClose} className="mt-6 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+        <button onClick={handleAnimatedClose} className="mt-6 bg-green-400 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
           Cerrar
         </button>
       </div>

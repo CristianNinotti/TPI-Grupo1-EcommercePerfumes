@@ -16,7 +16,7 @@ const CategoryCard = ({
 
   const availableClasses = isSelected
     ? 'bg-green-600 text-white'
-    : 'bg-gray-100 text-gray-800 hover:bg-gray-200';
+    : 'bg-gray-200 hover:bg-green-400';
 
   const unavailableClasses = 'bg-red-100 text-red-800 opacity-50 cursor-not-allowed';
 

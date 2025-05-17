@@ -114,17 +114,16 @@ const Contact = ({ isOpen, onClose }) => {
           </label>
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+            className="bg-blue-400 text-black hover:bg-blue-600 hover:text-white px-4 py-2 rounded-lg"
           >
             {loading ? 'Enviando...' : 'Enviar'}
           </button>
           <button
-            type="button"
-            onClick={handleAnimatedClose}
-            className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded mt-2"
-          >
-            Cerrar
-          </button>
+          onClick={handleAnimatedClose}
+          className="bg-green-400 text-black hover:bg-green-600 hover:text-white px-4 py-2 rounded-lg"
+        >
+          Cerrar
+        </button>
         </form>
       </div>
     </div>

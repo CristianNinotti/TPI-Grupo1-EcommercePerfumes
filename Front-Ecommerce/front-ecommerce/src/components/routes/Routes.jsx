@@ -7,7 +7,6 @@ import Products from '../products/Products';
 import Register from '../register/Register';
 import Profile from '../profile/Profile';
 import Cart from '../cart/Cart';
-import Categories from '../categories/Categories';
 import AccessDenied from '../accessDenied/AccessDenied';  
 import ProductDetail from '../productDetail/ProductDetail';
 import ProtectedRoute from '../../requires/ProtectedRoute';
@@ -15,28 +14,20 @@ import ProtectedRoute from '../../requires/ProtectedRoute';
 const RoutesComponent = () => {
   return (
     <Routes>
-
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="products" element={<Products />} />
-        <Route path="categories" element={<Categories />} />
         <Route path="product/:id" element={<ProductDetail />} />
-        <Route 
-          path="profile" 
+        <Route path="cart" element={<Cart />} />
+        <Route
+          path="profile"
           element={
             <ProtectedRoute accountType={["Minorista", "Mayorista", "SuperAdmin"]}>
-              <Profile /> 
+              <Profile />
             </ProtectedRoute>
           }
         />
-      </Route>
-      <Route path="cart" element={<Cart />} />
-
-      <Route path="login" element={<Login />} />
-      <Route path="register" element={<Register />} />
-      <Route path="AccessDenied" element={<AccessDenied />} />
-
-      <Route
+        <Route
         path="admin/*"
         element={
           <ProtectedRoute accountType={["SuperAdmin"]}>
@@ -44,6 +35,11 @@ const RoutesComponent = () => {
           </ProtectedRoute>
         }
       />
+      </Route>
+
+      <Route path="login" element={<Login />} />
+      <Route path="register" element={<Register />} />
+      <Route path="AccessDenied" element={<AccessDenied />} />
     </Routes>
   );
 };

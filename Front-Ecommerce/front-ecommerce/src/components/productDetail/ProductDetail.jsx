@@ -128,7 +128,7 @@ const ProductDetail = () => {
             </div>
           )} */}
 
-          <button className="mt-4 w-full bg-black text-black py-4 uppercase font-semibold rounded-full hover:bg-gray-800 transition">
+          <button className="mt-4 w-full bg-green-400 text-black py-4 uppercase font-semibold rounded-full hover:bg-green-600 hover:text-white transition">
             Añadir al carrito
           </button>
 
