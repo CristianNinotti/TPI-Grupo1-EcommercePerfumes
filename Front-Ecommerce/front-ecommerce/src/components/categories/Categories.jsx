@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CategoryCard from "../categoryCard/CategoryCard";
+import CategoryCard from "../categoryCard/categoryCard"
 import './Categories.css';
 
 const Categories = () => {

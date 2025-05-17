@@ -2,7 +2,7 @@ import React from "react";
 import logo3 from "/src/assets/image/logo/logo3.png";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
-import { playOpenSound } from "../components/sounds/Sounds";
+// import { playOpenSound } from "../components/sounds/Sounds";
 
 const CartHeader = () => {
     const navigate = useNavigate();
