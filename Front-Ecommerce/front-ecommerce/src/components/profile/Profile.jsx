@@ -79,19 +79,19 @@ const Profile = () => {
     };
 
     return (
-        <div className='w-full bg-white'/*className="max-w-2xl mx-auto p-6 my-8  rounded-xl shadow-xl overflow-hidden border border-gray-200"*/>
-            <div className="bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 p-6">
-                <h2 className="text-3xl font-bold text-center text-white">Mi Perfil</h2>
+        <div className='w-full'/*className="max-w-2xl mx-auto p-6 my-8  rounded-xl shadow-xl overflow-hidden border border-gray-200"*/>
+            <div className=/*"bg-gradient-to-r from-gray-800 via-blue-600 to-gray-900"bg-blue-600*/ "p-6">
+                <h2 className="text-3xl font-bold text-center text-gray-800">Mi Perfil</h2>
                 <div className="flex justify-center mt-2">
-                    <div className="h-1 w-20 bg-gray-300 bg-opacity-50 rounded-full"></div>
+                    <div className="h-1 w-20 bg-gray-800 rounded-full"></div>
                 </div>
             </div>
             
             {!isEditing ? (
                 <div className="p-6 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="bg-gray-100 p-4 rounded-lg border border-gray-200">
-                            <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-2 mb-3">Información Personal</h3>
+                        <div className="p-4 rounded-lg border border-black bg-gray-200">
+                            <h3 className="text-lg font-semibold text-gray-800 border-b border-black pb-2 mb-3">Información Personal</h3>
                             <div className="space-y-3">
                                 <p>
                                     <span className="font-medium text-gray-700">Nombre:</span>
@@ -126,8 +126,8 @@ const Profile = () => {
                             </div>
                         </div>
                         
-                        <div className="bg-gray-100 p-4 rounded-lg border border-gray-200">
-                            <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-2 mb-3">Detalles Adicionales</h3>
+                        <div className="p-4 rounded-lg border border-black bg-gray-200">
+                            <h3 className="text-lg font-semibold text-gray-800 border-b border-black pb-2 mb-3">Detalles Adicionales</h3>
                             <div className="space-y-3">
                                 <p>
                                     <span className="font-medium text-gray-700">Dirección:</span>
@@ -153,7 +153,7 @@ const Profile = () => {
                     <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
                         <button 
                             onClick={handleEditClick}
-                            className="flex-1 flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-gray py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:shadow-lg"
+                            className="flex-1 flex items-center justify-center gap-2 bg-blue-400 hover:bg-blue-600 text-gray py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:text-white"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -162,7 +162,7 @@ const Profile = () => {
                         </button>
                         <button 
                             onClick={handleLogout}
-                            className="flex-1 flex items-center justify-center gap-2 bg-red-700 hover:bg-red-800 text-gray py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:shadow-lg"
+                            className="flex-1 flex items-center justify-center gap-2 bg-red-400 hover:bg-red-600 text-gray py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:text-white"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
@@ -295,7 +295,7 @@ const Profile = () => {
                             <button 
                                 type="button"
                                 onClick={handleSave}
-                                className="flex-1 flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:shadow-lg"
+                                className="flex-1 flex items-center justify-center gap-2 bg-green-400 hover:bg-green-600 hover:text-white py-3 px-6 rounded font-semibold transition duration-200 shadow-md"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -305,7 +305,7 @@ const Profile = () => {
                             <button 
                                 type="button"
                                 onClick={handleCancel}
-                                className="flex-1 flex items-center justify-center gap-2 bg-gray-500 hover:bg-gray-600 py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:shadow-lg"
+                                className="flex-1 flex items-center justify-center gap-2 bg-red-400 hover:bg-red-600 py-3 px-6 rounded font-semibold transition duration-200 shadow-md hover:text-white"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />

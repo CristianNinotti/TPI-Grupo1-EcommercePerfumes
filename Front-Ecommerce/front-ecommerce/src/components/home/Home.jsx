@@ -1,49 +1,27 @@
-import React, { useState, useEffect, useContext } from 'react';
-import './Home.css';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import Categories from '../categories/Categories';
 
 const Home = () => {
   const { auth, user} = useContext(AuthContext)
   const navigate = useNavigate();
   
   return (
-    <main className="flex-grow bg-white">
-      {/*{ !auth.loggedIn && (
-      <section className="flex justify-center my-10">
-        <div className="flex justify-center gap-6">
-          <button
-            onClick={() => {
-              localStorage.setItem('accountType', 'Minorista');
-              navigate('/login')}
-            }
-            className="bg-gray-800 uppercase px-6 py-3 font-semibold tracking-wide rounded hover:bg-gray-700 transition"
-          >
-            Ingreso Minorista
-          </button>
-          <button
-            onClick={() => {
-              localStorage.setItem('accountType', 'Mayorista');
-              navigate('/login')}
-            }
-            className="bg-gray-800 uppercase px-6 py-3 font-semibold tracking-wide rounded hover:bg-gray-700 transition"
-          >
-            Ingreso Mayorista
-          </button>
-        </div>
-      </section>
-      )}*/}
-      <section className="hero text-center py-8 m-25">
-        <p className="text-lg text-gray-800 mb-4">
+    <main className="flex-grow">
+      <section className="p-0 text-center m-10">
+        <p className="text-lg mb-4 font-semibold">
           Descubre las mejores fragancias para cada ocasión
         </p>
         <button 
-          className="bg-black text-gray px-6 py-2 rounded hover:bg-gray-800 transition"
+          className="bg-gray-200 px-4 py-2 rounded hover:bg-green-400 transition"
             onClick={() => {navigate("/products")}}
         >
-          Explorar ahora
+          Ver productos
         </button>
       </section>
+      <p className='w-full text-center font-semibold'>Explore nuestras categorías disponibles y encuentre su fragancia ideal</p>
+      <Categories />
     </main>
   );
 };

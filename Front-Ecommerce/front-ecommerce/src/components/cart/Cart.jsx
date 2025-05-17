@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { initMercadoPago, Payment } from "@mercadopago/sdk-react";
 import useCart from "../../hooks/useCart";
-import CartHeader from "../cartHeader/cartHeader"; 
 
 const CheckoutPage = () => {
   const [preferenceId, setPreferenceId] = useState(null);
@@ -76,12 +75,11 @@ const CheckoutPage = () => {
 
   console.log(preferenceId)
   return (
-    <div>
-      <CartHeader />
+    <div className="w-full m-[25px] justify-center">
       <h2 className="text-2xl font-semibold mb-4">Finalizar compra</h2>
 
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="flex-1 bg-white rounded-lg shadow p-4">
+      <div className="flex flex-col md:flex-row gap-8 ">
+        <div className="flex-1 bg-gray-200 rounded-lg shadow p-4">
           <h3 className="text-lg font-bold mb-4">Resumen de productos</h3>
           {cartItems.map((item) => (
             <div key={item.id} className="flex gap-4 mb-4 border-b pb-4">
@@ -95,7 +93,7 @@ const CheckoutPage = () => {
           ))}
         </div>
 
-        <div className="flex-1 bg-white rounded-lg shadow p-4">
+        <div className="flex-1 bg-gray-200 rounded-lg shadow p-4">
           <h3 className="text-lg font-bold mb-4">Pago seguro</h3>
           {!preferenceId ? (
             <p>Cargando Brick de MercadoPago...</p>

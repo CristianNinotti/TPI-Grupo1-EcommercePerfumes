@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import CategoryCard from "../categoryCard/CategoryCard";
+import CategoryCard from "../categoryCard/categoryCard"
 import './Categories.css';
 
 const Categories = () => {
-
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -22,15 +21,15 @@ const Categories = () => {
         .catch(err => console.error('Error:', err))
         .finally(() => setLoading(false));
     }, []);
-
+    
     return (
-        <section className="categories">
+        <section className="categories" >
             {loading ? (
                 <p className="text-center mt-4 text-gray-600">Cargando categorías...</p>
             ) : (
                 <ul className='category-cards'>
                     {categories.map(category => (
-                    <li key={category.id} className='category-card'>
+                    <li key={category.id} className='category-card bg-gray-200' style={{backgroundImage: `url('${category.name}.png')`}}>
                         <CategoryCard
                         categoryId={category.id}
                         categoryName={category.name}
@@ -42,6 +41,6 @@ const Categories = () => {
             )}
         </section>
     );
-}
+};
 
 export default Categories;

@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { playOpenSound } from '../sounds/Sounds';
 
 const Register = () => {
     const { register } = useContext(AuthContext);
@@ -20,7 +21,7 @@ const Register = () => {
         cuit: "",
     });
 
-    const [typeUser, setTypeUser] = useState("");
+    const [typeUser, setTypeUser] = useState("Minorista");
     const [error, setError] = useState("");
 
     const handleChange = (e) => {
@@ -29,6 +30,7 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
+      playOpenSound();
       try {
           if (typeUser !== "Mayorista" && typeUser !== "Minorista") {
               setError("Selecciona un tipo de usuario válido");
@@ -89,27 +91,35 @@ const Register = () => {
   
   const handleLoginRedirect = () => {
     navigate("/login");
+    playOpenSound();
   };
   
   const handleBackHome = () => {
     navigate("/");
+    playOpenSound();
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-md mx-auto p-8 border border-gray-300 rounded-lg shadow-lg bg-white mt-15">
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="bg-gray-200 max-w-md mx-auto p-8 border border-gray-300 rounded-lg shadow-lg mt-15">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Crear Cuenta</h2>
 
         <div className="flex justify-center mb-6 gap-4">
           <button
-            className={`px-6 py-2 rounded-full font-semibold text-white ${typeUser === "Minorista" ? "bg-green-500 text-black" : "bg-gray-200 text-gray-700"}`}
-            onClick={() => setTypeUser("Minorista")}
+            className={`px-6 py-2 rounded-full font-semibold ${typeUser === "Minorista" ? "bg-green-600 text-white" : "bg-green-400 hover:bg-green-600 hover:text-white"}`}
+            onClick={() => {
+              playOpenSound();
+              setTypeUser("Minorista");
+            }}
           >
             Minorista
           </button>
           <button
-            className={`px-6 py-2 rounded-full font-semibold text-white ${typeUser === "Mayorista" ? "bg-green-500 text-black" : "bg-gray-200 text-gray-700"}`}
-            onClick={() => setTypeUser("Mayorista")}
+            className={`px-6 py-2 rounded-full font-semibold ${typeUser === "Mayorista" ? "bg-green-600 text-white" : "bg-green-400 hover:bg-green-600 hover:text-white"}`}
+            onClick={() => {
+              playOpenSound();
+              setTypeUser("Mayorista");
+            }}
           >
             Mayorista
           </button>
@@ -216,27 +226,28 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full p-3 bg-green-500 rounded-md font-semibold hover:bg-green-600 transition duration-200"
+            className="w-full p-3 bg-blue-400 rounded-md font-semibold hover:bg-blue-600 hover:text-white transition duration-200"
           >
             Registrarme
           </button>
         </form>
-        <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
+        <div className="mt-6 flex flex-row justify-center items-center gap-2">
+          <p className="text-sm">
             ¿Ya estás registrado?{" "}
-            <button
-              type="button"
-              onClick={handleLoginRedirect}
-              className="text-blue-500 hover:underline font-semibold"
-            >
-              Ingresar
-            </button>
           </p>
+          <button
+            type="button"
+            onClick={handleLoginRedirect}
+            className="p-3 bg-blue-400  hover:bg-blue-600 hover:text-white font-semibold rounded-md transition duration-200"
+          >
+            Ingresar
+          </button>
+          
         </div>
       </div>
       <button
         onClick={handleBackHome}
-        className="mb-8 px-6 py-2 bg-black-500 hover:bg-black-600 font-semibold rounded-md transition duration-200 mt-5"
+        className="p-3 bg-green-400 hover:bg-green-600 hover:text-white font-semibold rounded-md transition duration-200 m-5"
       >
         Volver al Home
       </button>

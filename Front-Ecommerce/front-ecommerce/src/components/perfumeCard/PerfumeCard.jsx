@@ -18,7 +18,7 @@ const PerfumeCard = ({
   const { user } = useContext(AuthContext);  // Obtén el usuario desde el contexto
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 relative w-full" onClick={onClick}>
+    <div className="bg-gray-200 rounded-xl shadow-md p-6 relative w-full" onClick={onClick}>
 
       <button className="absolute top-4 left-4 text-gray-400 hover:text-red-500 transition">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -58,21 +58,21 @@ const PerfumeCard = ({
         {/* BOTONES según el tipo de usuario */}
         {user?.accountType === 'SuperAdmin' ? (
           <>
-            <button className="mt-4 w-full bg-blue-600 text-white uppercase text-sm font-semibold py-2 rounded-full hover:bg-blue-700 transition">
+            <button className="mt-4 w-full bg-blue-400 uppercase text-sm font-semibold py-2 rounded hover:bg-blue-600 hover:text-white transition">
               Modificar Producto
             </button>
-            <button className="mt-2 w-full bg-red-600 text-white uppercase text-sm font-semibold py-2 rounded-full hover:bg-red-700 transition">
+            <button className="mt-2 w-full bg-red-400 uppercase text-sm font-semibold py-2 rounded hover:bg-red-600 hover:text-white transition">
               Eliminar Producto
             </button>
           </>
         ) : (
           <>
-            <button className="mt-4 w-full bg-black text-white uppercase text-sm font-semibold py-2 rounded-full hover:bg-gray-800 transition">
+            <button className="mt-4 w-full bg-green-400 uppercase text-sm font-semibold py-2 rounded hover:bg-green-600 hover:text-white transition">
               Agregar al carrito
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); onClick(); }}
-              className="mt-2 w-full bg-black text-white uppercase text-sm font-semibold py-2 rounded-full hover:bg-gray-800 transition"
+              className="mt-2 w-full bg-blue-400 uppercase text-sm font-semibold py-2 rounded hover:bg-blue-600 hover:text-white transition"
             >
               Ver detalles
             </button>

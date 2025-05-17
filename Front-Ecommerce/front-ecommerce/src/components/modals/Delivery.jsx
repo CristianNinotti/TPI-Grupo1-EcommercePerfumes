@@ -37,7 +37,7 @@ const Delivery = ({ isOpen, onClose }) => {
         <p className="mb-2 text-black">
           En todos los casos, te recomendamos verificar tu casilla de correo electrónico para recibir el mail de aprobación y el detalle del estado de tu pedido. Asegúrate de revisar tanto tu bandeja de entrada como la carpeta de correos no deseados para evitar cualquier inconveniente.
         </p>
-        <button onClick={handleAnimatedClose} className="mt-6 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+        <button onClick={handleAnimatedClose} className="mt-6 bg-green-400 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
           Cerrar
         </button>
       </div>

@@ -41,7 +41,7 @@ const Questions = ({ isOpen, onClose }) => {
         </p>
         <button
           onClick={handleAnimatedClose}
-          className="mt-6 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+          className="mt-6 bg-green-400 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
         >
           Cerrar
         </button>
