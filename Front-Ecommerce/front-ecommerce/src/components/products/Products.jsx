@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import CategoryCard from "../categoryCard/CategoryCard";
 import PerfumeCard from "../perfumeCard/PerfumeCard";
 import Perfume from "../../assets/image/inicio/aa.webp";
 import "./Products.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useFilteredProductsByName } from "../../hooks/useSearch";
+import SearchProduct from "../searchProduct/SearchProduct";
 
 function Productos({ limit = null }) {
   const [products, setProducts] = useState([]);
@@ -11,6 +13,8 @@ function Productos({ limit = null }) {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("default");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,12 +54,24 @@ function Productos({ limit = null }) {
       .catch((err) => console.error(err))
       .finally(() => setLoadingCategories(false));
   }, []);
-
+  console.log(products)
   const filtered = selectedCategoryId
     ? products.filter((p) => p.categoryId === selectedCategoryId)
     : products;
 
-  const displayProducts = limit ? filtered.slice(0, limit) : filtered;
+  const productosFiltradosPorNombre = useFilteredProductsByName(filtered, searchTerm);
+
+  const productosOrdenados = useMemo(() => {
+    if (sortOrder === "asc") {
+      return [...productosFiltradosPorNombre].sort((a, b) => a.price - b.price);
+    }
+    if (sortOrder === "desc") {
+      return [...productosFiltradosPorNombre].sort((a, b) => b.price - a.price);
+    }
+    return productosFiltradosPorNombre;
+  }, [productosFiltradosPorNombre, sortOrder]);
+
+  const displayProducts = limit ? productosOrdenados.slice(0, limit) : productosOrdenados;
 
   const handleCategoryClick = (categoryId) => {
     if (selectedCategoryId === categoryId) {
@@ -72,7 +88,6 @@ function Productos({ limit = null }) {
       <div className="flex justify-center mb-6">
         <h2 className="text-2xl font-bold">Perfumes y Fragancias</h2>
       </div>
-
       <div className="flex flex-wrap justify-center gap-3 mb-6">
         {loadingCategories ? (
           <p className="text-gray-600">Cargando categorías…</p>
@@ -89,6 +104,31 @@ function Productos({ limit = null }) {
           ))
         )}
       </div>
+
+      <div className="flex flex-wrap justify-end gap-3 mb-6">
+        <SearchProduct value={searchTerm} onChange={setSearchTerm} />
+        <div className="flex justify-center gap-4 mb-4">
+          <button
+            onClick={() => setSortOrder("asc")}
+            className={`px-3 py-1 rounded ${sortOrder === "asc" ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-blue-300"}`}
+          >
+            Precio ↓
+          </button>
+          <button
+            onClick={() => setSortOrder("desc")}
+            className={`px-3 py-1 rounded ${sortOrder === "desc" ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-blue-300"}`}
+          >
+            Precio ↑
+          </button>
+          <button
+            onClick={() => setSortOrder("default")}
+            className={`px-3 py-1 rounded ${sortOrder === "default" ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-blue-300"}`}
+          >
+            Sin Orden
+          </button>
+        </div>
+      </div>
+
       {loadingProducts ? (
         <p className="text-center">Cargando productos…</p>
       ) : (
@@ -100,8 +140,8 @@ function Productos({ limit = null }) {
                 volume="100 ML"
                 brand={p.marca}
                 name={p.name}
-                originalPrice={p.price.toFixed(2)}
-                discountedPrice={p.price.toFixed(2)}
+                originalPrice={p.price}
+                discountedPrice={p.price}
                 discountPercentage={0}
                 installments={{
                   count: 1,

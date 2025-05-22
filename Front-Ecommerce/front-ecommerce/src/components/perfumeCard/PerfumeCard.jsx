@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { AuthContext } from "../../context/AuthContext";  // Ajusta según la estructura real
 import useCart from "../../hooks/useCart";
+import { useNavigate } from 'react-router-dom';
 
 const PerfumeCard = ({
   id,
@@ -18,6 +19,7 @@ const PerfumeCard = ({
 }) => {
   const { user } = useContext(AuthContext);  // Obtén el usuario desde el contexto
   const { addToCart } = useCart()
+  const navigate = useNavigate();
 
   return (
     <div className="bg-gray-200 rounded-xl shadow-md p-6 relative w-full">
@@ -60,10 +62,16 @@ const PerfumeCard = ({
         {/* BOTONES según el tipo de usuario */}
         {user?.accountType === 'SuperAdmin' ? (
           <>
-            <button className="mt-4 w-full bg-blue-400 uppercase text-sm font-semibold py-2 rounded hover:bg-blue-600 hover:text-white transition">
+            <button
+              className="mt-4 w-full bg-blue-400 uppercase text-sm font-semibold py-2 rounded hover:bg-blue-600 hover:text-white transition"
+              onClick={() => navigate("/admin?tab=productos")}
+            >
               Modificar Producto
             </button>
-            <button className="mt-2 w-full bg-red-400 uppercase text-sm font-semibold py-2 rounded hover:bg-red-600 hover:text-white transition">
+            <button
+              className="mt-2 w-full bg-red-400 uppercase text-sm font-semibold py-2 rounded hover:bg-red-600 hover:text-white transition"
+              onClick={() => navigate("/admin?tab=productos")}
+            >
               Eliminar Producto
             </button>
           </>

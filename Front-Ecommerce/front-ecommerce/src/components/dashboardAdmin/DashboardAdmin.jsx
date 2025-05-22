@@ -4,6 +4,7 @@ import Header from "../header/Header";
 import Swal from "sweetalert2";
 import { MdAdd, MdEdit, MdDelete } from 'react-icons/md';
 import { FaBan } from 'react-icons/fa';
+import { useLocation } from "react-router-dom";
 
 const URL = "https://localhost:7174/api/";
 
@@ -27,7 +28,16 @@ export default function DashboardAdmin() {
         id: null,       // id del registro a editar/eliminar
         type: null,     // 'create', 'edit' o 'delete'
     });
+    
+    const location = useLocation();
 
+    useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tabParam = params.get("tab");
+    if (tabParam) {
+        setActiveTab(tabParam);
+    }
+    }, [location.search]);
 
     const readClientEndpoint = () => {
         switch (clientFilter) {
@@ -44,21 +54,30 @@ export default function DashboardAdmin() {
         }
     };
 
-    const softDeleteClientEndpoint = id =>
-        clientFilter.startsWith("Minorista")
-        ? `${URL}Minorista/SoftDeleteMinorista/${id}`
-        : `${URL}Mayorista/SoftDelete/${id}`;
+    const softDeleteClientEndpoint = (id) => {
+        const user = clients.find((u) => u.id === id);
+        if (!user) throw new Error("Cliente no encontrado");
 
-    const hardDeleteClientEndpoint = id =>
-        clientFilter.startsWith("Minorista")
-        ? `${URL}Minorista/HardDeleteMinorista/${id}`
-        : `${URL}Mayorista/HardDelete/${id}`;
+        return user.tipo === "Minorista"
+            ? `${URL}Minorista/SoftDeleteMinorista/${id}`
+            : `${URL}Mayorista/SoftDelete/${id}`;
+        };
+    const hardDeleteClientEndpoint = (id) => {
+        const user = clients.find((u) => u.id === id);
+        if (!user) throw new Error("Cliente no encontrado");
 
-    const editClientEndpoint = (id) =>
-        clientFilter.startsWith("Minorista")
+        return user.tipo === "Minorista"
+            ? `${URL}Minorista/HardDeleteMinorista/${id}`
+            : `${URL}Mayorista/HardDelete/${id}`;
+        };
+    const editClientEndpoint = (id) => {
+        const user = clients.find((u) => u.id === id);
+        if (!user) throw new Error("Cliente no encontrado");
+
+        return user.tipo === "Minorista"
             ? `${URL}Minorista/UpdateMinorista/${id}`
             : `${URL}Mayorista/UpdateMayorista/${id}`;
-
+        };
     const readProductEndpoint = () =>
         prodFilter === "AllProducts"
             ? `${URL}Product/AllProducts`
@@ -72,29 +91,43 @@ export default function DashboardAdmin() {
     const fetchClients = async () => {
         try {
             if (!clientFilter) {
-                // Trae todos los minoristas y mayoristas y los combina
-                const [minoristasRes, mayoristasRes] = await Promise.all([
-                    fetch(`${URL}Minorista/AllMinoristas`, { headers: { Authorization: `Bearer ${token}` } }),
-                    fetch(`${URL}Mayorista/AllMayoristas`, { headers: { Authorization: `Bearer ${token}` } }),
-                ]);
-                if (!minoristasRes.ok || !mayoristasRes.ok) throw new Error();
-                const [minoristas, mayoristas] = await Promise.all([
-                    minoristasRes.json(),
-                    mayoristasRes.json(),
-                ]);
-                setClients([...minoristas, ...mayoristas]);
+            const [minoristasRes, mayoristasRes] = await Promise.all([
+                fetch(`${URL}Minorista/AllMinoristas`, {
+                headers: { Authorization: `Bearer ${token}` },
+                }),
+                fetch(`${URL}Mayorista/AllMayoristas`, {
+                headers: { Authorization: `Bearer ${token}` },
+                }),
+            ]);
+
+            if (!minoristasRes.ok || !mayoristasRes.ok) throw new Error();
+
+            const [minoristas, mayoristas] = await Promise.all([
+                minoristasRes.json(),
+                mayoristasRes.json(),
+            ]);
+
+            const minoristasWithType = minoristas.map((c) => ({ ...c, tipo: "Minorista" }));
+            const mayoristasWithType = mayoristas.map((c) => ({ ...c, tipo: "Mayorista" }));
+
+            setClients([...minoristasWithType, ...mayoristasWithType]);
             } else {
-                const res = await fetch(readClientEndpoint(), {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                if (!res.ok) throw new Error();
-                const data = await res.json();
-                setClients(data);
+            const res = await fetch(readClientEndpoint(), {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+
+            const tipo = clientFilter.includes("Minorista") ? "Minorista" : "Mayorista";
+            const dataWithType = data.map((c) => ({ ...c, tipo }));
+
+            setClients(dataWithType);
             }
         } catch {
             Swal.fire("Error", "No se pudieron cargar los clientes", "error");
         }
-    };
+        };
 
     const fetchProducts = async () => {
         try {
@@ -123,14 +156,15 @@ export default function DashboardAdmin() {
             Swal.fire("Error", "No se pudieron cargar las categorías", "error");
         }
     };
+
+    
     useEffect(() => {
-        if (activeTab === "clientes") {
-            fetchClients();
-        }
+        if (activeTab === "clientes") fetchClients();
         if (activeTab === "productos") {
             fetchProducts();
             fetchCategories();
         }
+        if (activeTab === "categorias") fetchCategories();
     }, [activeTab, clientFilter, prodFilter]);
 
 
@@ -143,87 +177,207 @@ export default function DashboardAdmin() {
 
         try {
             let url, successMsg;
+
             if (entity === "cliente") {
-                if (type === "disable") {
-                    url = softDeleteClientEndpoint(id);
-                successMsg = "Cliente deshabilitado correctamente";
-                } else {  // hard delete
-                    url = hardDeleteClientEndpoint(id);
-                    successMsg = "Cliente eliminado permanentemente";
-                }
+                url =
+                    type === "disable"
+                    ? softDeleteClientEndpoint(id)
+                    : hardDeleteClientEndpoint(id);
+                successMsg =
+                    type === "disable"
+                    ? "Cliente deshabilitado correctamente"
+                    : "Cliente eliminado permanentemente";
+            } else if (entity === 'producto') {
+                url =
+                    type === "disable"
+                    ? softDeleteProdEndpoint(id)
+                    : hardDeleteProdEndpoint(id);
+                successMsg =
+                    type === "disable"
+                    ? "Producto deshabilitado correctamente"
+                    : "Producto eliminado permanentemente";
+            } else if (entity === "categoria") {
+                url = `${URL}Category/HardDeleteCategory/${id}`;
+                successMsg = "Categoría eliminada correctamente";
             } else {
-                if (type === "disable") {
-                    url = softDeleteProdEndpoint(id);
-                    successMsg = "Producto deshabilitado correctamente";
-                } else {
-                    url = hardDeleteProdEndpoint(id);
-                    successMsg = "Producto eliminado permanentemente";
-                }
+                throw new Error("Entidad no reconocida");
             }
 
+            console.log("→ DELETE:", url);
+
             const res = await fetch(url, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` }
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
             });
-            if (!res.ok) throw new Error();
+
+            const text = await res.text();
+
+            if (!res.ok) {
+            console.error("Error del backend:", text);
+            throw new Error(text || "Falló el DELETE");
+            }
+
             closeModal();
 
-           if (entity === "cliente") fetchClients();
+            if (entity === "cliente") fetchClients();
             else fetchProducts();
-            Swal.fire("👍", successMsg, "success");
-        } catch {
+
+            Swal.fire("✔️", successMsg, "success");
+        } catch (err) {
+            console.error("Error en confirmDelete:", err);
             closeModal();
-            Swal.fire("Error", "No se pudo eliminar", "error");
+            Swal.fire("❌", err.message || "No se pudo eliminar", "error");
         }
+
     };
 
     const confirmEdit = async (e) => {
         e.preventDefault();
-        const { entity, type } = modal;
+        const { entity, type, id } = modal;
 
-            try {
-                const res = await fetch(url, { /*…*/ });
-                if (!res.ok) throw new Error();
-                closeModal();
+        try {
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
 
-                if (entity === "cliente") {
-                  fetchClients();
-                } else {
-                  fetchProducts();
-                }
-            
-                if (entity === "producto") {
-                  if (type === "create") {
-                    Swal.fire("✔️", "Producto creado con éxito", "success");
-                  } else {
-                    Swal.fire("✔️", "Producto actualizado con éxito", "success");
-                  }
-                } else {
-                  Swal.fire("✔️", "Cliente actualizado con éxito", "success");
-                }
-            } catch {
-                closeModal();
-                Swal.fire("❌","Ha ocurrido un error, intente nuevamente.","error");
+            // Producto
+            if (entity === "producto") {
+            if (data.photos) {
+                data.photos = data.photos.split(",").map((url) => url.trim());
             }
+            if (data.price) data.price = parseFloat(data.price);
+            if (data.stock) data.stock = parseInt(data.stock);
+
+            const url =
+                type === "edit"
+                ? editProdEndpoint(id)
+                : createProdEndpoint();
+
+            const res = await fetch(url, {
+                method: type === "edit" ? "PUT" : "POST",
+                headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!res.ok) throw new Error();
+
+            closeModal();
+            fetchProducts();
+
+            Swal.fire(
+                "✔️",
+                type === "edit"
+                ? "Producto actualizado con éxito"
+                : "Producto creado con éxito",
+                "success"
+            );
+            }
+
+            // Cliente
+            if (entity === "cliente") {
+                const { firstName, lastName, email } = data;
+
+                if (!firstName || !lastName || !email) {
+                    Swal.fire("Campos incompletos", "Todos los campos son obligatorios", "warning");
+                    return;
+                }
+
+                const url = editClientEndpoint(id);
+
+                const res = await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ firstName, lastName, email }),
+                });
+
+                if (!res.ok) throw new Error();
+
+                closeModal();
+                fetchClients();
+                Swal.fire("✔️", "Cliente actualizado con éxito", "success");
+            }
+            if (entity === "categoria") {
+                const form = new FormData(e.target);
+                const nombre = form.get("name");
+
+                const url = type === "create"
+                    ? `${URL}Category/CreateCategory`
+                    : `${URL}Category/UpdateCategory/${id}`;
+
+                const res = await fetch(url, {
+                    method: type === "create" ? "POST" : "PUT",
+                    headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ name: nombre }),
+                });
+
+                if (!res.ok) throw new Error();
+                fetchCategories();
+                closeModal();
+                Swal.fire("✔️", `Categoría ${type === "create" ? "creada" : "actualizada"} con éxito`, "success");
+                return;
+                }
+        } catch (err) {
+            console.error("Error en confirmEdit:", err);
+            closeModal();
+            Swal.fire("❌", "Ha ocurrido un error. Revisá los datos ingresados.", "error");
+        }
+    };
+
+    const [adminData, setAdminData] = useState({
+        firstName: "",
+        lastName: "",
+        nameAccount: "",
+        password: "",
+        email: "",
+        dni: "",
+        phoneNumber: "",
+        address: ""
+    });
+
+    const handleAdminChange = e => {
+        setAdminData({ ...adminData, [e.target.name]: e.target.value });
+    };
+
+    const handleCreateAdmin = async (e) => {
+        e.preventDefault()
+        try {
+            const res = await fetch(`${URL}superAdmin`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(adminData)
+            });
+            if (!res.ok) throw new Error();
+            Swal.fire("✔️", "Administrador creado", "success");
+            setAdminData({
+            firstName: "", lastName: "", nameAccount: "", password: "",
+            email: "", dni: "", phoneNumber: "", address: ""
+            });
+        } catch {
+            Swal.fire("❌", "Error al crear administrador", "error");
+        }
     };
 
 
-  const currentClient = clients.find((u) => u.id === modal.id);
-  const currentProd   = products.find((p) => p.id === modal.id);
 
-    const deleteEndpoint = (id) =>
-        (filterOption && filterOption.startsWith("Minorista")) || (!filterOption && users.find(u => u.id === id)?.tipo === "Minorista")
-        ? `${URL}Minorista/SoftDeleteMinorista/${id}`
-        : `${URL}Mayorista/SoftDelete/${id}`;
 
-    const editEndpoint = (id) =>
-        (filterOption && filterOption.startsWith("Minorista")) || (!filterOption && users.find(u => u.id === id)?.tipo === "Minorista")
-        ? `${URL}Minorista/UpdateMinorista/${id}`
-        : `${URL}Mayorista/UpdateMayorista/${id}`;
+    const currentClient = clients.find((u) => u.id === modal.id);
+    const currentProd   = products.find((p) => p.id === modal.id);
+    const currentCategory = categories.find(c => c.id === modal.id);  
 
     return (
         <div className="w-full">
-            <div className="p-6 max-w-5xl mx-auto">
+            <div className="p-6 max-w-5xl mx-auto my-10">
                 <h1 className="text-3xl font-bold mb-2 text-center">
                     Panel Administrador
                 </h1>
@@ -253,6 +407,26 @@ export default function DashboardAdmin() {
                         }
                     >
                         Productos
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("categorias")}
+                        className={
+                        activeTab === "categorias"
+                            ? "px-4 py-2 bg-blue-600 text-white rounded"
+                            : "px-4 py-2 bg-gray-200 hover:bg-blue-400 rounded"
+                        }
+                    >
+                        Categorías
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("admins")}
+                        className={
+                        activeTab === "admins"
+                            ? "px-4 py-2 bg-blue-600 text-white rounded"
+                            : "px-4 py-2 bg-gray-200 hover:bg-blue-400 rounded"
+                        }
+                    >
+                        Agregar Administrador
                     </button>
                 </div>
 
@@ -471,121 +645,121 @@ export default function DashboardAdmin() {
                                             ? modal.type === "create"
                                             ? "Crear Producto"
                                             : "Editar Producto"
-                                            : "Editar Cliente"}
+                                            : modal.entity === "cliente"
+                                            ? "Editar Cliente"
+                                            : modal.entity === "categoria"
+                                                ? (modal.type === "create" ? "Crear Categoría" : "Editar Categoría")
+                                                : ""}
                                     </h3>
                                     <form onSubmit={confirmEdit} className="space-y-4">
-                                        {activeTab === "clientes" ? (
+                                        {modal.entity === "cliente" && (
                                             <>
-                                            <input
-                                                name="firstName"
-                                                defaultValue={currentClient?.firstName}
-                                                placeholder="Nombre"
-                                                className="w-full border rounded px-3 py-2"
-                                            />
-                                            <input
-                                                name="lastName"
-                                                defaultValue={currentClient?.lastName}
-                                                placeholder="Apellido"
-                                                className="w-full border rounded px-3 py-2"
-                                            />
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                defaultValue={currentClient?.email}
-                                                placeholder="Email"
-                                                className="w-full border rounded px-3 py-2"
-                                            />
-                                            </>
-                                        ) : (
-                                            <>
-                                                <input
-                                                    name="name"
-                                                    defaultValue={currentProd?.name}
-                                                    placeholder="Nombre"
-                                                    className="w-full border rounded px-3 py-2"
-                                                />
-                                                <input
-                                                    name="description"
-                                                    defaultValue={currentProd?.description}
-                                                    placeholder="Descripción"
-                                                    className="w-full border rounded px-3 py-2"
-                                                />
-                                                <input
-                                                    type="number"
-                                                    name="price"
-                                                    defaultValue={currentProd?.price}
-                                                    placeholder="Precio"
-                                                    className="w-full border rounded px-3 py-2"
-                                                />
-                                                <input
-                                                    type="number"
-                                                    name="stock"
-                                                    defaultValue={currentProd?.stock}
-                                                    placeholder="Stock"
-                                                    className="w-full border rounded px-3 py-2"
-                                                />
-                                                <input
-                                                    name="marca"
-                                                    defaultValue={currentProd?.marca}
-                                                    placeholder="Marca"
-                                                    className="w-full border rounded px-3 py-2"
-                                                />
-                                                <input
-                                                    name="genero"
-                                                    defaultValue={currentProd?.genero}
-                                                    placeholder="Género"
-                                                    className="w-full border rounded px-3 py-2"
-                                                />
-
-                                                <label className="block text-sm font-medium">
-                                                    Categoría
-                                                </label>
-                                                <select
-                                                    name="categoryId"
-                                                    defaultValue={currentProd?.categoryId || ""}
-                                                    className="w-full border rounded px-3 py-2"
-                                                >
-                                                    <option value="" disabled>
-                                                        – Selecciona categoría –
-                                                    </option>
-                                                    {categories.map((cat) => (
-                                                        <option key={cat.id} value={cat.id}>
-                                                            {cat.name}
-                                                        </option>
-                                                    ))}
-                                                </select>
-
-                                                <input
-                                                    name="photos"
-                                                    defaultValue={currentProd?.photos?.join(",")}
-                                                    placeholder="Fotos (URLs separadas por coma)"
-                                                    className="w-full border rounded px-3 py-2"
-                                                />
+                                            <input name="firstName" defaultValue={currentClient?.firstName} placeholder="Nombre" className="w-full border rounded px-3 py-2" />
+                                            <input name="lastName" defaultValue={currentClient?.lastName} placeholder="Apellido" className="w-full border rounded px-3 py-2" />
+                                            <input type="email" name="email" defaultValue={currentClient?.email} placeholder="Email" className="w-full border rounded px-3 py-2" />
                                             </>
                                         )}
+
+                                        {modal.entity === "producto" && (
+                                            <>
+                                            <input name="name" defaultValue={currentProd?.name} placeholder="Nombre" className="w-full border rounded px-3 py-2" />
+                                            <input name="description" defaultValue={currentProd?.description} placeholder="Descripción" className="w-full border rounded px-3 py-2" />
+                                            <input type="number" name="price" defaultValue={currentProd?.price} placeholder="Precio" className="w-full border rounded px-3 py-2" />
+                                            <input type="number" name="stock" defaultValue={currentProd?.stock} placeholder="Stock" className="w-full border rounded px-3 py-2" />
+                                            <input name="marca" defaultValue={currentProd?.marca} placeholder="Marca" className="w-full border rounded px-3 py-2" />
+                                            <input name="genero" defaultValue={currentProd?.genero} placeholder="Género" className="w-full border rounded px-3 py-2" />
+                                            <label className="block text-sm font-medium">Categoría</label>
+                                            <select name="categoryId" defaultValue={currentProd?.categoryId || ""} className="w-full border rounded px-3 py-2">
+                                                <option value="" disabled>– Selecciona categoría –</option>
+                                                {categories.map((cat) => (
+                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                                ))}
+                                            </select>
+                                            <input name="photos" defaultValue={currentProd?.photos?.join(",")} placeholder="Fotos (URLs separadas por coma)" className="w-full border rounded px-3 py-2" />
+                                            </>
+                                        )}
+
+                                        {modal.entity === "categoria" && (
+                                            <>
+                                            <input name="name" defaultValue={currentCategory?.name} placeholder="Nombre de la categoría" className="w-full border rounded px-3 py-2" />
+                                            </>
+                                        )}
+
                                         <div className="flex justify-end space-x-4">
-                                            <button
-                                                type="button"
-                                                onClick={closeModal}
-                                                className="px-4 py-2 border rounded"
-                                            >
-                                                Cancelar
-                                            </button>
-                                            <button
-                                                type="submit"
-                                                className="px-4 py-2 bg-blue-400 hover:bg-blue-600 hover:text-white rounded"
-                                            >
-                                                {modal.type === "create"
-                                                    ? "Crear"
-                                                    : "Guardar"}
+                                            <button type="button" onClick={closeModal} className="px-4 py-2 border rounded">Cancelar</button>
+                                            <button type="submit" className="px-4 py-2 bg-blue-400 hover:bg-blue-600 hover:text-white rounded">
+                                            {modal.type === "create" ? "Crear" : "Guardar"}
                                             </button>
                                         </div>
-                                    </form>
+                                        </form>
+
                                 </>
                             )}
                         </div>
                     </div>
                 )}
+
+                {activeTab === "categorias" && (
+                    <>
+                        <div className="mb-4 flex justify-between items-center">
+                            <button
+                                onClick={() =>
+                                setModal({ open: true, entity: "categoria", type: "create" })
+                                }
+                                className="flex items-center px-4 py-2 bg-blue-400 hover:bg-blue-600 text-white rounded"
+                            >
+                                <MdAdd className="w-5 h-5 mr-2" /> 
+                                Crear Categoría
+                            </button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {categories.map(cat => (
+                                <div key={cat.id} className="border p-4 rounded shadow bg-gray-200 flex justify-between">
+                                    <span>{cat.name}</span>
+                                    <div className="flex space-x-2">
+                                        <button 
+                                            onClick={() =>
+                                                setModal({ open: true, entity: "categoria", id: cat.id, type: "edit" })
+                                            }
+                                        >
+                                            <MdEdit className="w-6 h-6 text-blue-400 hover:text-blue-600" />
+                                        </button>
+                                        <button 
+                                            onClick={() =>
+                                                setModal({ open: true, entity: "categoria", id: cat.id, type: "delete" })
+                                            }
+                                        >
+                                            <MdDelete className="w-6 h-6 text-red-400 hover:text-red-600" />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
+            
+                {activeTab === "admins" && (
+                    <form onSubmit={handleCreateAdmin} className="max-w-md mx-auto space-y-4">
+                        {["firstName","lastName","nameAccount","password","email","dni","phoneNumber","address"].map(field => (
+                        <input
+                            key={field}
+                            name={field}
+                            type={field === "password" ? "password" : "text"}
+                            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                            value={adminData[field]}
+                            onChange={handleAdminChange}
+                            className="w-full border rounded px-3 py-2"
+                        />
+                        ))}
+                        <button
+                            type="submit"
+                            className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded"
+                        >
+                            Crear Administrador
+                        </button>
+                    </form>
+                )}
+
             </div>
         </div>
     );
