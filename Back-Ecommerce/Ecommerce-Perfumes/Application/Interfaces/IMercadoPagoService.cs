@@ -10,6 +10,6 @@ namespace Application.Interfaces
 {
     public interface IMercadoPagoService
     {
-        Task<string> CreatePreferenceAsync(CreatePreferenceDto dto);
+        Task<string> CreatePreferenceAsync(List<CreatePreferenceDto> dtos);
     }
 }

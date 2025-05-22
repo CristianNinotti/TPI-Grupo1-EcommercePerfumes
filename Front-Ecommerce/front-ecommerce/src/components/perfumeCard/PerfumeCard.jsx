@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from "../../context/AuthContext";  // Ajusta según la estructura real
+import useCart from "../../hooks/useCart";
 
 const PerfumeCard = ({
   id,
@@ -16,9 +17,10 @@ const PerfumeCard = ({
   priceWithoutTax = 'Precio sin Impuestos Nacionales: $ 67.500',
 }) => {
   const { user } = useContext(AuthContext);  // Obtén el usuario desde el contexto
+  const { addToCart } = useCart()
 
   return (
-    <div className="bg-gray-200 rounded-xl shadow-md p-6 relative w-full" onClick={onClick}>
+    <div className="bg-gray-200 rounded-xl shadow-md p-6 relative w-full">
 
       <button className="absolute top-4 left-4 text-gray-400 hover:text-red-500 transition">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -67,7 +69,15 @@ const PerfumeCard = ({
           </>
         ) : (
           <>
-            <button className="mt-4 w-full bg-green-400 uppercase text-sm font-semibold py-2 rounded hover:bg-green-600 hover:text-white transition">
+            <button className="mt-4 w-full bg-green-400 uppercase text-sm font-semibold py-2 rounded hover:bg-green-600 hover:text-white transition" onClick={() =>
+              addToCart({
+                id: id,
+                title: name,
+                description: volume,
+                price: discountedPrice,
+                quantity: 1,
+              })
+            }>
               Agregar al carrito
             </button>
             <button
