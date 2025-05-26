@@ -22,10 +22,6 @@ namespace Application.Services
             _mayoristaRepository = mayoristaRepository;
         }
 
-        ///  Variable Global Discount
-
-        private readonly decimal discount = 0.9m;
-
         public List<OrderItemResponse> GetAllOrderItems()
         {
             var orderItems = _orderItemRepository.GetAllOrderItemsRepository();
@@ -58,10 +54,12 @@ namespace Application.Services
                 var totalPrice = orderItem.Quantity * product.Price;
                 var orderItemEntity = OrderItemProfile.ToOrderItemEntity(orderItem, product.Price);
                 orderItemEntity.TotalPrice = totalPrice;
+
                 if (mayoristaEntity != null)
                 {
-                    orderItemEntity.TotalPrice = orderItemEntity.TotalPrice * discount;
+                    orderItemEntity.TotalPrice *= mayoristaEntity.DiscountRate;
                 }
+
                 _orderItemRepository.CreateOrderItemRepository(orderItemEntity);
                 orderEntity.TotalAmount = _orderItemRepository.GetOrderItemsByOrderIdRepository(orderItem.OrderId).Where(oi => oi.Available).Sum(oi => oi.TotalPrice);
                 _orderRepository.UpdateOrderRepository(orderEntity);
@@ -86,8 +84,9 @@ namespace Application.Services
                     orderItemEntity.TotalPrice = request.Quantity * product.Price;
                     if (mayoristaEntity != null)
                     {
-                        orderItemEntity.TotalPrice *= discount;
+                        orderItemEntity.TotalPrice *= mayoristaEntity.DiscountRate; 
                     }
+
                     OrderItemProfile.ToOrderItemUpdate(orderItemEntity, request, product.Price);
                     _orderItemRepository.UpdateOrderItemRepository(orderItemEntity);
                     orderEntity.TotalAmount = _orderItemRepository.GetOrderItemsByOrderIdRepository(orderEntity.Id).Where(oi => oi.Available == true).Sum(oi => oi.TotalPrice);

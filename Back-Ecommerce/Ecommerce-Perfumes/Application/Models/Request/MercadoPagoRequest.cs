@@ -8,7 +8,7 @@ namespace Application.Models.Request
 {
     public class MercadoPagoRequest
     {
-        public string Title;
+        public string Title = string.Empty;
         public int Quantity;
         public float UnitPrice;
     }

@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models.Request;
+using Application.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,18 +23,18 @@ namespace Web.Controllers
         {
             try
             {
-                var mayoristas = _mayoristaService.GetAllMayoristas();
+                var mayoristas = _mayoristaService.GetAllMayoristas() ?? new List<MayoristaResponse>();
                 if (!mayoristas.Any())
                 {
-                    return BadRequest($"No se encontro ningun Mayorista registrado en el sistema");
+                    return BadRequest("No se encontró ningún Mayorista registrado en el sistema");
                 }
+
                 return Ok(mayoristas);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error interno en el servidor. Error: {ex.Message}");
             }
-
         }
 
 
@@ -43,18 +44,20 @@ namespace Web.Controllers
         {
             try
             {
-                var mayoristas = _mayoristaService.GetAllMayoristas().Where(o => o.Available);
-                if (!mayoristas.Any())
+                var allMayoristas = _mayoristaService.GetAllMayoristas() ?? new List<MayoristaResponse>(); 
+                var disponibles = allMayoristas.Where(o => o.Available).ToList(); 
+
+                if (!disponibles.Any())
                 {
-                    return BadRequest($"No se encontro ningun Mayorista habilitado en el sistema");
+                    return BadRequest("No se encontró ningún Mayorista habilitado en el sistema");
                 }
-                return Ok(mayoristas);
+
+                return Ok(disponibles); 
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error interno en el servidor. Error: {ex.Message}");
             }
-
         }
 
         [HttpPost("CreateMayorista")]
@@ -110,6 +113,23 @@ namespace Web.Controllers
             }
         }
 
+        [HttpPatch("{id}/discount")]
+        [Authorize(Policy = "SuperAdminOnly")]
+        public IActionResult PatchMayoristaDiscount([FromRoute] int id, [FromBody] MayoristaDescuentoPatchRequest request)
+        {
+            try
+            {
+                var updated = _mayoristaService.UpdateMayoristaDiscount(id, request.DiscountRate);
+                if (!updated)
+                    return NotFound($"Mayorista con ID {id} no encontrado.");
+
+                return Ok("Descuento actualizado correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno: {ex.Message}");
+            }
+        }
 
         [HttpDelete("SoftDelete/{id}")]
         [Authorize(Policy = "MayoristaOrSuperAdmin")]

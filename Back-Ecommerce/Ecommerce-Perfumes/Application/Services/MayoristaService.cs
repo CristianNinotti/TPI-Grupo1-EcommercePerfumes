@@ -68,6 +68,20 @@ namespace Application.Services
             return true;  // La actualización fue exitosa
         }
 
+        public bool UpdateMayoristaDiscount(int id, decimal discountRate)
+        {
+            var mayoristaEntity = _mayoristaRepository.GetMayoristaById(id);
+            if (mayoristaEntity == null)
+            {
+                return false;
+            }
+
+            mayoristaEntity.DiscountRate = discountRate;
+            _mayoristaRepository.UpdateMayorista(mayoristaEntity);
+
+            return true;
+        }
+
 
 
         public bool SoftDeleteMayorista(int id)

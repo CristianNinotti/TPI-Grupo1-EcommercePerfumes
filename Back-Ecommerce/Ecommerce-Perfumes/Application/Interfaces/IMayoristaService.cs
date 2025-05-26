@@ -1,10 +1,6 @@
 ﻿using Application.Models.Request;
 using Application.Models.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Application.Interfaces
 {
@@ -14,6 +10,7 @@ namespace Application.Interfaces
         List<MayoristaResponse>? GetAllMayoristas();
         void CreateMayorista(MayoristaRequest mayoristaRequest);
         bool UpdateMayorista(int id, MayoristaRequest mayoristaRequest);
+        bool UpdateMayoristaDiscount(int id, decimal discountRate);
         bool SoftDeleteMayorista(int id);
         bool HardDeleteMayorista(int id);
 

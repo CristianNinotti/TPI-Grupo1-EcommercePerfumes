@@ -44,7 +44,8 @@ namespace Application.Mappings
                 Dni = mayoristaEntity.Dni,
                 PhoneNumber = mayoristaEntity.PhoneNumber,
                 Address = mayoristaEntity.Address,
-                Available = mayoristaEntity.Available
+                Available = mayoristaEntity.Available,
+                DiscountRate = mayoristaEntity.DiscountRate
             };
         }
 
@@ -63,14 +64,15 @@ namespace Application.Mappings
                 Dni = m.Dni,
                 PhoneNumber = m.PhoneNumber,
                 Address = m.Address,
-                Available = m.Available
+                Available = m.Available,
+                DiscountRate = m.DiscountRate
             }).ToList();
         }
 
         public static void ToUpdateMayorista(Mayorista mayoristaEntity, MayoristaRequest request)
         {
             mayoristaEntity.FirstName = request.FirstName;
-            mayoristaEntity.LastName = request.FirstName;
+            mayoristaEntity.LastName = request.LastName;
             mayoristaEntity.CUIT = request.CUIT;
             mayoristaEntity.Categoria = request.Categoria;
             mayoristaEntity.NameAccount = request.NameAccount;
@@ -80,5 +82,12 @@ namespace Application.Mappings
             mayoristaEntity.PhoneNumber = request.PhoneNumber;
             mayoristaEntity.Address = request.Address;
         }
+
+
+        public static void ToUpdateDiscount(Mayorista mayorista, decimal discountRate)
+        {
+            mayorista.DiscountRate = discountRate;
+        }
+
     }
 }
