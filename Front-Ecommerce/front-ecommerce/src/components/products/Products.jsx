@@ -54,7 +54,6 @@ function Productos({ limit = null }) {
       .catch((err) => console.error(err))
       .finally(() => setLoadingCategories(false));
   }, []);
-  console.log(products)
   const filtered = selectedCategoryId
     ? products.filter((p) => p.categoryId === selectedCategoryId)
     : products;
@@ -136,6 +135,7 @@ function Productos({ limit = null }) {
           {displayProducts.map((p) => (
             <li key={p.id} className="product-card">
               <PerfumeCard
+                id={p.id}
                 image={Perfume}
                 volume="100 ML"
                 brand={p.marca}
