@@ -96,8 +96,7 @@ function Productos({ limit = null }) {
           {displayProducts.map((p) => (
             <li key={p.id} className="product-card">
               <PerfumeCard
-                image={Perfume}
-                volume="100 ML"
+                volume={p.description}
                 brand={p.marca}
                 name={p.name}
                 originalPrice={p.price.toFixed(2)}

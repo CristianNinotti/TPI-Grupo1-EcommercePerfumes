@@ -2,15 +2,13 @@ import React, { useContext } from 'react';
 import { AuthContext } from "../../context/AuthContext";  // Ajusta según la estructura real
 
 const PerfumeCard = ({
-  id,
   onClick,
-  image,
-  volume = '100 ML',
-  brand = 'CALVIN KLEIN',
-  name = 'CK ONE GOLD',
-  originalPrice = '163.250',
-  discountedPrice = '81.675',
-  discountPercentage = 50,
+  volume,
+  brand,
+  name,
+  originalPrice,
+  discountedPrice,
+  discountPercentage,
   installments = { count: 6, perInstallment: '13.613' },
   cftea = 'CFTEA: 0%',
   priceWithoutTax = 'Precio sin Impuestos Nacionales: $ 67.500',
@@ -18,7 +16,7 @@ const PerfumeCard = ({
   const { user } = useContext(AuthContext);  // Obtén el usuario desde el contexto
 
   return (
-    <div className="bg-gray-200 rounded-xl shadow-md p-6 relative w-full" onClick={onClick}>
+    <div className="bg-gray-200 rounded-xl shadow-md p-6 relative w-full">
 
       <button className="absolute top-4 left-4 text-gray-400 hover:text-red-500 transition">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -31,7 +29,7 @@ const PerfumeCard = ({
       </div>
 
       <div className="flex justify-center">
-        <img src={image} alt={`${brand} ${name}`} className="w-32 h-32 object-contain" />
+        <img src={`${name}.jpg`} alt={`${brand} ${name}`} className="w-32 h-32 object-contain" />
       </div>
 
       <div className="flex justify-center mt-4">

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MdShare, MdFavoriteBorder } from 'react-icons/md';
-import img from "../../assets/image/inicio/aa.webp";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -25,6 +24,7 @@ const ProductDetail = () => {
       })
       .then(data => {
         setProducto(data);
+        console.log(data);
         // const imgs = data.images && data.images.length > 0
         //   ? data.images
         //   : [data.imageUrl];
@@ -54,8 +54,8 @@ const ProductDetail = () => {
                 className={`border rounded-lg p-1  'border-gray-200'`}
               >
                 <img
-                  src={img}
-                  alt={`${producto.name}`}
+                  src={`/${producto.name}.jpg`}
+                  alt={`${producto.marca} ${producto.name}`}
                   className="w-20 h-20 object-contain"
                 />
               </button>
@@ -69,8 +69,8 @@ const ProductDetail = () => {
               </span>
             )}
             <img
-              src={img}
-              alt={producto.name}
+              src={`/${producto.name}.jpg`}
+              alt={`${producto.marca} ${producto.name}`}
               className="max-h-[400px] object-contain"
             />
           </div>
