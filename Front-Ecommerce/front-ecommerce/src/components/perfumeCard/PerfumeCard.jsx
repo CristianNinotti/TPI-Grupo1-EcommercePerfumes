@@ -16,6 +16,7 @@ const PerfumeCard = ({
   installments = { count: 6, perInstallment: '13.613' },
   cftea = 'CFTEA: 0%',
   priceWithoutTax = 'Precio sin Impuestos Nacionales: $ 67.500',
+  onAddToCart
 }) => {
   const { user } = useContext(AuthContext);  // Obtén el usuario desde el contexto
   const { addToCart } = useCart()
@@ -77,15 +78,7 @@ const PerfumeCard = ({
           </>
         ) : (
           <>
-            <button className="mt-4 w-full bg-green-400 uppercase text-sm font-semibold py-2 rounded hover:bg-green-600 hover:text-white transition" onClick={() =>
-              addToCart({
-                id: id,
-                title: name,
-                description: volume,
-                price: discountedPrice,
-                quantity: 1,
-              })
-            }>
+            <button className="mt-4 w-full bg-green-400 uppercase text-sm font-semibold py-2 rounded hover:bg-green-600 hover:text-white transition" onClick={onAddToCart}>
               Agregar al carrito
             </button>
             <button
