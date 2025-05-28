@@ -1,12 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
 import CategoryCard from "../categoryCard/CategoryCard";
 import PerfumeCard from "../perfumeCard/PerfumeCard";
-import Perfume from "../../assets/image/inicio/aa.webp";
 import "./Products.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useFilteredProductsByName } from "../../hooks/useSearch";
 import SearchProduct from "../searchProduct/SearchProduct";
-import CartSidebar from "../cartSidebar/cartSidebar";
+import CartSidebar from "../cartSidebar/CartSidebar";
 import useCart from "../../hooks/useCart";
 
 function Productos({ limit = null }) {

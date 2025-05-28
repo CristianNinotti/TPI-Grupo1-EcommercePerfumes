@@ -249,7 +249,7 @@ const Register = () => {
         onClick={handleBackHome}
         className="p-3 bg-green-400 hover:bg-green-600 hover:text-white font-semibold rounded-md transition duration-200 m-5"
       >
-        Volver al Home
+        Volver al Inicio
       </button>
     </div>
   );

@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { MdShare, MdFavoriteBorder } from 'react-icons/md';
+import { CartContext } from '../../context/CartContext';
+import CartSidebar from '../cartSidebar/CartSidebar';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -8,8 +10,10 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState(null);
   const [mainImage, setMainImage] = useState('');
+  const [showCartSidebar, setShowCartSidebar] = useState(false); // Nuevo estado
+  const [lastAddedProduct, setLastAddedProduct] = useState(null); // Nuevo estado
   const token = localStorage.getItem("token");
-  const { addToCart } = useCart()
+  const { addToCart } = useContext(CartContext);
 
 
   useEffect(() => {
@@ -25,7 +29,6 @@ const ProductDetail = () => {
       })
       .then(data => {
         setProducto(data);
-        console.log(data);
         // const imgs = data.images && data.images.length > 0
         //   ? data.images
         //   : [data.imageUrl];
@@ -38,6 +41,20 @@ const ProductDetail = () => {
 
   if (loading) return <p className="text-center py-20">Cargando producto…</p>;
   if (!producto) return <p className="text-center py-20">Producto no disponible.</p>;
+
+  // Función para manejar el agregado al carrito y mostrar el sidebar
+  const handleAddToCart = () => {
+    const productToAdd = {
+      id: id,
+      title: producto.name,
+      description: producto.description,
+      price: producto.price,
+      quantity: 1,
+    };
+    addToCart(productToAdd);
+    setLastAddedProduct(productToAdd);
+    setShowCartSidebar(true);
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
@@ -129,15 +146,10 @@ const ProductDetail = () => {
             </div>
           )} */}
 
-          <button className="mt-4 w-full bg-green-400 text-black py-4 uppercase font-semibold rounded-full hover:bg-green-600 hover:text-white transition" onClick={() =>
-            addToCart({
-              id: id,
-              title: producto.name,
-              description: producto.description,
-              price: producto.price,
-              quantity: 1,
-            })
-          }>
+          <button
+            className="mt-4 w-full bg-green-400 text-black py-4 uppercase font-semibold rounded-full hover:bg-green-600 hover:text-white transition"
+            onClick={handleAddToCart}
+          >
             Añadir al carrito
           </button>
 
@@ -166,6 +178,12 @@ const ProductDetail = () => {
         <h3>Descripción</h3>
         <p>{producto.description}</p>
       </section> */}
+
+      <CartSidebar
+        isOpen={showCartSidebar}
+        onClose={() => setShowCartSidebar(false)}
+        lastAddedProduct={lastAddedProduct} />
+
     </div>
   );
 };
