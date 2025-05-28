@@ -19,9 +19,9 @@ namespace Web.Controllers
         }
 
         [HttpPost("create-preference")]
-        public async Task<IActionResult> CreatePreference([FromBody] CreatePreferenceDto dto)
+        public async Task<IActionResult> CreatePreference([FromBody] List<CreatePreferenceDto> dtos)
         {
-            var preferenceId = await _mercadoPagoService.CreatePreferenceAsync(dto);
+            var preferenceId = await _mercadoPagoService.CreatePreferenceAsync(dtos);
             return Ok(new { preferenceId });
         }
     }

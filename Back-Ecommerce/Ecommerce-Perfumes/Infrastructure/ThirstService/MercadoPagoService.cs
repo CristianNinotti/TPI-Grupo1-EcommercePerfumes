@@ -21,26 +21,24 @@ namespace Infrastructure.ThirstService
             MercadoPagoConfig.AccessToken = configuration["MercadoPago:AccessToken"];
         }
 
-        public async Task<string> CreatePreferenceAsync(CreatePreferenceDto dto)
+        public async Task<string> CreatePreferenceAsync(List<CreatePreferenceDto> dtos)
         {
             var request = new PreferenceRequest
             {
                 Purpose = "wallet_purchase",
-                Items = new List<PreferenceItemRequest>
+                Items = dtos.Select(dto => new PreferenceItemRequest
                 {
-                    new PreferenceItemRequest
-                    {
-                        Title = dto.Title,
-                        Quantity = dto.Quantity,
-                        CurrencyId = "ARS",
-                        UnitPrice = dto.UnitPrice
-                    }
-                }
+                    Title = dto.Title,
+                    Quantity = dto.Quantity,
+                    CurrencyId = "ARS",
+                    UnitPrice = dto.UnitPrice
+                }).ToList()
             };
 
             var client = new PreferenceClient();
             var preference = await client.CreateAsync(request);
             return preference.Id;
         }
+
     }
 }

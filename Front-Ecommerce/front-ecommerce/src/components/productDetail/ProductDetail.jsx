@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MdShare, MdFavoriteBorder } from 'react-icons/md';
 import img from "../../assets/image/inicio/aa.webp";
+import useCart from '../../hooks/useCart';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -10,6 +11,7 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [mainImage, setMainImage] = useState('');
   const token = localStorage.getItem("token");
+  const { addToCart } = useCart()
 
 
   useEffect(() => {
@@ -48,17 +50,17 @@ const ProductDetail = () => {
         <div className="flex-shrink-0 flex flex-row lg:flex-col gap-4">
           <div className="flex lg:flex-col gap-4">
             {/* {(producto.images || [producto.imageUrl]).map((img, i) => (           si hyuuhibese mas d una foto*/}
-              <button
-                // key={i}
-                // onClick={() => setMainImage(img)}
-                className={`border rounded-lg p-1  'border-gray-200'`}
-              >
-                <img
-                  src={img}
-                  alt={`${producto.name}`}
-                  className="w-20 h-20 object-contain"
-                />
-              </button>
+            <button
+              // key={i}
+              // onClick={() => setMainImage(img)}
+              className={`border rounded-lg p-1  'border-gray-200'`}
+            >
+              <img
+                src={img}
+                alt={`${producto.name}`}
+                className="w-20 h-20 object-contain"
+              />
+            </button>
             {/* ))} */}
           </div>
 
@@ -128,7 +130,15 @@ const ProductDetail = () => {
             </div>
           )} */}
 
-          <button className="mt-4 w-full bg-green-400 text-black py-4 uppercase font-semibold rounded-full hover:bg-green-600 hover:text-white transition">
+          <button className="mt-4 w-full bg-green-400 text-black py-4 uppercase font-semibold rounded-full hover:bg-green-600 hover:text-white transition" onClick={() =>
+            addToCart({
+              id: id,
+              title: producto.name,
+              description: producto.description,
+              price: producto.price,
+              quantity: 1,
+            })
+          }>
             Añadir al carrito
           </button>
 

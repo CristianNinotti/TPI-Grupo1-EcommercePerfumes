@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-200 w-48 p-4 shadow-lg border-r border-black">
+    <nav className="bg-white w-48 p-4 shadow-lg border-r border-white">
       <ul className="space-y-4 sticky top-0 h-min pt-3">
         <li className="pb-2 border-b border-black">
           <p onClick={(e) => {e.preventDefault(); playOpenSound(); navigate("/")}} className={`font-semibold cursor-pointer ${
