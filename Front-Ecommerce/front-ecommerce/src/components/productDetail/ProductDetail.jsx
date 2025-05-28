@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MdShare, MdFavoriteBorder } from 'react-icons/md';
-import img from "../../assets/image/inicio/aa.webp";
-import useCart from '../../hooks/useCart';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -27,6 +25,7 @@ const ProductDetail = () => {
       })
       .then(data => {
         setProducto(data);
+        console.log(data);
         // const imgs = data.images && data.images.length > 0
         //   ? data.images
         //   : [data.imageUrl];
@@ -50,17 +49,17 @@ const ProductDetail = () => {
         <div className="flex-shrink-0 flex flex-row lg:flex-col gap-4">
           <div className="flex lg:flex-col gap-4">
             {/* {(producto.images || [producto.imageUrl]).map((img, i) => (           si hyuuhibese mas d una foto*/}
-            <button
-              // key={i}
-              // onClick={() => setMainImage(img)}
-              className={`border rounded-lg p-1  'border-gray-200'`}
-            >
-              <img
-                src={img}
-                alt={`${producto.name}`}
-                className="w-20 h-20 object-contain"
-              />
-            </button>
+              <button
+                // key={i}
+                // onClick={() => setMainImage(img)}
+                className={`border rounded-lg p-1  'border-gray-200'`}
+              >
+                <img
+                  src={`/${producto.name}.jpg`}
+                  alt={`${producto.marca} ${producto.name}`}
+                  className="w-20 h-20 object-contain"
+                />
+              </button>
             {/* ))} */}
           </div>
 
@@ -71,8 +70,8 @@ const ProductDetail = () => {
               </span>
             )}
             <img
-              src={img}
-              alt={producto.name}
+              src={`/${producto.name}.jpg`}
+              alt={`${producto.marca} ${producto.name}`}
               className="max-h-[400px] object-contain"
             />
           </div>

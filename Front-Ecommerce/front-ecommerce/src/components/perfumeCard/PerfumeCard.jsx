@@ -4,15 +4,13 @@ import useCart from "../../hooks/useCart";
 import { useNavigate } from 'react-router-dom';
 
 const PerfumeCard = ({
-  id,
   onClick,
-  image,
-  volume = '100 ML',
-  brand = 'CALVIN KLEIN',
-  name = 'CK ONE GOLD',
-  originalPrice = '163.250',
-  discountedPrice = '81.675',
-  discountPercentage = 50,
+  volume,
+  brand,
+  name,
+  originalPrice,
+  discountedPrice,
+  discountPercentage,
   installments = { count: 6, perInstallment: '13.613' },
   cftea = 'CFTEA: 0%',
   priceWithoutTax = 'Precio sin Impuestos Nacionales: $ 67.500',
@@ -36,7 +34,7 @@ const PerfumeCard = ({
       </div>
 
       <div className="flex justify-center">
-        <img src={image} alt={`${brand} ${name}`} className="w-32 h-32 object-contain" />
+        <img src={`${name}.jpg`} alt={`${brand} ${name}`} className="w-32 h-32 object-contain" />
       </div>
 
       <div className="flex justify-center mt-4">
