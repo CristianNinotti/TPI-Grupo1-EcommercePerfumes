@@ -10,6 +10,9 @@ import Cart from '../cart/Cart';
 import AccessDenied from '../accessDenied/AccessDenied';  
 import ProductDetail from '../productDetail/ProductDetail';
 import ProtectedRoute from '../../requires/ProtectedRoute';
+import ResetPassword from '../resetpassword/Resetpassword';
+import ForgotPassword from '../forgotpassword/Forgotpassword';
+
 
 const RoutesComponent = () => {
   return (
@@ -40,6 +43,8 @@ const RoutesComponent = () => {
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="AccessDenied" element={<AccessDenied />} />
+      <Route path="reset-password" element={<ResetPassword />} />
+      <Route path="forgot-password" element={<ForgotPassword />} />
     </Routes>
   );
 };
