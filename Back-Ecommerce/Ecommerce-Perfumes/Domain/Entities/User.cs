@@ -15,5 +15,8 @@
         public string TypeUser { get; set; } = string.Empty;
         public List<Order> Orders { get; set; } = new List<Order>();
 
+        // Recuperación contraseña
+        public string? PasswordResetToken { get; set; }
+        public DateTime? PasswordResetTokenExpiration { get; set; }
     }
 }
