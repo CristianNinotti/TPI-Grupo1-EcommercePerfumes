@@ -1,5 +1,5 @@
 
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Application.Models.Request;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,5 +39,34 @@ namespace Web.Controllers
             }
         }
 
+        // Recuperación de contraseña
+
+        [HttpPost("forgot-password")]
+        public IActionResult ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            try
+            {
+                var token = _customAuthenticationService.GeneratePasswordResetToken(request);
+                return Ok(token);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("reset-password")]
+        public IActionResult ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            try
+            {
+                _customAuthenticationService.ResetPassword(request);
+                return Ok("Contraseña actualizada correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

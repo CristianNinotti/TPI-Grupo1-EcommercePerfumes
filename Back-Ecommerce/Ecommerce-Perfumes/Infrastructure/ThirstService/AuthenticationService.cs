@@ -74,8 +74,6 @@ public class AuthenticationService : IAuthenticationService
         return user;
     }
 
-
-
     public string Authenticate(AuthenticationRequest authenticationRequest)
     {
         var user = ValidateUser(authenticationRequest);
@@ -108,4 +106,82 @@ public class AuthenticationService : IAuthenticationService
 
         return tokenToReturn.ToString();
     }
+
+
+    // Recuperación de contraseña
+
+    public string GeneratePasswordResetToken(ForgotPasswordRequest request)
+    {
+        string email = request.Email;
+
+        User? user = _mayoristaRepository.GetAllMayoristas().FirstOrDefault(u => u.Email == email);
+
+        if (user == null)
+            user = _minoristaRepository.GetAllMinoristas().FirstOrDefault(u => u.Email == email);
+
+        if (user == null)
+            user = _superAdminRepository.GetAllSuperAdmins().FirstOrDefault(u => u.Email == email);
+
+        if (user == null)
+            throw new Exception("No se encontró un usuario con ese email.");
+
+        var token = Guid.NewGuid().ToString();
+        user.PasswordResetToken = token;
+        user.PasswordResetTokenExpiration = DateTime.UtcNow.AddHours(1);
+
+        switch (user.TypeUser.ToLower())
+        {
+            case "mayorista":
+                _mayoristaRepository.UpdateMayorista((Mayorista)user);
+                break;
+            case "minorista":
+                _minoristaRepository.UpdateMinorista((Minorista)user);
+                break;
+            case "admin":
+            case "superadmin":
+                _superAdminRepository.UpdateSuperAdmin((SuperAdmin)user);
+                break;
+            default:
+                throw new Exception("Tipo de usuario no reconocido.");
+        }
+
+        return token;
+    }
+
+    public void ResetPassword(ResetPasswordRequest request)
+    {
+        User? user = _mayoristaRepository.GetAllMayoristas().FirstOrDefault(u => u.PasswordResetToken == request.Token);
+
+        if (user == null)
+            user = _minoristaRepository.GetAllMinoristas().FirstOrDefault(u => u.PasswordResetToken == request.Token);
+
+        if (user == null)
+            user = _superAdminRepository.GetAllSuperAdmins().FirstOrDefault(u => u.PasswordResetToken == request.Token);
+
+
+        if (user == null || user.PasswordResetTokenExpiration < DateTime.UtcNow)
+            throw new Exception("Token inválido o expirado.");
+
+        user.Password = request.NewPassword;
+        user.PasswordResetToken = null;
+        user.PasswordResetTokenExpiration = null;
+
+        switch (user.TypeUser.ToLower())
+        {
+            case "mayorista":
+                _mayoristaRepository.UpdateMayorista((Mayorista)user);
+                break;
+            case "minorista":
+                _minoristaRepository.UpdateMinorista((Minorista)user);
+                break;
+            case "admin":
+            case "superadmin":
+                _superAdminRepository.UpdateSuperAdmin((SuperAdmin)user);
+                break;
+            default:
+                throw new Exception("Tipo de usuario no reconocido.");
+        }
+    }
+
+
 }

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext"; 
-import { useNavigate } from "react-router-dom"; 
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { playOpenSound } from '../sounds/Sounds';
 
+
 const Login = () => {
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [nameAccount, setNameAccount] = useState("");
   const [password, setPassword] = useState("");
@@ -56,9 +57,9 @@ const Login = () => {
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="bg-gray-200 p-8 rounded-lg shadow-lg w-full max-w-sm">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Iniciar sesión</h2>
-        
+
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <input
@@ -82,14 +83,24 @@ const Login = () => {
               className="w-full text-black p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
             />
           </div>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className={`w-full p-3 font-semibold rounded-md ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-400 hover:bg-blue-600 hover:text-white"} transition duration-200`}
             disabled={isLoading}
           >
             {isLoading ? "Cargando..." : "Ingresar"}
           </button>
         </form>
+
+        <div className="text-center mt-4">
+          <button
+            type="button"
+            onClick={() => navigate("/forgot-password")}
+            className="text-sm text-blue-600 hover:underline"
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
 
         <div className="mt-6 flex flex-row justify-center items-center gap-2">
           <p className="text-sm">
@@ -102,7 +113,7 @@ const Login = () => {
           >
             Registrarme
           </button>
-          
+
         </div>
       </div>
       <button
