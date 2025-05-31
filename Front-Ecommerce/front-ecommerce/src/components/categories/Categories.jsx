@@ -31,9 +31,9 @@ const Categories = () => {
                     {categories.map(category => (
                     <li key={category.id} className='category-card bg-gray-200' style={{backgroundImage: `url('${category.name}.png')`}}>
                         <CategoryCard
-                        categoryId={category.id}
-                        categoryName={category.name}
-                        categoryAvailable={category.available}
+                            categoryId={category.id}
+                            categoryName={category.name}
+                            categoryAvailable={category.available}
                         />
                     </li>
                     ))}

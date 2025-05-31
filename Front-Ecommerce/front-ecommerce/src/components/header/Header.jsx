@@ -5,27 +5,34 @@ import { playOpenSound } from '../sounds/Sounds';
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import useCart from "../../hooks/useCart";
+import { useTheme } from "../../context/ThemeContext";
 
 const Header = () => {
   const { auth, user } = useContext(AuthContext)
   const { cartItems, totalItems } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
+  const { mode, toggleTheme } = useTheme();
 
   return (
-    <header className="w-auto bg-black text-white">
+    <header className="w-auto transition-colors duration-300">
       <div className="flex justify-around gap-10 items-center">
-        {/* Logo a la izquierda */}
         <img
           src={logo3}
           alt="logo3"
           className="h-35 object-contain cursor-pointer transition-transform duration-200 hover:scale-110"
           onClick={(e) => { e.preventDefault(); playOpenSound(); navigate('/') }}
         />
-
-
         <nav>
           <ul className="flex gap-6">
+            <li>
+              <button
+                onClick={toggleTheme}
+                className="font-semibold text-white hover:text-green-400"
+              >
+                {mode === "light" ? "🌙" : "☀️"}
+              </button>
+            </li>
             {auth.loggedIn && (
               <li style={{ marginRight: 20 }}>
                 <a

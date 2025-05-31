@@ -1,6 +1,9 @@
 import { useEffect } from "react";
+import { useTheme } from "../../context/ThemeContext";
 
 function CartSidebar({ isOpen, onClose, lastAddedProduct }) {
+    const { mode } = useTheme();
+    
     useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === "Escape") {
@@ -25,9 +28,9 @@ function CartSidebar({ isOpen, onClose, lastAddedProduct }) {
 
             {/* Sidebar con animación */}
             <div
-                className={`ml-auto h-full w-80 bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+                className={`ml-auto h-full w-80 shadow-lg z-50 transform transition-transform duration-300 ${
                     isOpen ? "translate-x-0" : "translate-x-full"
-                }`}
+                } ${mode === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
             >
                 <div className="flex items-center justify-between p-4 border-b">
                     <h2 className="text-lg font-semibold">Producto Agregado</h2>
@@ -42,7 +45,9 @@ function CartSidebar({ isOpen, onClose, lastAddedProduct }) {
                     <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
                         <span className="text-green-600 text-3xl">✔</span>
                     </div>
-                    <p className="text-gray-700 mb-6">¡Producto agregado al carrito!</p>
+                    <p className={`mb-6 ${mode === "dark" ? "text-white" : "text-gray-700"}`}>
+                        ¡Producto agregado al carrito!
+                    </p>
                     {lastAddedProduct && (
                         <div className="mb-4 text-left w-full px-4">
                             <p className="text-sm">

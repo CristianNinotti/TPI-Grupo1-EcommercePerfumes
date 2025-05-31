@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
-import { useEffect } from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 const Profile = () => {
     const { user, logout } = useUser();
@@ -20,7 +20,8 @@ const Profile = () => {
         cuit: user?.accountType === 'Mayorista' ? user?.cuit : '', 
         categoria: user?.accountType === 'Mayorista' ? user?.categoria : '',
     });
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { mode } = useTheme();
 
     if (!user) {
         return <div className="text-center text-gray-500">Cargando datos del usuario...</div>;
@@ -81,7 +82,13 @@ const Profile = () => {
     return (
         <div className='w-full'/*className="max-w-2xl mx-auto p-6 my-8  rounded-xl shadow-xl overflow-hidden border border-gray-200"*/>
             <div className=/*"bg-gradient-to-r from-gray-800 via-blue-600 to-gray-900"bg-blue-600*/ "p-6">
-                <h2 className="text-3xl font-bold text-center text-gray-800">Mi Perfil</h2>
+                <h2
+                    className={`text-3xl font-bold text-center mb-4 ${
+                        mode === "dark" ? "text-white" : "text-gray-800"
+                    }`}
+                >
+                    Mi Perfil
+                </h2>
                 <div className="flex justify-center mt-2">
                     <div className="h-1 w-20 bg-gray-800 rounded-full"></div>
                 </div>

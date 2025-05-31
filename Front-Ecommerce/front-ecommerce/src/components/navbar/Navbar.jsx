@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; // <-- agrega useLocation
+import { useNavigate, useLocation } from 'react-router-dom'; 
 import { playOpenSound, playCloseSound } from '../sounds/Sounds';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // <-- obtiene la ruta actual
+  const location = useLocation(); 
   const [showSubmenu, setShowSubmenu] = useState(false);
   const toggleSubmenu = () => {
     setShowSubmenu(prev => !prev);
   };
 
   return (
-    <nav className="bg-white w-48 p-4 shadow-lg border-r border-white">
+    <nav className="navbar w-48 p-4 shadow-lg">
       <ul className="space-y-4 sticky top-0 h-min pt-3">
         <li className="pb-2 border-b border-black">
-          <p onClick={(e) => {e.preventDefault(); playOpenSound(); navigate("/")}} className={`font-semibold cursor-pointer ${
-            location.pathname === "/"
-              ? "text-green-600"
-              : "text-black hover:text-green-400"
-            }`}>
+          <p 
+            onClick={() => navigate("/")}
+            className={`font-semibold cursor-pointer ${
+              location.pathname === "/" ? "text-green-600" : "hover:text-green-400"
+            }`}
+          >
             Inicio
           </p>
         </li>
@@ -41,7 +42,7 @@ const Navbar = () => {
                   Perfumes
                 </p>
               </li>
-              <li>
+              {/* <li>
                 <p onClick={(e) => {e.preventDefault(); playOpenSound(); navigate("/makeup")}} className={`cursor-pointer ${
                   location.pathname === "/makeup"
                     ? "text-green-600"
@@ -49,7 +50,7 @@ const Navbar = () => {
                   }`}>
                   Maquillajes
                 </p>
-              </li>
+              </li> */}
             </ul>
           )}
         </li>
