@@ -83,6 +83,37 @@ namespace Web.Controllers
             }
         }
 
+        [HttpGet("OrderStatusTrue")]
+        [Authorize(Policy = "MinoristaOrMayoristaOrSuperAdmin")]
+
+        public IActionResult OrderStatusTrue()
+        {
+            try
+            {
+                string? userIdClaim = User.FindFirst("Id")?.Value;
+                if (userIdClaim == null)
+                {
+                    return BadRequest("No esta logueado");
+                }
+                int userId = int.Parse(userIdClaim);
+
+                var order = _orderService.GetOrderStatusTrue(userId);
+                if (order == null)
+                {
+                    return BadRequest($"No se encontro el Order");
+                }
+                return Ok(order);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Se obtuvieron datos inesperados. Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno en el servidor. Error: {ex.Message}");
+            }
+        }
+
         [HttpPost("CreateOrder")]
 
         public IActionResult CreateOrder([FromBody] OrderRequest orderRequest)

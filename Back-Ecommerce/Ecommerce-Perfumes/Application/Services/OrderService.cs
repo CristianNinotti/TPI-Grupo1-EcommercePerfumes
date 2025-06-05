@@ -39,6 +39,17 @@ namespace Application.Services
             }
             return null;
         }
+
+        public OrderResponse? GetOrderStatusTrue(int id)
+        {
+            var order = _orderRepository.GetOrderStatusTrue(id);
+            if (order != null)
+            {
+                return OrderProfile.ToOrderResponse(order);
+            }
+            return null;
+        }
+
         public void CreateOrder(int userId, OrderRequest orderRequest)
         {
             var order = OrderProfile.ToOrderEntity(orderRequest);

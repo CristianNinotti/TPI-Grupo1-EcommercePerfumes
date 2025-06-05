@@ -1,12 +1,46 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
+import useUser from "../hooks/useUser";
 
 export const CartContext = createContext();
+const URL = "https://localhost:7174/api/";
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
+  const { user } = useUser();
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      if (!user) {
+        setCartItems([]); 
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`${URL}Order/OrderStatusTrue`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+        // ^^ trae los datos de la ORDEN
+        // hay que obtener los orderItems de la order para setearlo en cartItems y q funcione el coso del header
+        // esto de aca abajo no hace un carajo
+        setCartItems(data.items || []);
+      } catch (err) {
+        console.error("Error al obtener el carrito", err);
+        setCartItems([]);
+      }
+    };
+
+    fetchCart();
+  }, [user]);
+
+
+  // de aca para abajo no vamos a usar nada, hay que seguir cambiando
+  // pero si comento el codigo se rompe la pagina :p
+  
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
@@ -69,6 +103,7 @@ export const CartProvider = ({ children }) => {
     decreaseQuantity,
     totalItems: cartItems.reduce((sum, item) => sum + item.quantity, 0),
   };
+
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };

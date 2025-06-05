@@ -6,6 +6,7 @@ namespace Domain.Interfaces
     {
         List<Order> GetAllOrdersRepository();
         Order? GetOrderByIdRepository(int id);
+        Order? GetOrderStatusTrue(int id);
         void CreateOrderRepository(Order order);
         void UpdateOrderRepository(Order order);
         void SoftDeleteOrderRepository(Order order);

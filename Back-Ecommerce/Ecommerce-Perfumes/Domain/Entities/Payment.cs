@@ -14,6 +14,6 @@ namespace Domain.Entities
         Order? Order { get; set; }
         public DateTime PaymentDate { get; set; }
         public decimal Amount { get; set; }
-        public Paymethod PayMethod { get; set; }
+        public Paymethod PayMethod { get; set; } = Paymethod.Transferencia;
     }
 }
