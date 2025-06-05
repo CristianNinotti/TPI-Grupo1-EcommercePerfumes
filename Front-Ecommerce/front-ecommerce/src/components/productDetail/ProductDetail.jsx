@@ -73,7 +73,7 @@ const ProductDetail = () => {
                 className={`border rounded-lg p-1  'border-gray-200'`}
               >
                 <img
-                  src={`/${producto.name}.jpg`}
+                  src={`/images/perfumes/${producto.name}.png`}
                   alt={`${producto.marca} ${producto.name}`}
                   className="w-20 h-20 object-contain"
                 />
@@ -88,7 +88,7 @@ const ProductDetail = () => {
               </span>
             )}
             <img
-              src={`/${producto.name}.jpg`}
+              src={`/images/perfumes/${producto.name}.png`}
               alt={`${producto.marca} ${producto.name}`}
               className="max-h-[400px] object-contain"
             />

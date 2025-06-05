@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { useNavigate } from 'react-router-dom';
 import { playOpenSound } from '../sounds/Sounds';
+import Swal from 'sweetalert2';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -26,7 +27,11 @@ const ForgotPassword = () => {
         body: JSON.stringify({ email }),
       });
 
-      if (!response.ok) throw new Error('No se pudo generar el token');
+      if (!response.ok) {
+        // Leer el mensaje de error del backend
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'No se pudo generar el token');
+      }
 
       const token = await response.text();
       const resetLink = `http://localhost:5173/reset-password?token=${token}`;
@@ -42,8 +47,22 @@ const ForgotPassword = () => {
       );
 
       setStatus('Correo enviado. Revisá tu bandeja de entrada.');
+
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Correo enviado!',
+        text: 'Revisá tu bandeja de entrada para restablecer tu contraseña.',
+        confirmButtonColor: '#3085d6',
+      });
+
     } catch (error) {
       setStatus('Error al enviar el correo.');
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.message || 'Hubo un problema al enviar el correo',
+        confirmButtonColor: '#d33',
+      });
       console.error(error);
     } finally {
       setIsLoading(false);

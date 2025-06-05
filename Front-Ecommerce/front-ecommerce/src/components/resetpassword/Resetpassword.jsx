@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { playOpenSound } from '../sounds/Sounds';
+import Swal from 'sweetalert2';
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -61,12 +62,23 @@ const ResetPassword = () => {
 
       setStatus('Contraseña restablecida correctamente.');
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Contraseña restablecida!',
+        text: 'Ahora podés iniciar sesión con tu nueva contraseña.',
+        confirmButtonColor: '#3085d6',
+      });
+
+      navigate("/login");
 
     } catch (error) {
       setStatus(`Error: ${error.message}`);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.message || 'Hubo un problema al restablecer la contraseña',
+        confirmButtonColor: '#d33',
+      });
     } finally {
       setIsLoading(false);
     }
