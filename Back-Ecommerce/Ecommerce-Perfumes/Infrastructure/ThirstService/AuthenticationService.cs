@@ -123,7 +123,7 @@ public class AuthenticationService : IAuthenticationService
             user = _superAdminRepository.GetAllSuperAdmins().FirstOrDefault(u => u.Email == email);
 
         if (user == null)
-            throw new Exception("No se encontró un usuario con ese email :D.");
+            throw new Exception("No se encontró un usuario con ese email.");
 
         var token = Guid.NewGuid().ToString();
         user.PasswordResetToken = token;
