@@ -5,6 +5,9 @@ import RoutesComponent from "./components/routes/Routes";
 import { CartProvider } from "./context/CartContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
+
+
+
 function App() {
   return (
     <ThemeProvider>

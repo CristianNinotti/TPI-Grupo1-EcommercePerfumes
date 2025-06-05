@@ -1,20 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAnimatedClose } from '../animations/UseAnimatedClose';
 
 const Delivery = ({ isOpen, onClose }) => {
-  const { isVisible, isClosing, handleAnimatedClose, playSound } = useAnimatedClose(isOpen, () => {
-    onClose();  // Llamamos a onClose después de la animación
-  });
+  const { isVisible, isClosing, handleAnimatedClose } = useAnimatedClose(isOpen, onClose);
 
-  // Reproducir el sonido de cierre cuando se indique
-  useEffect(() => {
-    if (playSound) {
-      const audio = new Audio('/sounds/close-sound.mp3');  // Rua absoluta
-      audio.play();
-    }
-  }, [playSound]);
-
-  if (!isVisible) return null; // No renderiza nada si el modal no es visible
+  if (!isVisible) return null;
 
   return (
     <div
