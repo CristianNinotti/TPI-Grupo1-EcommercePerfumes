@@ -1,18 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAnimatedClose } from '../animations/UseAnimatedClose';
 
 const HowToBuy = ({ isOpen, onClose }) => {
-  const { isVisible, isClosing, handleAnimatedClose, playSound } = useAnimatedClose(isOpen, () => {
-    onClose();  // Llamamos a onClose después de la animación
-  });
-
-  // Reproducir el sonido de cierre cuando se indique
-  useEffect(() => {
-    if (playSound) {
-      const audio = new Audio('/sounds/close-sound.mp3');  // Asegúrate de que la ruta es correcta
-      audio.play();
-    }
-  }, [playSound]);
+  const { isVisible, isClosing, handleAnimatedClose } = useAnimatedClose(isOpen, onClose);
 
   if (!isVisible) return null; // No renderiza nada si el modal no es visible
 
