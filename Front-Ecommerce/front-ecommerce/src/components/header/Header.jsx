@@ -16,7 +16,7 @@ const Header = () => {
 
   return (
     <header className="w-auto transition-colors duration-300">
-      <div className="flex justify-around gap-10 items-center">
+      <div className="flex justify-around gap-10 items-center sm:gap 1">
         <img
           src={logo3}
           alt="logo3"

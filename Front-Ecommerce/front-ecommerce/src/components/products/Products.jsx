@@ -154,11 +154,13 @@ function Productos({ limit = null }) {
       ) : (
         <ul className="product-list">
           {displayProducts.map((p) => (
-            <li key={p.id} className="product-card">
+            <li key={p.id} className="product-card flex flex-col items-end">
               <PerfumeCard
+                id={p.id}
                 volume={p.description}
                 brand={p.marca}
                 name={p.name}
+                stock={p.stock}
                 originalPrice={p.price}
                 discountedPrice={p.price}
                 discountPercentage={0}

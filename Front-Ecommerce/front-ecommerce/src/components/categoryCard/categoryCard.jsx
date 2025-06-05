@@ -13,16 +13,16 @@ const CategoryCard = ({
 
   const baseClasses = `
     inline-block px-3 py-1 rounded-full text-sm font-medium
-    cursor-pointer select-none transition-colors
+    select-none transition-colors
   `;
 
   const availableClasses = isSelected
-    ? 'bg-green-600 text-white'
+    ? 'cursor-pointer bg-green-600 text-white'
     : mode === 'dark'
-      ? 'bg-gray-200 text-black hover:bg-green-400'
-      : 'bg-gray-200 hover:bg-green-400';
+      ? 'cursor-pointer bg-gray-200 text-black hover:bg-green-400'
+      : 'cursor-pointer bg-gray-200 hover:bg-green-400';
 
-  const unavailableClasses = 'bg-red-100 text-red-800 opacity-50 cursor-not-allowed';
+  const unavailableClasses = 'bg-red-400 cursor-not-allowed';
 
   const handleClick = () => {
     if (categoryAvailable) {
