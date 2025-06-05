@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAnimatedClose } from '../animations/UseAnimatedClose';
+import { useAnimatedClose } from '../../hooks/UseAnimatedClose';
 
 const Delivery = ({ isOpen, onClose }) => {
   const { isVisible, isClosing, handleAnimatedClose } = useAnimatedClose(isOpen, onClose);

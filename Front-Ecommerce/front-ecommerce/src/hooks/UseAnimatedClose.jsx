@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { playCloseSound, playOpenSound } from '../sounds/Sounds';
+import { playOpenSound, playCloseSound } from '../components/sounds/Sounds'; // Ajusta el path si es necesario
 
 export const useAnimatedClose = (isOpen, onClose) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -10,14 +10,15 @@ export const useAnimatedClose = (isOpen, onClose) => {
     if (isOpen) {
       setIsVisible(true);
       setIsClosing(false);
-      
+      playOpenSound(); // Sonido de apertura
     }
   }, [isOpen]);
 
   // Maneja el cierre animado y el sonido
   const handleAnimatedClose = () => {
     setIsClosing(true);
-    
+    playCloseSound(); // Sonido de cierre
+
     setTimeout(() => {
       if (onClose) onClose();
       setIsVisible(false);

@@ -4,6 +4,8 @@ import useCart from "../../hooks/useCart";
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import useFavorites from "../../hooks/useFavorites";
+import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
+import useTemporaryModal from "../../hooks/useTemporaryModal";
 
 const PerfumeCard = ({
   onClick,
@@ -25,12 +27,43 @@ const PerfumeCard = ({
   const navigate = useNavigate();
   const { mode } = useTheme();
   const { addFavorite, removeFavorite, isFavorite, userKey } = useFavorites(user);
+  const { showModal, Modal } = useTemporaryModal();
+
+  const renderFavoriteIcon = () => {
+    const handleClick = () => {
+      if (!userKey) {
+        showModal("Debes iniciar sesión para agregar favoritos.");
+        return;
+      }
+      if (isFavorite(id)) {
+        removeFavorite(id);
+      } else {
+        addFavorite(id);
+      }
+    };
+
+    const Icon = isFavorite(id) ? MdFavorite : MdFavoriteBorder;
+    const color = isFavorite(id) ? "red" : "gray";
+    const label = isFavorite(id) ? "Quitar de favoritos" : "Agregar a favoritos";
+
+    return (
+      <Icon
+        className="absolute top-4 left-4 cursor-pointer transition-transform hover:scale-110"
+        onClick={handleClick}
+        size={32}
+        color={color}
+        aria-label={label}
+      />
+    );
+  };
+
   return (
     <div
       className={`rounded-xl shadow-md p-6 relative w-full ${
         mode === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-black"
       }`}
     >
+      <Modal />
       <div className="absolute top-4 right-4 bg-black text-white text-xs font-semibold px-3 py-1 rounded-full">
         -{discountPercentage}%
       </div>
@@ -39,24 +72,7 @@ const PerfumeCard = ({
         <img src={`images/perfumes/${name}.png`} alt={`${brand} ${name}`} className="w-32 h-32 object-contain" />
       </div>
 
-      <button
-        onClick={() => {
-          if (!userKey) {
-            alert("Debes iniciar sesión para agregar favoritos.");
-            return;
-          }
-          isFavorite(id) ? removeFavorite(id) : addFavorite(id);
-        }}
-        className="absolute top-0 left-4 px-3"
-        aria-label={isFavorite(id) ? "Quitar de favoritos" : "Agregar a favoritos"}
-        style={{
-          color: isFavorite(id) ? "red" : "gray",
-          fontSize: "50px",
-          cursor: "pointer"
-        }}
-      >
-        {isFavorite(id) ? "♥" : "♡"}
-      </button>
+      {renderFavoriteIcon()}
 
       <div className="flex justify-center mt-4">
         <span className="bg-gray-200 text-gray-700 text-xs uppercase font-medium px-2 py-1 rounded-full">
