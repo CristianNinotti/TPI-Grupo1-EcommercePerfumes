@@ -7,6 +7,7 @@ import { useFilteredProductsByName } from "../../hooks/useSearch";
 import SearchProduct from "../searchProduct/SearchProduct";
 import CartSidebar from "../cartSidebar/CartSidebar";
 import useCart from "../../hooks/useCart";
+import { useTheme } from "../../context/ThemeContext"; 
 
 function Productos({ limit = null }) {
   const [products, setProducts] = useState([]);
@@ -21,6 +22,7 @@ function Productos({ limit = null }) {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { mode } = useTheme();
 
   const { cartItems, addToCart } = useCart();
 
@@ -87,8 +89,10 @@ function Productos({ limit = null }) {
       navigate(`/products?categoryId=${categoryId}`);
     }
   };
-
-  const totalItemsInCart = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
+  const inactiveButtonClass =
+    mode === "dark"
+      ? "bg-gray-700 text-white hover:bg-gray-600"
+      : "bg-gray-200 text-black hover:bg-blue-300";
 
   return (
     <div className="products">
@@ -118,22 +122,27 @@ function Productos({ limit = null }) {
         <div className="flex justify-center gap-4 mb-4">
           <button
             onClick={() => setSortOrder("asc")}
-            className={`px-3 py-1 rounded ${sortOrder === "asc" ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-blue-300"
-              }`}
+             className={`px-3 py-1 rounded border ${
+            sortOrder === "asc" ? "bg-blue-600 text-white" : inactiveButtonClass
+          }`}
           >
             Precio ↓
           </button>
           <button
             onClick={() => setSortOrder("desc")}
-            className={`px-3 py-1 rounded ${sortOrder === "desc" ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-blue-300"
-              }`}
+            className={`px-3 py-1 rounded border ${
+              sortOrder === "desc" ? "bg-blue-600 text-white" : inactiveButtonClass
+            }`}
           >
             Precio ↑
           </button>
           <button
             onClick={() => setSortOrder("default")}
-            className={`px-3 py-1 rounded ${sortOrder === "default" ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-blue-300"
-              }`}
+            className={`px-3 py-1 rounded border ${
+              sortOrder === "default"
+                ? "bg-blue-600 text-white"
+                : `${mode === "dark" ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-gray-200 text-black hover:bg-blue-300"}`
+            }`}
           >
             Sin Orden
           </button>
@@ -145,11 +154,13 @@ function Productos({ limit = null }) {
       ) : (
         <ul className="product-list">
           {displayProducts.map((p) => (
-            <li key={p.id} className="product-card">
+            <li key={p.id} className="product-card flex flex-col items-end">
               <PerfumeCard
+                id={p.id}
                 volume={p.description}
                 brand={p.marca}
                 name={p.name}
+                stock={p.stock}
                 originalPrice={p.price}
                 discountedPrice={p.price}
                 discountPercentage={0}

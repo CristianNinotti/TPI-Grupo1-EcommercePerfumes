@@ -2,10 +2,12 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import Categories from '../categories/Categories';
+import { useTheme } from '../../context/ThemeContext';
 
 const Home = () => {
   const { auth, user} = useContext(AuthContext)
   const navigate = useNavigate();
+  const { mode } = useTheme();
   
   return (
     <main className="flex-grow">
@@ -14,7 +16,11 @@ const Home = () => {
           Descubre las mejores fragancias para cada ocasión
         </p>
         <button 
-          className="bg-gray-200 px-4 py-2 rounded hover:bg-green-400 transition"
+          className={`px-4 py-2 rounded transition font-semibold ${
+            mode === "dark"
+              ? "bg-gray-700 text-white hover:bg-green-600"
+              : "bg-gray-200 text-black hover:bg-green-400"
+          }`}
             onClick={() => {navigate("/products")}}
         >
           Ver productos

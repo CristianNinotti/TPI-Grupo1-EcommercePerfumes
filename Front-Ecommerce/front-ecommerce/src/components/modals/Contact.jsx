@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
-import { useAnimatedClose } from '../animations/UseAnimatedClose'; // Asegúrate de tener este hook de animaciones
-import { playCloseSound } from '../sounds/Sounds';
+import { useAnimatedClose } from '../animations/UseAnimatedClose';
 
 const Contact = ({ isOpen, onClose }) => {
-  const { isVisible, isClosing, handleAnimatedClose, playSound } = useAnimatedClose(isOpen, () => {
-    onClose(); // Llamamos a onClose después de la animación
-  });
-  
+  const { isVisible, isClosing, handleAnimatedClose } = useAnimatedClose(isOpen, onClose);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -46,7 +43,7 @@ const Contact = ({ isOpen, onClose }) => {
             email: '',
             message: '',
           });
-          handleAnimatedClose(); // Solo aquí se llama
+          handleAnimatedClose();
         },
         (error) => {
           setLoading(false);
@@ -55,14 +52,6 @@ const Contact = ({ isOpen, onClose }) => {
         }
       );
   };
-
-  // Reproducir el sonido de cierre cuando se indique
-  useEffect(() => {
-    if (playSound) {
-      const audio = new Audio('/sounds/close-sound.mp3'); // Ruta absoluta
-      audio.play();
-    }
-  }, [playSound]);
 
   if (!isVisible) return null; // No renderiza nada si el modal no es visible
 
@@ -119,11 +108,12 @@ const Contact = ({ isOpen, onClose }) => {
             {loading ? 'Enviando...' : 'Enviar'}
           </button>
           <button
-          onClick={handleAnimatedClose}
-          className="bg-green-400 text-black hover:bg-green-600 hover:text-white px-4 py-2 rounded-lg"
-        >
-          Cerrar
-        </button>
+            type="button"
+            onClick={handleAnimatedClose}
+            className="bg-green-400 text-black hover:bg-green-600 hover:text-white px-4 py-2 rounded-lg"
+          >
+            Cerrar
+          </button>
         </form>
       </div>
     </div>

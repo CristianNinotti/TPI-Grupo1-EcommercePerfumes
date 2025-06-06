@@ -113,6 +113,7 @@ if (!response.ok) {
         phoneNumber: loggedUser.phoneNumber,
         cuit: loggedUser?.cuit,
         categoria: loggedUser?.categoria,
+        discountRate: loggedUser?.discountRate
       });
 
       localStorage.setItem("token", token);
@@ -197,6 +198,7 @@ if (!response.ok) {
             phoneNumber: loggedUser.phoneNumber,
             cuit: loggedUser?.cuit,
             categoria: loggedUser?.categoria,
+            discountRate: loggedUser?.discountRate
           });
 
           setAuth({ loggedIn: true, token });

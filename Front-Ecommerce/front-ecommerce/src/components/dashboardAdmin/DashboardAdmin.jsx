@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { MdAdd, MdEdit, MdDelete } from 'react-icons/md';
 import { FaBan } from 'react-icons/fa';
 import { useLocation } from "react-router-dom";
+import { useTheme } from "../../context/ThemeContext";
 
 const URL = "https://localhost:7174/api/";
 
@@ -28,15 +29,17 @@ export default function DashboardAdmin() {
         id: null,       // id del registro a editar/eliminar
         type: null,     // 'create', 'edit' o 'delete'
     });
+
+    const { mode } = useTheme()
     
     const location = useLocation();
 
     useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const tabParam = params.get("tab");
-    if (tabParam) {
-        setActiveTab(tabParam);
-    }
+        const params = new URLSearchParams(location.search);
+        const tabParam = params.get("tab");
+        if (tabParam) {
+            setActiveTab(tabParam);
+        }
     }, [location.search]);
 
     const readClientEndpoint = () => {
@@ -381,7 +384,7 @@ export default function DashboardAdmin() {
                 <h1 className="text-3xl font-bold mb-2 text-center">
                     Panel Administrador
                 </h1>
-                <p className="text-center text-gray-800 mb-6">
+                <p className={`text-center ${mode === "dark" ? "text-gray-200" : "text-gray-800"} mb-6`}>
                     En este panel puedes gestionar <strong>Clientes</strong> (Minoristas,
                     Mayoristas) y <strong>Productos</strong>.<br />
                     Crea, deshabilita, edita o elimina ítems según necesites.
@@ -390,48 +393,33 @@ export default function DashboardAdmin() {
                 <div className="flex justify-center space-x-4 mb-6">
                     <button
                         onClick={() => setActiveTab("clientes")}
-                        className={
-                            activeTab === "clientes"
-                            ? "px-4 py-2 bg-blue-600 text-white rounded"
-                            : "px-4 py-2 bg-gray-200 hover:bg-blue-400 rounded"
-                        }
+                          className={`btn ${activeTab === "clientes" ? "btn-active" : "btn-inactive"}`}
+
                     >
                         Clientes
                     </button>
                     <button
                         onClick={() => setActiveTab("productos")}
-                        className={
-                            activeTab === "productos"
-                            ? "px-4 py-2 bg-blue-600 text-white rounded"
-                            : "px-4 py-2 bg-gray-200 hover:bg-blue-400 rounded"
-                        }
+                        className={`btn ${ activeTab === "productos" ? "btn-active" : "btn-inactive" }`}
                     >
                         Productos
                     </button>
                     <button
                         onClick={() => setActiveTab("categorias")}
-                        className={
-                        activeTab === "categorias"
-                            ? "px-4 py-2 bg-blue-600 text-white rounded"
-                            : "px-4 py-2 bg-gray-200 hover:bg-blue-400 rounded"
-                        }
+                        className={`btn ${ activeTab === "categorias" ? "btn-active" : "btn-inactive" }`}
                     >
                         Categorías
                     </button>
                     <button
                         onClick={() => setActiveTab("admins")}
-                        className={
-                        activeTab === "admins"
-                            ? "px-4 py-2 bg-blue-600 text-white rounded"
-                            : "px-4 py-2 bg-gray-200 hover:bg-blue-400 rounded"
-                        }
+                        className={`btn ${ activeTab === "admins" ? "btn-active" : "btn-inactive" }`}
                     >
                         Agregar Administrador
                     </button>
                 </div>
 
                 {activeTab === null && (
-                    <p className="text-center text-gray-600">
+                    <p className={`text-center ${mode === "dark" ? "text-gray-200" : "text-gray-600"}`}>
                         Selecciona una pestaña para comenzar.
                     </p>
                 )}
@@ -448,11 +436,11 @@ export default function DashboardAdmin() {
                                 <button
                                     key={opt}
                                     onClick={() => setClientFilter(clientFilter === opt ? null : opt)}
-                                    className={
+                                    className={`btn ${
                                         clientFilter === opt
-                                        ? "px-3 py-1 bg-green-600 text-white rounded"
-                                        : "px-3 py-1 bg-gray-200 hover:bg-green-400 rounded"
-                                    }
+                                        ? "btn-active"
+                                        : "btn-inactive"
+                                    }`}
                                 >
                                     {opt.replace("All", "").replace("Available", " Disponibles").replace("Minorista", "Minoristas").replace("Mayorista", "Mayoristas")}
                                 </button>
@@ -463,16 +451,63 @@ export default function DashboardAdmin() {
                             {clients.map((u) => (
                                 <div
                                     key={u.id}
-                                    className="border p-4 rounded shadow flex flex-col justify-between bg-gray-200"
+                                    className="border p-4 rounded shadow flex flex-col justify-between bg-gray-200 dark:bg-gray-800 dark:text-gray-100"
                                 >
                                     <div>
-                                        <p className="font-semibold">{u.nameAccount}</p>
-                                        <p className="text-sm">
-                                            {u.firstName} {u.lastName}
-                                        </p>
-                                        <p className="text-sm">{u.email}</p>
+                                        <p className="font-semibold text-gray-900 dark:text-white">{u.nameAccount}</p>
+                                        <p className="text-sm text-gray-700 dark:text-gray-300">{u.firstName} {u.lastName}</p>
+                                        <p className="text-sm text-gray-700 dark:text-gray-300">{u.email}</p>
                                     </div>
                                     <div className="mt-4 flex justify-end space-x-4">
+                                        {u.tipo === "Mayorista" && (
+                                            <button
+                                            onClick={() => {
+                                                Swal.fire({
+                                                title: "Actualizar descuento",
+                                                input: "number",
+                                                inputLabel: "Nuevo descuento (%)",
+                                                inputPlaceholder: "Por ejemplo: 10 para 10%",
+                                                showCancelButton: true,
+                                                confirmButtonText: "Actualizar",
+                                                cancelButtonText: "Cancelar",
+                                                inputAttributes: {
+                                                    min: 0,
+                                                    max: 100,
+                                                    step: 1
+                                                }
+                                                }).then(async (result) => {
+                                                if (result.isConfirmed) {
+                                                    const newRate = parseFloat(result.value);
+                                                    if (isNaN(newRate) || newRate < 0 || newRate > 100) {
+                                                    Swal.fire("Error", "Ingrese un valor válido entre 0 y 100", "error");
+                                                    return;
+                                                    }
+
+                                                    try {
+                                                    const res = await fetch(`https://localhost:7174/api/Mayorista/${u.id}/discount`, {
+                                                        method: "PATCH",
+                                                        headers: {
+                                                        "Content-Type": "application/json",
+                                                        Authorization: `Bearer ${token}`,
+                                                        },
+                                                        body: JSON.stringify({ discountRate: newRate / 100 }),
+                                                    });
+
+                                                    if (!res.ok) throw new Error();
+
+                                                    Swal.fire("✔️", "Descuento actualizado correctamente", "success");
+                                                    fetchClients(); // recargar los datos
+                                                    } catch {
+                                                    Swal.fire("Error", "No se pudo actualizar el descuento", "error");
+                                                    }
+                                                }
+                                                });
+                                            }}
+                                            aria-label="Editar descuento"
+                                            >
+                                            <span className="text-green-400 hover:text-green-600 hover:scale-110 text-lg font-bold">%</span>
+                                            </button>
+                                        )}
                                         <button
                                             onClick={() =>
                                             setModal({
@@ -542,7 +577,7 @@ export default function DashboardAdmin() {
                                         onClick={() => setProdFilter(opt)}
                                         className={
                                             prodFilter === opt
-                                            ? "px-4 py-2 bg-green-600 text-white rounded"
+                                            ? "px-4 py-2 bg-green-600 text-gray rounded"
                                             : "px-4 py-2 bg-gray-200 hover:bg-green-400 rounded"
                                         }
                                     >
@@ -556,11 +591,11 @@ export default function DashboardAdmin() {
                             {products.map((p) => (
                                 <div
                                     key={p.id}
-                                    className="border p-4 rounded shadow flex flex-col justify-between bg-gray-200"
+                                    className="border p-4 rounded shadow flex flex-col justify-between bg-gray-200 dark:bg-gray-800 dark:text-gray-100"
                                 >
                                     <div>
-                                        <p className="font-semibold">{p.name}</p>
-                                        <p className="text-sm">
+                                        <p className="font-semibold text-gray-900 dark:text-white">{p.name}</p>
+                                        <p className="text-sm text-gray-700 dark:text-gray-300">
                                             ${p.price} – Stock: {p.stock}
                                         </p>
                                     </div>
@@ -714,8 +749,8 @@ export default function DashboardAdmin() {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {categories.map(cat => (
-                                <div key={cat.id} className="border p-4 rounded shadow bg-gray-200 flex justify-between">
-                                    <span>{cat.name}</span>
+                                <div key={cat.id} className="border p-4 rounded shadow flex justify-between bg-gray-200 dark:bg-gray-800 dark:text-gray-100">
+                                    <span className="font-semibold text-gray-900 dark:text-white">{cat.name}</span>
                                     <div className="flex space-x-2">
                                         <button 
                                             onClick={() =>
@@ -740,11 +775,11 @@ export default function DashboardAdmin() {
             
                 {activeTab === "admins" && (
                     <form onSubmit={handleCreateAdmin} className="max-w-md mx-auto space-y-4">
-                        {["firstName","lastName","nameAccount","password","email","dni","phoneNumber","address"].map(field => (
+                        {["Nombre","Apellido","Nombre de usuario","Contraseña","email","dni","Número de teléfono","Dirección"].map(field => (
                         <input
                             key={field}
                             name={field}
-                            type={field === "password" ? "password" : "text"}
+                            type={field === "Contraseña" ? "Contraseña" : "text"}
                             placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                             value={adminData[field]}
                             onChange={handleAdminChange}

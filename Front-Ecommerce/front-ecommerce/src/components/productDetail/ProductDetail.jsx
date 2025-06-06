@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { MdShare, MdFavoriteBorder } from 'react-icons/md';
 import { CartContext } from '../../context/CartContext';
 import CartSidebar from '../cartSidebar/CartSidebar';
+import { useTheme } from '../../context/ThemeContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const ProductDetail = () => {
   const [lastAddedProduct, setLastAddedProduct] = useState(null); // Nuevo estado
   const token = localStorage.getItem("token");
   const { addToCart } = useContext(CartContext);
-
+  const { mode } = useTheme();
 
   useEffect(() => {
     fetch(`https://localhost:7174/api/Product/ProductById/${id}`, {
@@ -72,7 +73,7 @@ const ProductDetail = () => {
                 className={`border rounded-lg p-1  'border-gray-200'`}
               >
                 <img
-                  src={`/${producto.name}.jpg`}
+                  src={`/images/perfumes/${producto.name}.png`}
                   alt={`${producto.marca} ${producto.name}`}
                   className="w-20 h-20 object-contain"
                 />
@@ -87,7 +88,7 @@ const ProductDetail = () => {
               </span>
             )}
             <img
-              src={`/${producto.name}.jpg`}
+              src={`/images/perfumes/${producto.name}.png`}
               alt={`${producto.marca} ${producto.name}`}
               className="max-h-[400px] object-contain"
             />
@@ -95,15 +96,17 @@ const ProductDetail = () => {
         </div>
 
         <div className="flex-1 bg-gray-50 rounded-2xl p-8 space-y-6 relative">
-          <div className="absolute top-6 right-6 flex space-x-4">
+          {/* <div className="absolute top-6 right-6 flex space-x-4">
             <button onClick={() => console.log('Favorito')}>
               <MdFavoriteBorder size={20} />
             </button>
-          </div>
+          </div> */}
 
-          <h2 className="text-xl font-medium">{producto.marca}</h2>
-          <h1 className="text-3xl font-bold">
-            {producto.name} {selectedSize} ML
+          <h2 className={`text-xl font-medium ${mode === "dark" ? "text-black" : "text-gray-800"}`}>
+            {producto.marca}
+          </h2>
+          <h1 className={`text-3xl font-bold ${mode === "dark" ? "text-black" : "text-black"}`}>
+            {producto.name}
           </h1>
 
           <div className="space-y-1">
@@ -154,15 +157,16 @@ const ProductDetail = () => {
           </button>
 
           <div className="space-y-4">
-            <details className="bg-white rounded-lg border">
+            <details className={`${mode === "dark" ? "bg-gray-700 text-white" : "bg-white"} rounded-lg border`}>
               <summary className="px-4 py-3 cursor-pointer flex justify-between items-center">
                 Promociones o reintegros
               </summary>
-              <div className="px-4 py-3 border-t">
-                No hay promociones disponibles.
+              <div className="px-4 py-3 border-t space-y-2">
+                <p className="text-sm">💵 <strong>10% de descuento</strong> pagando con Transferencia.</p>
+                <p className="text-sm">💳 <strong>3 cuotas sin interés</strong> con tarjeta Macro.</p>
               </div>
             </details>
-            <details className="bg-white rounded-lg border">
+            <details className={`${mode === "dark" ? "bg-gray-700 text-white" : "bg-white"} rounded-lg border`}>
               <summary className="px-4 py-3 cursor-pointer flex justify-between items-center">
                 Descripción del producto
               </summary>
