@@ -7,11 +7,12 @@ const URL = "https://localhost:7174/api/";
 export const CartProvider = ({ children }) => {
   const { user } = useUser();
   const [cartItems, setCartItems] = useState([]);
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
     const fetchCart = async () => {
       if (!user) {
-        setCartItems([]); 
+        setCartItems([]);
         return;
       }
 
@@ -23,11 +24,16 @@ export const CartProvider = ({ children }) => {
           },
         });
 
+        if (!res.ok) {
+          const errorText = await res.text(); 
+          throw new Error(errorText || 'Error al obtener el carrito');
+        }
+
         const data = await res.json();
         // ^^ trae los datos de la ORDEN
         // hay que obtener los orderItems de la order para setearlo en cartItems y q funcione el coso del header
         // esto de aca abajo no hace un carajo
-        setCartItems(data.items || []);
+        setCartItems(data.orderItems || []);
       } catch (err) {
         console.error("Error al obtener el carrito", err);
         setCartItems([]);
@@ -40,36 +46,36 @@ export const CartProvider = ({ children }) => {
 
   // de aca para abajo no vamos a usar nada, hay que seguir cambiando
   // pero si comento el codigo se rompe la pagina :p
-  
+
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (product, quantity = 1) => {
-    setCartItems(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      console.log(product.id)
+  const addToCart = async (productId, quantity = 1) => {
+    let currentOrderId = orderId;
 
-      if (existing) {
-        return prev.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      }
+    if (!currentOrderId) {
+      const res = await fetch(`${URL}Order/CreateOrder`, {
+        method: "POST",
+        body: JSON.stringify({ etcetc }),
+        headers: { "Content-Type": "application/json" },
+      });
 
-      return [
-        ...prev,
-        {
-          id: product.id,
-          title: product.title,
-          description: product.description || "", // por si no viene
-          price: product.price,
-          image: product.image || "", // por si no viene
-          quantity: quantity,
-        }
-      ];
+      const data = await res.json();
+      currentOrderId = data.orderId;
+      setOrderId(currentOrderId); // ajustar el back para que devuelva efectivamente un orderId, ahora esta devolviendo un Ok(text)
+      // pero ta jugando arg asiq mañana sera
+    }
+
+    await fetch(`${URL}CreateOrderItem`, {
+      method: "POST",
+      body: JSON.stringify({
+        orderId: currentOrderId,
+        productId,
+        quantity,
+      }),
+      headers: { "Content-Type": "application/json" },
     });
   };
 
