@@ -36,7 +36,7 @@ const PerfumeCard = ({
       </div>
 
       <div className="flex justify-center">
-        <img src={`images/perfumes/${name}.png`} alt={`${brand} ${name}`} className="w-32 h-32 object-contain" />
+        <img src={`images/perfumes/${name}.jpg`} alt={`${brand} ${name}`} className="w-32 h-32 object-contain" />
       </div>
 
       <button
