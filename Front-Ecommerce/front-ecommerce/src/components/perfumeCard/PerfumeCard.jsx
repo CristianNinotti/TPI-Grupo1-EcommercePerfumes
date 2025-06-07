@@ -69,7 +69,20 @@ const PerfumeCard = ({
       </div>
 
       <div className="flex justify-center">
-        <img src={`images/perfumes/${name}.jpg`} alt={`${brand} ${name}`} className="w-32 h-32 object-contain" />
+        <img
+          src={`images/perfumes/${name}.png`}
+          alt={`${brand} ${name}`}
+          className="w-32 h-32 object-contain"
+          onError={e => {
+            if (e.target.src.endsWith('.png')) {
+              e.target.src = `images/perfumes/${name}.jpg`;
+            } else if (e.target.src.endsWith('.jpg') && !e.target.src.includes('Default')) {
+              e.target.src = `images/perfumes/Default.png`;
+            } else if (e.target.src.endsWith('Default.png')) {
+              e.target.src = `images/perfumes/Default.jpg`;
+            }
+          }}
+        />
       </div>
 
       {renderFavoriteIcon()}
