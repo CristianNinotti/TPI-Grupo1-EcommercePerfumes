@@ -50,16 +50,17 @@ namespace Application.Services
             return null;
         }
 
-        public void CreateOrder(int userId, OrderRequest orderRequest)
+        public int CreateOrder(int userId)
         {
-            var order = OrderProfile.ToOrderEntity(orderRequest);
-            var mayorista = _mayoristaRepository.GetMayoristaById(orderRequest.UserId);
-            var minorista = _minoristaRepository.GetMinoristaById(orderRequest.UserId);
-            var superAdmin = _superAdminRepository.GetSuperAdminById(orderRequest.UserId);
+            var order = OrderProfile.ToOrderEntity(userId);
+            var mayorista = _mayoristaRepository.GetMayoristaById(userId);
+            var minorista = _minoristaRepository.GetMinoristaById(userId);
+            var superAdmin = _superAdminRepository.GetSuperAdminById(userId);
 
             if (userId == order.UserId && (mayorista != null && mayorista.Available == true || minorista != null && minorista.Available == true || superAdmin != null && superAdmin.Available == true))
             {
                 _orderRepository.CreateOrderRepository(order);
+                return order.Id;
             }
             else
             {
@@ -70,7 +71,7 @@ namespace Application.Services
         public bool ToUpdateOrder(int userId, int orderId, OrderRequest request)
         {
             var orderEntity = _orderRepository.GetOrderByIdRepository(orderId);
-            if (orderEntity == null || userId != orderEntity.UserId || orderEntity.User == null || orderEntity.User.Available == false || orderEntity.OrderStatus == false || request.UserId != userId || request.UserId != orderEntity.UserId)
+            if (orderEntity == null || userId != orderEntity.UserId || orderEntity.User == null || orderEntity.User.Available == false)
             {
                 return false;
             }

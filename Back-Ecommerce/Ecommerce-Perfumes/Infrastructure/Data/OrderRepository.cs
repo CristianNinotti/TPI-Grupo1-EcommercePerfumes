@@ -38,7 +38,9 @@ namespace Infrastructure.Data
 
         public Order? GetOrderStatusTrue(int id)
         {
-            return _order.Orders.FirstOrDefault(o => o.UserId == id && o.OrderStatus == true);
+            return _order.Orders.Include(o => o.OrderItems)
+                    .ThenInclude(o => o.Product)
+                .FirstOrDefault(o => o.UserId == id && o.OrderStatus == true);
         }
 
         public void CreateOrderRepository(Order order)

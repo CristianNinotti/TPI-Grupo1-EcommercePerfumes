@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class OrderItemController : ControllerBase
     {
         private readonly IOrderItemService _orderItemService;

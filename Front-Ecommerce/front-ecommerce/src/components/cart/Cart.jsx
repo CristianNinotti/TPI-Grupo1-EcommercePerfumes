@@ -89,7 +89,6 @@ const CheckoutPage = () => {
     console.log("Brick listo");
   };
 
-  // 🛒 Si el carrito está vacío, mostramos solo el mensaje
   if (cartItems.length === 0) {
     return (
       <div className="w-full m-[25px] justify-center">
@@ -101,6 +100,8 @@ const CheckoutPage = () => {
     );
   }
 
+  console.log("Cart items:", cartItems);
+
   return (
     <div className="w-full m-[25px] justify-center">
       <h2 className="text-2xl font-semibold mb-4">Finalizar compra</h2>
@@ -110,11 +111,16 @@ const CheckoutPage = () => {
           <h3 className="text-lg font-bold mb-4">Resumen de productos</h3>
           {cartItems.map((item) => (
             <div key={item.id} className="flex gap-4 mb-4 border-b pb-4">
-              <img src={`images/perfumes/${item.title}.png`} alt={item.title} className="w-20 h-20 object-cover rounded" />
+              <img
+                src={`images/perfumes/${item.product?.name}.png`}
+                alt={`${item.product?.marca || ''} ${item.product?.name || ''}`}
+                className="w-32 h-32 object-contain"
+              />
               <div className="flex flex-col justify-between flex-grow">
                 <div>
-                  <h4 className="font-semibold">{item.title}</h4>
-                  <p className="text-gray-500 text-sm">{item.description}</p>
+                  <h4 className="font-semibold">{item.product?.name || ''}</h4>
+                  <p className="text-gray-500 text-sm">{item.product?.description || ''}</p>
+                  <p className="text-gray-500 text-xs">{item.product?.marca || ''}</p>
                 </div>
                 <div className="text-sm mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -126,7 +132,7 @@ const CheckoutPage = () => {
                     </button>
                     <span className="font-bold">{item.quantity}</span>
                     <button
-                      onClick={() => addToCart(item, 1)}
+                      onClick={() => addToCart(item.productId, 1)}
                       className="bg-gray-300 px-2 rounded hover:bg-gray-400"
                     >
                       +
@@ -142,7 +148,7 @@ const CheckoutPage = () => {
                     onClick={() => {
                       Swal.fire({
                         title: '¿Eliminar producto?',
-                        text: `¿Estás seguro de que querés quitar "${item.title}" del carrito?`,
+                        text: `¿Estás seguro de que querés quitar "${item.product?.name || ''}" del carrito?`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',

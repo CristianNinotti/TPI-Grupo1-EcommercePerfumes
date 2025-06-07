@@ -19,6 +19,7 @@ function Productos({ limit = null }) {
   const [sortOrder, setSortOrder] = useState("default");
   const [showCartSidebar, setShowCartSidebar] = useState(false);
   const [lastAddedProduct, setLastAddedProduct] = useState(null);
+  const { orderId } = useCart();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -171,16 +172,8 @@ function Productos({ limit = null }) {
                 cftea="CFTEA: 0%"
                 priceWithoutTax=""
                 onAddToCart={() => {
-                  const productToAdd = {
-                    id: p.id,
-                    title: p.name,
-                    description: "100 ML",
-                    price: p.price,
-                    quantity: 1,
-                  };
-
-                  addToCart(productToAdd);
-                  setLastAddedProduct(productToAdd);
+                  addToCart(p.id);
+                  setLastAddedProduct(p.id); // hay q cambiar esto para que muestre bien
                   setShowCartSidebar(true);
                 }}
                 onClick={() => navigate(`/product/${p.id}`)}

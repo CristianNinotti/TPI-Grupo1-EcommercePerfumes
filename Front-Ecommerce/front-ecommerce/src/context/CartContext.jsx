@@ -9,95 +9,176 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [orderId, setOrderId] = useState(null);
 
+  // Mover fetchCart FUERA del useEffect
+  const fetchCart = async () => {
+    if (!user) {
+      setCartItems([]);
+      localStorage.removeItem("orderId");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${URL}Order/OrderStatusTrue`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || 'Error al obtener el carrito');
+      }
+
+      const data = await res.json();
+
+      if (data && data.id) {
+        localStorage.setItem("orderId", data.id);
+      } else {
+        localStorage.removeItem("orderId");
+      }
+
+      let items = data.orderItems || [];
+
+      const groupedItems = Object.values(
+        items.reduce((acc, item) => {
+          if (!acc[item.productId]) {
+            acc[item.productId] = { ...item };
+          } else {
+            acc[item.productId].quantity += item.quantity;
+            acc[item.productId].totalPrice += item.totalPrice;
+          }
+          return acc;
+        }, {})
+      );
+
+      const itemsWithProduct = await Promise.all(
+        groupedItems.map(async (item) => {
+          if (item.product) return item;
+          try {
+            const resProd = await fetch(`${URL}Product/ProductById/${item.productId}`);
+            const product = await resProd.json();
+            return { ...item, product };
+          } catch {
+            return item;
+          }
+        })
+      );
+
+      setCartItems(itemsWithProduct);
+      console.log(itemsWithProduct)
+    } catch (err) {
+      console.error("Error al obtener el carrito", err);
+      setCartItems([]);
+      localStorage.removeItem("orderId");
+    }
+  };
+
   useEffect(() => {
-    const fetchCart = async () => {
-      if (!user) {
-        setCartItems([]);
-        return;
-      }
-
-      try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`${URL}Order/OrderStatusTrue`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) {
-          const errorText = await res.text(); 
-          throw new Error(errorText || 'Error al obtener el carrito');
-        }
-
-        const data = await res.json();
-        // ^^ trae los datos de la ORDEN
-        // hay que obtener los orderItems de la order para setearlo en cartItems y q funcione el coso del header
-        // esto de aca abajo no hace un carajo
-        setCartItems(data.orderItems || []);
-      } catch (err) {
-        console.error("Error al obtener el carrito", err);
-        setCartItems([]);
-      }
-    };
-
     fetchCart();
   }, [user]);
-
-
-  // de aca para abajo no vamos a usar nada, hay que seguir cambiando
-  // pero si comento el codigo se rompe la pagina :p
-
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
   const addToCart = async (productId, quantity = 1) => {
-    let currentOrderId = orderId;
+    let currentOrderId = parseInt(localStorage.getItem("orderId"));
+    let token = localStorage.getItem("token");
+    console.log(token)
 
     if (!currentOrderId) {
       const res = await fetch(`${URL}Order/CreateOrder`, {
         method: "POST",
-        body: JSON.stringify({ etcetc }),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
       });
-
       const data = await res.json();
-      currentOrderId = data.orderId;
-      setOrderId(currentOrderId); // ajustar el back para que devuelva efectivamente un orderId, ahora esta devolviendo un Ok(text)
-      // pero ta jugando arg asiq mañana sera
+      console.log(data);
+
+      currentOrderId = data;
+      setOrderId(currentOrderId);
+      console.log(currentOrderId);
     }
 
-    await fetch(`${URL}CreateOrderItem`, {
+    await fetch(`${URL}OrderItem/CreateOrderItem`, {
       method: "POST",
       body: JSON.stringify({
         orderId: currentOrderId,
         productId,
         quantity,
       }),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
     });
   };
 
 
-  const removeFromCart = (productId) => {
-    setCartItems(prev => prev.filter(item => item.id !== productId));
+  const removeFromCart = async (orderItemId) => {
+    const token = localStorage.getItem("token");
+    try {
+      await fetch(`${URL}OrderItem/HardDeleteOrderItem/${orderItemId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+      });
+
+      await fetchCart();
+    } catch (err) {
+      console.error("Error al eliminar producto del carrito", err);
+    }
   };
 
-  const clearCart = () => {
-    setCartItems([]);
+  const clearCart = async () => {
+    const token = localStorage.getItem("token");
+    const orderId = localStorage.getItem("orderId");
+    try {
+      await fetch(`${URL}Order/HardDeleteOrder/${orderId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+      });
+      await fetchCart();
+    } catch (err) {
+      console.error("Error al vaciar el carrito", err);
+    }
   };
 
-  const decreaseQuantity = (productId) => {
-    setCartItems(prev =>
-      prev
-        .map(item =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        )
-        .filter(item => item.quantity > 0)
-    );
+  const decreaseQuantity = async (productId) => {
+    const token = localStorage.getItem("token");
+    const orderId = localStorage.getItem("orderId");
+    
+    const item = cartItems.find(i => i.productId === productId);
+    if (!item) return;
+    if (item.quantity <= 1) {
+      await removeFromCart(productId);
+      return;
+    }
+    try {
+      await fetch(`${URL}OrderItem/UpdateQuantity`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          orderId: parseInt(orderId),
+          productId,
+          quantity: item.quantity - 1,
+        }),
+      });
+      await fetchCart();
+    } catch (err) {
+      console.error("Error al disminuir cantidad", err);
+    }
   };
 
 

@@ -116,7 +116,7 @@ namespace Web.Controllers
 
         [HttpPost("CreateOrder")]
 
-        public IActionResult CreateOrder([FromBody] OrderRequest orderRequest)
+        public IActionResult CreateOrder()
         {
             try
             {
@@ -128,8 +128,8 @@ namespace Web.Controllers
                 }
                 int userId = int.Parse(userIdClaim);
 
-                _orderService.CreateOrder(userId, orderRequest);
-                return Ok("Orden creado con exito");
+                var orderId = _orderService.CreateOrder(userId);
+                return Ok(orderId);
             }
             catch (InvalidOperationException ex)
             {

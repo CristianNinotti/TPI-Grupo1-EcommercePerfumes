@@ -8,6 +8,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Web.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class PaymentController : Controller
     {
         private readonly IPaymentService _paymentService;

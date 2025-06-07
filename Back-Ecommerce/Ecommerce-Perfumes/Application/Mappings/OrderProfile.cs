@@ -7,13 +7,13 @@ namespace Application.Mappings
     public class OrderProfile
     {
 
-        public static Order ToOrderEntity(OrderRequest orderRequest)
+        public static Order ToOrderEntity(int userId)
         {
             return new Order()
             {
                 OrderDate = DateTime.Now,
-                OrderStatus = orderRequest.OrderStatus,
-                UserId = orderRequest.UserId,
+                OrderStatus = true,
+                UserId = userId,
 
             };
         }
