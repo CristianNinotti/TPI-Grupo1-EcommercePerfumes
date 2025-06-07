@@ -19,6 +19,7 @@ function Productos({ limit = null }) {
   const [sortOrder, setSortOrder] = useState("default");
   const [showCartSidebar, setShowCartSidebar] = useState(false);
   const [lastAddedProduct, setLastAddedProduct] = useState(null);
+  const [selectedGender, setSelectedGender] = useState(null); // <--- AGREGADO
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,8 +30,16 @@ function Productos({ limit = null }) {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const categoryId = params.get("categoryId");
+    const gender = params.get("gender"); // <--- AGREGADO
     if (categoryId) {
       setSelectedCategoryId(Number(categoryId));
+    } else {
+      setSelectedCategoryId(null);
+    }
+    if (gender) {
+      setSelectedGender(gender);
+    } else {
+      setSelectedGender(null);
     }
   }, [location.search]);
 
@@ -62,9 +71,17 @@ function Productos({ limit = null }) {
       .finally(() => setLoadingCategories(false));
   }, []);
 
-  const filtered = selectedCategoryId
-    ? products.filter((p) => p.categoryId === selectedCategoryId)
-    : products;
+  // FILTRO POR CATEGORÍA Y GÉNERO
+  const filtered = products
+    .filter((p) =>
+      selectedCategoryId ? p.categoryId === selectedCategoryId : true
+    )
+    .filter((p) => {
+      if (!selectedGender) return true;
+      // Soporta tanto "Genero" como "genero"
+      const genero = p.Genero || p.genero || "";
+      return genero.toLowerCase() === selectedGender.toLowerCase();
+    });
 
   const productosFiltradosPorNombre = useFilteredProductsByName(filtered, searchTerm);
 
