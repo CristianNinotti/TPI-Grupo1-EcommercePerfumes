@@ -110,7 +110,20 @@ const CheckoutPage = () => {
           <h3 className="text-lg font-bold mb-4">Resumen de productos</h3>
           {cartItems.map((item) => (
             <div key={item.id} className="flex gap-4 mb-4 border-b pb-4">
-              <img src={`images/perfumes/${item.title}.png`} alt={item.title} className="w-20 h-20 object-cover rounded" />
+              <img
+                src={`images/perfumes/${item.title}.png`}
+                alt={`${item.title} ${item.brand}`}
+                className="w-20 h-20 object-cover rounded"
+                onError={e => {
+                  if (e.target.src.endsWith('.png')) {
+                    e.target.src = `images/perfumes/${item.title}.jpg`;
+                  } else if (e.target.src.endsWith('.jpg') && !e.target.src.includes('Default')) {
+                    e.target.src = `images/perfumes/Default.png`;
+                  } else if (e.target.src.endsWith('Default.png')) {
+                    e.target.src = `images/perfumes/Default.jpg`;
+                  }
+                }}
+              />
               <div className="flex flex-col justify-between flex-grow">
                 <div>
                   <h4 className="font-semibold">{item.title}</h4>

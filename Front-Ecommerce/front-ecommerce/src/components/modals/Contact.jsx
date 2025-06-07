@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
-import { useAnimatedClose } from '../animations/UseAnimatedClose';
+import { useAnimatedClose } from '../../hooks/UseAnimatedClose';
 
 const Contact = ({ isOpen, onClose }) => {
   const { isVisible, isClosing, handleAnimatedClose } = useAnimatedClose(isOpen, onClose);
