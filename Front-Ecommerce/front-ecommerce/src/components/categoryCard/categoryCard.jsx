@@ -35,7 +35,7 @@ const CategoryCard = ({
       onClick={categoryAvailable ? (onClick ? onClick : handleClick) : undefined}
       className={`${baseClasses} ${
         categoryAvailable ? availableClasses : unavailableClasses
-      }`}
+      } hover:scale-105 hover:shadow-2xl hover:bg-green-300 hover:opacity-90 transition-all duration-200`}
     >
       {categoryName}
       {!categoryAvailable && ' (No Disp.)'}

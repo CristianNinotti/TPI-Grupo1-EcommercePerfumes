@@ -66,9 +66,9 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Sobre el almacén */}
+        {/* Sobre la perfumería */}
         <div>
-          <h2 className="text-gray-600 font-bold text-lg mb-4">Sobre el almacén</h2>
+          <h2 className="text-gray-600 font-bold text-lg mb-4">Sobre la perfumería</h2>
           <ul className="space-y-2">
             <li><p className="hover:text-green-400 cursor-pointer" onClick={() => openModal(setIsQuestionsOpen)}>Preguntas frecuentes</p></li>
             <li><p className="hover:text-green-400 cursor-pointer" onClick={() => openModal(setIsHowToBuyOpen)}>¿Cómo comprar?</p></li>
