@@ -70,13 +70,22 @@ function Productos({ limit = null }) {
   const productosFiltradosPorNombre = useFilteredProductsByName(filtered, searchTerm);
 
   const productosOrdenados = useMemo(() => {
-    if (sortOrder === "asc") {
-      return [...productosFiltradosPorNombre].sort((a, b) => a.price - b.price);
+    switch (sortOrder) {
+      case "price-asc":
+        return [...productosFiltradosPorNombre].sort((a, b) => a.price - b.price);
+      case "price-desc":
+        return [...productosFiltradosPorNombre].sort((a, b) => b.price - a.price);
+      case "name-asc":
+        return [...productosFiltradosPorNombre].sort((a, b) => a.name.localeCompare(b.name));
+      case "name-desc":
+        return [...productosFiltradosPorNombre].sort((a, b) => b.name.localeCompare(a.name));
+      case "discount":
+        return [...productosFiltradosPorNombre].sort((a, b) => (b.discountPercentage || 0) - (a.discountPercentage || 0));
+      case "newest":
+        return [...productosFiltradosPorNombre].sort((a, b) => b.id - a.id);
+      default:
+        return productosFiltradosPorNombre;
     }
-    if (sortOrder === "desc") {
-      return [...productosFiltradosPorNombre].sort((a, b) => b.price - a.price);
-    }
-    return productosFiltradosPorNombre;
   }, [productosFiltradosPorNombre, sortOrder]);
 
   const displayProducts = limit ? productosOrdenados.slice(0, limit) : productosOrdenados;
@@ -120,33 +129,34 @@ function Productos({ limit = null }) {
 
       <div className="flex flex-wrap justify-end gap-3 mb-6">
         <SearchProduct value={searchTerm} onChange={setSearchTerm} />
-        <div className="flex justify-center gap-4 mb-4">
-          <button
-            onClick={() => setSortOrder("asc")}
-             className={`px-3 py-1 rounded border ${
-            sortOrder === "asc" ? "bg-blue-600 text-white" : inactiveButtonClass
-          }`}
-          >
-            Precio ↓
-          </button>
-          <button
-            onClick={() => setSortOrder("desc")}
-            className={`px-3 py-1 rounded border ${
-              sortOrder === "desc" ? "bg-blue-600 text-white" : inactiveButtonClass
-            }`}
-          >
-            Precio ↑
-          </button>
-          <button
-            onClick={() => setSortOrder("default")}
-            className={`px-3 py-1 rounded border ${
-              sortOrder === "default"
-                ? "bg-blue-600 text-white"
-                : `${mode === "dark" ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-gray-200 text-black hover:bg-blue-300"}`
-            }`}
-          >
-            Sin Orden
-          </button>
+        <div>
+          <div className="relative">
+            <select
+              id="sortOrder"
+              value={sortOrder}
+              onChange={e => setSortOrder(e.target.value)}
+              className={`
+                inline-block px-3 py-1 rounded-full text-sm font-medium
+                select-none transition-colors border-2 shadow
+                ${mode === "dark"
+                  ? "bg-gray-200 text-black border-green-600"
+                  : "bg-gray-200 text-black border-green-600"}
+                cursor-pointer
+              `}
+              style={{
+                minWidth: "180px",
+                fontSize: "1rem"
+              }}
+            >
+              <option value="default">Ordenar por</option>
+              <option value="price-asc">Precio ↓</option>
+              <option value="price-desc">Precio ↑</option>
+              <option value="name-asc">Nombre A-Z</option>
+              <option value="name-desc">Nombre Z-A</option>
+              <option value="discount">Mayor descuento</option>
+              <option value="newest">Más nuevo</option>
+            </select>
+          </div>
         </div>
       </div>
 

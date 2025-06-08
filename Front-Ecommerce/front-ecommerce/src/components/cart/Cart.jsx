@@ -38,9 +38,11 @@ const CheckoutPage = () => {
   const createPreference = async () => {
     try {
       const items = cartItems.map((item) => ({
-        title: item.title,
+        title: item.product?.name || item.title,
         quantity: item.quantity,
-        unitPrice: item.price,
+        unitPrice: isMayoristaConDescuento
+          ? Number((item.price * user.discountRate).toFixed(2))
+          : item.price,
       }));
 
       const response = await fetch("https://localhost:7174/api/MercadoPago/create-preference", {
@@ -108,7 +110,32 @@ const CheckoutPage = () => {
 
       <div className="flex flex-col md:flex-row gap-8">
         <div className={`flex-1 rounded-lg shadow p-4 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}>
-          <h3 className="text-lg font-bold mb-4">Resumen de productos</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-bold">Resumen de productos</h3>
+            <button
+              onClick={() => {
+                Swal.fire({
+                  title: '¿Vaciar carrito?',
+                  text: '¿Estás seguro de que querés eliminar todos los productos del carrito?',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#d33',
+                  cancelButtonColor: '#3085d6',
+                  confirmButtonText: 'Sí, vaciar',
+                  cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    clearCart();
+                    Swal.fire('Vaciado', 'El carrito fue vaciado.', 'success');
+                  }
+                });
+              }}
+              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition text-sm"
+              title="Vaciar carrito"
+            >
+              Vaciar carrito 🗑️
+            </button>
+          </div>
           {cartItems.map((item) => (
             <div key={item.id} className="flex gap-4 mb-4 border-b pb-4">
               <img
