@@ -76,6 +76,13 @@ const ProductDetail = () => {
                   src={`/images/perfumes/${producto.name}.png`}
                   alt={`${producto.marca} ${producto.name}`}
                   className="w-20 h-20 object-contain"
+                  onError={e => {
+                    if (e.target.src.endsWith('.png')) {
+                      e.target.src = `/images/perfumes/${producto.name}.jpg`;
+                    } else if (e.target.src.endsWith('.jpg')) {
+                      e.target.src = `/images/perfumes/Default.png`;
+                    }
+                  }}
                 />
               </button>
             {/* ))} */}
@@ -91,6 +98,15 @@ const ProductDetail = () => {
               src={`/images/perfumes/${producto.name}.png`}
               alt={`${producto.marca} ${producto.name}`}
               className="max-h-[400px] object-contain"
+              onError={e => {
+                if (e.target.src.endsWith('.png')) {
+                  e.target.src = `/images/perfumes/${producto.name}.jpg`;
+                } else if (e.target.src.endsWith('.jpg') && !e.target.src.includes('Default')) {
+                  e.target.src = `images/perfumes/Default.png`;
+                } else if (e.target.src.endsWith('Default.png')) {
+                  e.target.src = `images/perfumes/Default.jpg`;
+                }
+              }}
             />
           </div>
         </div>
