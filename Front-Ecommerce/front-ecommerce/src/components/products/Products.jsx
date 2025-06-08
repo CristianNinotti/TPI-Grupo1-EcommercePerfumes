@@ -98,14 +98,27 @@ function Productos({ limit = null }) {
   const displayProducts = limit ? productosOrdenados.slice(0, limit) : productosOrdenados;
 
   const handleCategoryClick = (categoryId) => {
-    if (selectedCategoryId === categoryId) {
-      setSelectedCategoryId(null);
-      navigate("/products");
+  const searchParams = new URLSearchParams(location.search);
+  const gender = searchParams.get("gender");
+
+  if (selectedCategoryId === categoryId) {
+    setSelectedCategoryId(null);
+    // Mantenemos el género si existía
+    if (gender) {
+      navigate(`/products?gender=${gender}`);
     } else {
-      setSelectedCategoryId(categoryId);
-      navigate(`/products?categoryId=${categoryId}`);
+      navigate("/products");
     }
-  };
+  } else {
+    setSelectedCategoryId(categoryId);
+    // Armamos la nueva URL con categoryId y, si aplica, el gender
+    const newParams = new URLSearchParams();
+    newParams.set("categoryId", categoryId);
+    if (gender) newParams.set("gender", gender);
+
+    navigate(`/products?${newParams.toString()}`);
+  }
+};
   const inactiveButtonClass =
     mode === "dark"
       ? "bg-gray-700 text-white hover:bg-gray-600"
