@@ -51,17 +51,40 @@ namespace Application.Services
             if (product != null && orderEntity != null && userId == orderEntity.UserId && orderEntity.OrderStatus && product.Available && orderItem.Quantity <= product.Stock)
             {
                 var mayoristaEntity = _mayoristaRepository.GetMayoristaById(orderEntity.UserId);
-                var totalPrice = orderItem.Quantity * product.Price;
-                var orderItemEntity = OrderItemProfile.ToOrderItemEntity(orderItem, product.Price);
-                orderItemEntity.TotalPrice = totalPrice;
 
-                if (mayoristaEntity != null)
+                var existingOrderItem = _orderItemRepository
+                    .GetOrderItemsByOrderIdRepository(orderItem.OrderId)
+                    .FirstOrDefault(oi => oi.ProductId == orderItem.ProductId && oi.Available);
+
+                if (existingOrderItem != null)
                 {
-                    orderItemEntity.TotalPrice *= mayoristaEntity.DiscountRate;
+                    existingOrderItem.Quantity += orderItem.Quantity;
+                    existingOrderItem.TotalPrice = existingOrderItem.Quantity * product.Price;
+
+                    if (mayoristaEntity != null)
+                    {
+                        existingOrderItem.TotalPrice *= mayoristaEntity.DiscountRate;
+                    }
+
+                    _orderItemRepository.UpdateOrderItemRepository(existingOrderItem);
+                }
+                else
+                {
+                    var orderItemEntity = OrderItemProfile.ToOrderItemEntity(orderItem, product.Price);
+                    orderItemEntity.TotalPrice = orderItem.Quantity * product.Price;
+
+                    if (mayoristaEntity != null)
+                    {
+                        orderItemEntity.TotalPrice *= mayoristaEntity.DiscountRate;
+                    }
+
+                    _orderItemRepository.CreateOrderItemRepository(orderItemEntity);
                 }
 
-                _orderItemRepository.CreateOrderItemRepository(orderItemEntity);
-                orderEntity.TotalAmount = _orderItemRepository.GetOrderItemsByOrderIdRepository(orderItem.OrderId).Where(oi => oi.Available).Sum(oi => oi.TotalPrice);
+                orderEntity.TotalAmount = _orderItemRepository
+                    .GetOrderItemsByOrderIdRepository(orderItem.OrderId)
+                    .Where(oi => oi.Available)
+                    .Sum(oi => oi.TotalPrice);
                 _orderRepository.UpdateOrderRepository(orderEntity);
             }
             else
@@ -126,7 +149,7 @@ namespace Application.Services
         public bool HardDeleteOrderItem(int userId, int id)
         {
             var orderItemEntity = _orderItemRepository.GetOrderItemByIdRepository(id);
-            if (orderItemEntity == null || userId != orderItemEntity?.Order?.UserId)
+            if (orderItemEntity == null)
             {
                 return false;
             }

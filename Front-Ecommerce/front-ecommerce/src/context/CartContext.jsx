@@ -9,7 +9,6 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [orderId, setOrderId] = useState(null);
 
-  // Mover fetchCart FUERA del useEffect
   const fetchCart = async () => {
     if (!user) {
       setCartItems([]);
@@ -115,6 +114,8 @@ export const CartProvider = ({ children }) => {
         "Content-Type": "application/json"
       },
     });
+
+    await fetchCart();
   };
 
 
@@ -155,15 +156,17 @@ export const CartProvider = ({ children }) => {
   const decreaseQuantity = async (productId) => {
     const token = localStorage.getItem("token");
     const orderId = localStorage.getItem("orderId");
-    
+
     const item = cartItems.find(i => i.productId === productId);
     if (!item) return;
+
     if (item.quantity <= 1) {
-      await removeFromCart(productId);
+      await removeFromCart(item.id); 
       return;
     }
+
     try {
-      await fetch(`${URL}OrderItem/UpdateQuantity`, {
+      await fetch(`${URL}OrderItem/UpdateOrderItem/${item.id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

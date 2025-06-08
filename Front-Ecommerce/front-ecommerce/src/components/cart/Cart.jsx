@@ -125,7 +125,7 @@ const CheckoutPage = () => {
                 <div className="text-sm mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => decreaseQuantity(item.id)}
+                      onClick={() => decreaseQuantity(item.productId)}
                       className="bg-gray-300 px-2 rounded hover:bg-gray-400"
                     >
                       -
@@ -157,7 +157,7 @@ const CheckoutPage = () => {
                         cancelButtonText: 'Cancelar',
                       }).then((result) => {
                         if (result.isConfirmed) {
-                          removeFromCart(item.id);
+                          removeFromCart(item.id); 
                           Swal.fire('Eliminado', 'El producto fue eliminado del carrito.', 'success');
                         }
                       });

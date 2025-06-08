@@ -49,12 +49,24 @@ function CartSidebar({ isOpen, onClose, lastAddedProduct }) {
                         ¡Producto agregado al carrito!
                     </p>
                     {lastAddedProduct && (
-                        <div className="mb-4 text-left w-full px-4">
-                            <p className="text-sm">
-                                <strong>{lastAddedProduct.title}</strong> – {lastAddedProduct.description}
-                            </p>
-                            <p className="text-sm">Precio: ${lastAddedProduct.price.toFixed(2)}</p>
-                            <p className="text-sm">Cantidad: {lastAddedProduct.quantity}</p>
+                        <div className="mb-4 flex flex-col items-center w-full">
+                            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-2 relative">
+                                {lastAddedProduct.product?.name && (
+                                    <img
+                                        src={`images/perfumes/${lastAddedProduct.product.name}.png`}
+                                        alt={lastAddedProduct.product.name}
+                                        className="w-16 h-16 object-contain rounded-full"
+                                    />
+                                )}
+                                <span className="absolute bottom-1 right-1 bg-green-500 text-white rounded-full p-1 text-lg border-2 border-white">✔</span>
+                            </div>
+                            <div className="text-center w-full">
+                                <p className="font-bold text-base">{lastAddedProduct.product?.name || lastAddedProduct.name}</p>
+                                <p className="text-sm text-gray-500">{lastAddedProduct.product?.marca || lastAddedProduct.marca}</p>
+                                <p className="text-sm">{lastAddedProduct.product?.description || lastAddedProduct.description}</p>
+                                <p className="text-sm">Precio: ${lastAddedProduct.price?.toFixed ? lastAddedProduct.price.toFixed(2) : lastAddedProduct.price}</p>
+                                <p className="text-sm">Cantidad: {lastAddedProduct.quantity}</p>
+                            </div>
                         </div>
                     )}
                     <div className="flex flex-col gap-2 w-full">

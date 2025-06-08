@@ -5,7 +5,7 @@ import "./Products.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useFilteredProductsByName } from "../../hooks/useSearch";
 import SearchProduct from "../searchProduct/SearchProduct";
-import CartSidebar from "../cartSidebar/CartSidebar";
+import CartSidebar from "../cartSidebar/cartSidebar";
 import useCart from "../../hooks/useCart";
 import { useTheme } from "../../context/ThemeContext"; 
 
@@ -173,7 +173,11 @@ function Productos({ limit = null }) {
                 priceWithoutTax=""
                 onAddToCart={() => {
                   addToCart(p.id);
-                  setLastAddedProduct(p.id); // hay q cambiar esto para que muestre bien
+                  setLastAddedProduct({
+                    product: p,
+                    price: p.price,
+                    quantity: 1, 
+                  });
                   setShowCartSidebar(true);
                 }}
                 onClick={() => navigate(`/product/${p.id}`)}

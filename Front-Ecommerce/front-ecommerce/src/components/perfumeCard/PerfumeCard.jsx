@@ -85,7 +85,13 @@ const PerfumeCard = ({
         <>
           <button
             className="mt-4 w-full bg-green-400 uppercase text-sm font-semibold py-2 rounded hover:bg-green-600 hover:text-white transition"
-            onClick={onAddToCart}
+            onClick={() => {
+              if (!user) {
+                navigate('/login');
+              } else {
+                onAddToCart();
+              }
+            }}
           >
             Agregar al carrito
           </button>
