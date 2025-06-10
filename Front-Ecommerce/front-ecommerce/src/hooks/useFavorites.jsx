@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 function getUserKey(user) {
-  return user && user.email ? `favorites_${user.email}` : null;
+  return user && user.nameAccount ? `favorites_${user.nameAccount}` : null;
 }
 
 export default function useFavorites(user) {
@@ -30,24 +30,36 @@ export default function useFavorites(user) {
     return () => window.removeEventListener("storage", handleStorage);
   }, [userKey]);
 
-  // Siempre lee la última versión antes de agregar/quitar
+  // Usar useCallback para evitar bucles infinitos en dependencias
+  const reloadFavorites = useCallback(() => {
+    if (userKey) {
+      const favs = JSON.parse(localStorage.getItem(userKey)) || [];
+      setFavorites(favs);
+    }
+  }, [userKey]);
+
   const addFavorite = (productId) => {
     if (!userKey) return;
-    const favs = JSON.parse(localStorage.getItem(userKey)) || [];
-    const newFavs = [...new Set([...favs, productId])];
-    setFavorites(newFavs);
+    const idNum = Number(productId);
+    const favs = (JSON.parse(localStorage.getItem(userKey)) || []).map(Number);
+    const newFavs = [...new Set([...favs, idNum])];
     localStorage.setItem(userKey, JSON.stringify(newFavs));
+    setFavorites(newFavs); // Actualiza el estado local
   };
 
   const removeFavorite = (productId) => {
     if (!userKey) return;
-    const favs = JSON.parse(localStorage.getItem(userKey)) || [];
-    const newFavs = favs.filter((id) => id !== productId);
-    setFavorites(newFavs);
+    const idNum = Number(productId);
+    const favs = (JSON.parse(localStorage.getItem(userKey)) || []).map(Number);
+    const newFavs = favs.filter((id) => id !== idNum);
     localStorage.setItem(userKey, JSON.stringify(newFavs));
+    setFavorites(newFavs); // Actualiza el estado local
   };
 
-  const isFavorite = (productId) => favorites.includes(productId);
+  const isFavorite = (productId) => {
+    const idNum = Number(productId);
+    return favorites.map(Number).includes(idNum);
+  };
 
-  return { favorites, addFavorite, removeFavorite, isFavorite, userKey };
+  return { favorites, addFavorite, removeFavorite, isFavorite, reloadFavorites, userKey };
 }
