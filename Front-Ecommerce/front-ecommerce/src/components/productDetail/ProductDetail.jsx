@@ -1,9 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { MdShare, MdFavoriteBorder } from 'react-icons/md';
 import { CartContext } from '../../context/CartContext';
 import CartSidebar from '../cartSidebar/CartSidebar';
 import { useTheme } from '../../context/ThemeContext';
+import useFavorites from "../../hooks/useFavorites";
+import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
+import { AuthContext } from "../../context/AuthContext";
+import useTemporaryModal from "../../hooks/useTemporaryModal";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -16,7 +19,40 @@ const ProductDetail = () => {
   const token = localStorage.getItem("token");
   const { addToCart } = useContext(CartContext);
   const { mode } = useTheme();
+  const { user } = useContext(AuthContext);
+  const { addFavorite, removeFavorite, isFavorite, userKey } = useFavorites(user);
+  const { showModal, Modal } = useTemporaryModal();
 
+  console.log(localStorage);
+
+  const renderFavoriteIcon = () => {
+    const handleClick = () => {
+      if (!userKey) {
+        showModal("Debes iniciar sesión para agregar favoritos.");
+        return;
+      }
+      if (isFavorite(id)) {
+        removeFavorite(id);
+      } else {
+        addFavorite(id);
+      }
+    };
+
+    const Icon = isFavorite(id) ? MdFavorite : MdFavoriteBorder;
+    const color = isFavorite(id) ? "red" : "gray";
+    const label = isFavorite(id) ? "Quitar de favoritos" : "Agregar a favoritos";
+
+    return (
+      <Icon
+        className="cursor-pointer transition-transform hover:scale-110"
+        onClick={handleClick}
+        size={32}
+        color={color}
+        aria-label={label}
+      />
+    );
+  };
+  
   useEffect(() => {
     fetch(`https://localhost:7174/api/Product/ProductById/${id}`, {
       headers: {
@@ -59,6 +95,7 @@ const ProductDetail = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
+      <Modal />
       {/* <nav className="text-sm text-gray-500">
         Inicio / Fragancias / Premium / Unisex / Eau de Toilette / Regular
       </nav> */}
@@ -112,15 +149,13 @@ const ProductDetail = () => {
         </div>
 
         <div className="flex-1 bg-gray-50 rounded-2xl p-8 space-y-6 relative">
-          {/* <div className="absolute top-6 right-6 flex space-x-4">
-            <button onClick={() => console.log('Favorito')}>
-              <MdFavoriteBorder size={20} />
-            </button>
-          </div> */}
+          <div className='flex items-center justify-between mb-4'>
+            <h2 className={`text-xl font-medium ${mode === "dark" ? "text-black" : "text-gray-800"}`}>
+              {producto.marca}
+            </h2>
 
-          <h2 className={`text-xl font-medium ${mode === "dark" ? "text-black" : "text-gray-800"}`}>
-            {producto.marca}
-          </h2>
+            {renderFavoriteIcon()}
+          </div>
           <h1 className={`text-3xl font-bold ${mode === "dark" ? "text-black" : "text-black"}`}>
             {producto.name}
           </h1>

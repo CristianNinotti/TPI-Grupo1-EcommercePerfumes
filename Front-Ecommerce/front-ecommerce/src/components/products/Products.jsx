@@ -8,6 +8,8 @@ import SearchProduct from "../searchProduct/SearchProduct";
 import CartSidebar from "../cartSidebar/CartSidebar";
 import useCart from "../../hooks/useCart";
 import { useTheme } from "../../context/ThemeContext"; 
+import { useAuth } from "../../context/AuthContext";
+import useFavorites from "../../hooks/useFavorites";
 
 function Productos({ limit = null }) {
   const [products, setProducts] = useState([]);
@@ -19,13 +21,16 @@ function Productos({ limit = null }) {
   const [sortOrder, setSortOrder] = useState("default");
   const [showCartSidebar, setShowCartSidebar] = useState(false);
   const [lastAddedProduct, setLastAddedProduct] = useState(null);
-  const [selectedGender, setSelectedGender] = useState(null); // <--- AGREGADO
+  const [selectedGender, setSelectedGender] = useState(null);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+
+  const { mode } = useTheme();
+  const { user, auth} = useAuth();
+  const { favorites, isFavorite, reloadFavorites } = useFavorites(user);
+  const { cartItems, addToCart } = useCart();
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { mode } = useTheme();
-
-  const { cartItems, addToCart } = useCart();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -72,7 +77,7 @@ function Productos({ limit = null }) {
   }, []);
 
   // FILTRO POR CATEGORÍA Y GÉNERO
-  const filtered = products
+  let filtered = products
     .filter((p) =>
       selectedCategoryId ? p.categoryId === selectedCategoryId : true
     )
@@ -82,6 +87,11 @@ function Productos({ limit = null }) {
       const genero = p.Genero || p.genero || "";
       return genero.toLowerCase() === selectedGender.toLowerCase();
     });
+
+  // Filtro por favoritos si está activo
+  if (showOnlyFavorites) {
+    filtered = filtered.filter((p) => favorites.includes(p.id));
+  }
 
   const productosFiltradosPorNombre = useFilteredProductsByName(filtered, searchTerm);
 
@@ -122,7 +132,14 @@ function Productos({ limit = null }) {
   const inactiveButtonClass =
     mode === "dark"
       ? "bg-gray-700 text-white hover:bg-gray-600"
-      : "bg-gray-200 text-black hover:bg-blue-300";
+      : "bg-gray-200 text-black hover:bg-green-400";
+
+  // Cuando se activa/desactiva el filtro de favoritos, recarga favoritos
+  useEffect(() => {
+    if (showOnlyFavorites) {
+      reloadFavorites();
+    }
+  }, [showOnlyFavorites, reloadFavorites]);
 
   return (
     <div className="products">
@@ -151,40 +168,51 @@ function Productos({ limit = null }) {
         <SearchProduct value={searchTerm} onChange={setSearchTerm} />
         <div className="flex justify-center gap-4 mb-4">
           <button
-            onClick={() => setSortOrder("asc")}
-             className={`px-3 py-1 rounded border ${
-            sortOrder === "asc" ? "bg-blue-600 text-white" : inactiveButtonClass
-          }`}
+            onClick={() =>
+              setSortOrder((prev) => (prev === "asc" ? "default" : "asc"))
+            }
+            className={`px-3 py-1 rounded border ${
+              sortOrder === "asc" ? "bg-green-600 text-white" : inactiveButtonClass
+            }`}
           >
             Precio ↓
           </button>
           <button
-            onClick={() => setSortOrder("desc")}
+            onClick={() =>
+              setSortOrder((prev) => (prev === "desc" ? "default" : "desc"))
+            }
             className={`px-3 py-1 rounded border ${
-              sortOrder === "desc" ? "bg-blue-600 text-white" : inactiveButtonClass
+              sortOrder === "desc" ? "bg-green-600 text-white" : inactiveButtonClass
             }`}
           >
             Precio ↑
           </button>
-          <button
-            onClick={() => setSortOrder("default")}
-            className={`px-3 py-1 rounded border ${
-              sortOrder === "default"
-                ? "bg-blue-600 text-white"
-                : `${mode === "dark" ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-gray-200 text-black hover:bg-blue-300"}`
-            }`}
-          >
-            Sin Orden
-          </button>
+          {auth.loggedIn && (
+            <button
+              onClick={() => setShowOnlyFavorites((prev) => !prev)}
+              className={`px-3 py-1 rounded border ${
+                showOnlyFavorites
+                  ? "bg-green-600 text-white"
+                  : inactiveButtonClass
+              }`}
+              title="Mostrar solo favoritos"
+            >
+              Favoritos
+            </button>
+        )}
         </div>
       </div>
 
       {loadingProducts ? (
         <p className="text-center">Cargando productos…</p>
+      ) : displayProducts.length === 0 ? (
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-6 rounded text-center">
+          No existen productos para los filtros seleccionados.
+        </div>
       ) : (
         <ul className="product-list">
           {displayProducts.map((p) => (
-            <li key={p.id} className="product-card flex flex-col items-end">
+            <li key={p.id} className="product-card">
               <PerfumeCard
                 id={p.id}
                 volume={p.description}
