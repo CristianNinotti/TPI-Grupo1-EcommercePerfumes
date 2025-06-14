@@ -1,13 +1,17 @@
-import { useContext, useState } from 'react';
+import { use, useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
+import { useRef } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 
 const Profile = () => {
     const { user, logout } = useUser();
     // const { token } = useContext(AuthContext)
     const [isEditing, setIsEditing] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const storedPassword = localStorage.getItem("userPassword") || '';
+
     const [formData, setFormData] = useState({
         firstName: user?.firstName,
         lastName: user?.lastName,
@@ -17,7 +21,8 @@ const Profile = () => {
         dni: user?.dni || '',
         nameAccount: user?.nameAccount || '',
         phoneNumber: user?.phoneNumber || '',
-        cuit: user?.accountType === 'Mayorista' ? user?.cuit : '', 
+        password: storedPassword,
+        cuit: user?.accountType === 'Mayorista' ? user?.cuit : '',
         categoria: user?.accountType === 'Mayorista' ? user?.categoria : '',
     });
     const navigate = useNavigate();
@@ -29,8 +34,14 @@ const Profile = () => {
 
     const handleEditClick = () => {
         setIsEditing(true);
-        setFormData(user); 
+        setFormData(prev => ({
+            ...user,
+            password: storedPassword,
+        }));
+
     };
+
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -41,11 +52,11 @@ const Profile = () => {
         if (!updatedData.password) {
             delete updatedData.password;
         }
-    
+
         const endpoint = user?.accountType === 'Minorista'
-          ? `https://localhost:7174/api/Minorista/UpdateMinorista/${user.id}`
-          : `https://localhost:7174/api/Mayorista/UpdateMayorista/${user.id}`;
-    
+            ? `https://localhost:7174/api/Minorista/UpdateMinorista/${user.id}`
+            : `https://localhost:7174/api/Mayorista/UpdateMayorista/${user.id}`;
+
         try {
             const response = await fetch(endpoint, {
                 method: 'PUT',
@@ -55,37 +66,39 @@ const Profile = () => {
                 },
                 body: JSON.stringify(updatedData),
             });
-    
+
             if (!response.ok) {
                 throw new Error('Error actualizando usuario');
             }
-    
+
             alert('Datos actualizados correctamente');
             setIsEditing(false);
+            window.location.reload();
         } catch (error) {
             console.error('Error al actualizar:', error);
             alert('Error al actualizar los datos');
         }
     };
-    
-    
+
+
 
     const handleCancel = () => {
         setIsEditing(false);
     };
 
     const handleLogout = () => {
+        localStorage.removeItem("userPassword");
         logout();
         navigate('/');
     };
+
 
     return (
         <div className='w-full'/*className="max-w-2xl mx-auto p-6 my-8  rounded-xl shadow-xl overflow-hidden border border-gray-200"*/>
             <div className=/*"bg-gradient-to-r from-gray-800 via-blue-600 to-gray-900"bg-blue-600*/ "p-6">
                 <h2
-                    className={`text-3xl font-bold text-center mb-4 ${
-                        mode === "dark" ? "text-white" : "text-gray-800"
-                    }`}
+                    className={`text-3xl font-bold text-center mb-4 ${mode === "dark" ? "text-white" : "text-gray-800"
+                        }`}
                 >
                     Mi Perfil
                 </h2>
@@ -93,7 +106,7 @@ const Profile = () => {
                     <div className="h-1 w-20 bg-gray-800 rounded-full"></div>
                 </div>
             </div>
-            
+
             {!isEditing ? (
                 <div className="p-6 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -118,6 +131,16 @@ const Profile = () => {
                                         {user?.accountType}
                                     </span>
                                 </p>
+
+                                {/*prueba contraseña*/}
+                                <p className="hidden">
+                                    <span className="hidden">Contraseña:</span>
+                                    <span className="ml-2 text-gray-900">
+                                        {showPassword ? user?.password : 'Escondo contraseña'}
+                                    </span>
+                                </p>
+
+
                                 {user?.accountType === 'Mayorista' && (
                                     <>
                                         <p>
@@ -132,7 +155,7 @@ const Profile = () => {
                                 )}
                             </div>
                         </div>
-                        
+
                         <div className="p-4 rounded-lg border border-black bg-gray-200">
                             <h3 className="text-lg font-semibold text-gray-800 border-b border-black pb-2 mb-3">Detalles Adicionales</h3>
                             <div className="space-y-3">
@@ -152,13 +175,13 @@ const Profile = () => {
                                     <span className="font-medium text-gray-700">Teléfono:</span>
                                     <span className="ml-2 text-gray-900">{user?.phoneNumber || 'No especificado'}</span>
                                 </p>
-                                
+
                             </div>
                         </div>
                     </div>
 
                     <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
-                        <button 
+                        <button
                             onClick={handleEditClick}
                             className="flex-1 flex items-center justify-center gap-2 bg-blue-400 hover:bg-blue-600 text-gray py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:text-white"
                         >
@@ -167,7 +190,7 @@ const Profile = () => {
                             </svg>
                             Editar Perfil
                         </button>
-                        <button 
+                        <button
                             onClick={handleLogout}
                             className="flex-1 flex items-center justify-center gap-2 bg-red-400 hover:bg-red-600 text-gray py-3 px-6 rounded-lg font-semibold transition duration-200 shadow-md hover:text-white"
                         >
@@ -223,7 +246,8 @@ const Profile = () => {
                                     id="accountType"
                                     value={formData.accountType}
                                     onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent transition duration-200"
+                                    disabled
+                                    className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-100 text-gray-500 cursor-not-allowed"
                                 />
                             </div>
                             <div>
@@ -270,36 +294,65 @@ const Profile = () => {
                                     className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent transition duration-200"
                                 />
                             </div>
+
+                            <div className='hidden'>
+                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Confirmá tu contraseña</label>
+                                <input
+                                    type="hidden"
+                                    name="password"
+                                    id="password"
+                                    placeholder=""
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent transition duration-200"
+                                />
+                            </div>
+
+
+                            {/*prueba contraseña*/}
+                            <div className="hidden">
+                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                                <input
+                                    type="hidden"
+                                    name="password"
+                                    id="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent transition duration-200"
+                                />
+                            </div>
+
+
                             {formData.accountType === 'Mayorista' && (
-                                    <>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="cuit" className="text-gray-700 font-medium">CUIT:</label>
-                                            <input
-                                                type="text"
-                                                name="cuit"
-                                                id="cuit"
-                                                value={formData.cuit}
-                                                onChange={handleChange}
-                                                className="p-2 rounded border border-gray-300 mt-1"
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="categoria" className="text-gray-700 font-medium">Categoría:</label>
-                                            <input
-                                                type="text"
-                                                name="categoria"
-                                                id="categoria"
-                                                value={formData.categoria}
-                                                onChange={handleChange}
-                                                className="p-2 rounded border border-gray-300 mt-1"
-                                            />
-                                        </div>
-                                    </>
-                                )}
+                                <>
+                                    <div className="flex flex-col">
+                                        <label htmlFor="cuit" className="text-gray-700 font-medium">CUIT:</label>
+                                        <input
+                                            type="text"
+                                            name="cuit"
+                                            id="cuit"
+                                            value={formData.cuit}
+                                            onChange={handleChange}
+                                            className="p-2 rounded border border-gray-300 mt-1"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <label htmlFor="categoria" className="text-gray-700 font-medium">Categoría:</label>
+                                        <input
+                                            type="text"
+                                            name="categoria"
+                                            id="categoria"
+                                            value={formData.categoria}
+                                            onChange={handleChange}
+                                            className="p-2 rounded border border-gray-300 mt-1"
+                                        />
+                                    </div>
+                                </>
+                            )}
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                            <button 
+                            <button
                                 type="button"
                                 onClick={handleSave}
                                 className="flex-1 flex items-center justify-center gap-2 bg-green-400 hover:bg-green-600 hover:text-white py-3 px-6 rounded font-semibold transition duration-200 shadow-md"
@@ -309,7 +362,7 @@ const Profile = () => {
                                 </svg>
                                 Guardar Cambios
                             </button>
-                            <button 
+                            <button
                                 type="button"
                                 onClick={handleCancel}
                                 className="flex-1 flex items-center justify-center gap-2 bg-red-400 hover:bg-red-600 py-3 px-6 rounded font-semibold transition duration-200 shadow-md hover:text-white"
