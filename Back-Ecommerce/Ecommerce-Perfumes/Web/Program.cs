@@ -102,7 +102,6 @@ builder.Services.AddAuthorization(options =>
           context.User.HasClaim("TypeUser", "SuperAdmin")));
 });
 
-
 //Servicios de terceros
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();

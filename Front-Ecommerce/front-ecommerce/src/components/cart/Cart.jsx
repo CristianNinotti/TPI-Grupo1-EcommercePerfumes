@@ -38,11 +38,9 @@ const CheckoutPage = () => {
   const createPreference = async () => {
     try {
       const items = cartItems.map((item) => ({
-        title: item.product?.name || item.title,
+        title: item.product.name || "Producto sin nombre",
         quantity: item.quantity,
-        unitPrice: isMayoristaConDescuento
-          ? Number((item.price * user.discountRate).toFixed(2))
-          : item.price,
+        unitPrice: item.price,
       }));
 
       const response = await fetch("https://localhost:7174/api/MercadoPago/create-preference", {
@@ -71,17 +69,54 @@ const CheckoutPage = () => {
   };
 
   const onSubmit = async ({ selectedPaymentMethod, formData }) => {
-    return new Promise((resolve, reject) => {
-      fetch("/process_payment", {
+    try {
+      // hay que matchear bien al endpoint payment y dps
+      // hacer todo el proceso de guardado del pago
+      // y la ventana de pago correcto (en caso de que la hagamos, sino dejamos la swal alert)
+      const response = await fetch("/process_payment", { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then(() => resolve())
-        .catch(() => reject());
-    });
+      });
+      console.log("data:", formData);
+      let result;
+      try {
+        result = await response.json();
+      } catch (jsonError) {
+        console.error("Error al parsear JSON:", jsonError);
+        throw new Error("Respuesta inválida del servidor");
+      }
+
+      console.log("Resultado del pago:", result);
+
+      if (result.status === "approved" || result.status_detail === "accredited") {
+        await Swal.fire({
+          title: "Pago exitoso",
+          text: "Tu pago ha sido procesado correctamente.",
+          icon: "success",
+        });
+        clearCart();
+      } else {
+        await Swal.fire({
+          title: "Pago fallido",
+          text: "Hubo un problema al procesar tu pago.",
+          icon: "error",
+        });
+      }
+
+      return result;
+    } catch (error) {
+      console.error("Error en onSubmit:", error);
+      await Swal.fire({
+        title: "Error",
+        text: "Ocurrió un error inesperado.",
+        icon: "error",
+      });
+      throw error;
+    }
   };
+
+
 
   const onError = async (error) => {
     console.log("Error en el Brick:", error);
@@ -184,7 +219,7 @@ const CheckoutPage = () => {
                         cancelButtonText: 'Cancelar',
                       }).then((result) => {
                         if (result.isConfirmed) {
-                          removeFromCart(item.id); 
+                          removeFromCart(item.id);
                           Swal.fire('Eliminado', 'El producto fue eliminado del carrito.', 'success');
                         }
                       });
@@ -214,7 +249,7 @@ const CheckoutPage = () => {
 
                     {isMayoristaConDescuento && (
                       <p>
-                        Descuento aplicado ({discountPercentage}%): 
+                        Descuento aplicado ({discountPercentage}%):
                         <span className="text-green-500 ml-1">-${discountAmount.toFixed(2)}</span>
                       </p>
                     )}
