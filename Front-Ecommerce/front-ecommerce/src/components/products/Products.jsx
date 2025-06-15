@@ -8,6 +8,8 @@ import SearchProduct from "../searchProduct/SearchProduct";
 import CartSidebar from "../cartSidebar/cartSidebar";
 import useCart from "../../hooks/useCart";
 import { useTheme } from "../../context/ThemeContext"; 
+import { useAuth } from "../../context/AuthContext";
+import useFavorites from "../../hooks/useFavorites";
 
 function Productos({ limit = null }) {
   const [products, setProducts] = useState([]);
@@ -19,19 +21,30 @@ function Productos({ limit = null }) {
   const [sortOrder, setSortOrder] = useState("default");
   const [showCartSidebar, setShowCartSidebar] = useState(false);
   const [lastAddedProduct, setLastAddedProduct] = useState(null);
-  const { orderId } = useCart();
+  const [selectedGender, setSelectedGender] = useState(null);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+
+  const { mode } = useTheme();
+  const { user, auth} = useAuth();
+  const { favorites, isFavorite, reloadFavorites } = useFavorites(user);
+  const { cartItems, addToCart } = useCart();
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { mode } = useTheme();
-
-  const { cartItems, addToCart } = useCart();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const categoryId = params.get("categoryId");
+    const gender = params.get("gender"); // <--- AGREGADO
     if (categoryId) {
       setSelectedCategoryId(Number(categoryId));
+    } else {
+      setSelectedCategoryId(null);
+    }
+    if (gender) {
+      setSelectedGender(gender);
+    } else {
+      setSelectedGender(null);
     }
   }, [location.search]);
 
@@ -63,9 +76,22 @@ function Productos({ limit = null }) {
       .finally(() => setLoadingCategories(false));
   }, []);
 
-  const filtered = selectedCategoryId
-    ? products.filter((p) => p.categoryId === selectedCategoryId)
-    : products;
+  // FILTRO POR CATEGORÍA Y GÉNERO
+  let filtered = products
+    .filter((p) =>
+      selectedCategoryId ? p.categoryId === selectedCategoryId : true
+    )
+    .filter((p) => {
+      if (!selectedGender) return true;
+      // Soporta tanto "Genero" como "genero"
+      const genero = p.Genero || p.genero || "";
+      return genero.toLowerCase() === selectedGender.toLowerCase();
+    });
+
+  // Filtro por favoritos si está activo
+  if (showOnlyFavorites) {
+    filtered = filtered.filter((p) => favorites.includes(p.id));
+  }
 
   const productosFiltradosPorNombre = useFilteredProductsByName(filtered, searchTerm);
 
@@ -91,18 +117,38 @@ function Productos({ limit = null }) {
   const displayProducts = limit ? productosOrdenados.slice(0, limit) : productosOrdenados;
 
   const handleCategoryClick = (categoryId) => {
-    if (selectedCategoryId === categoryId) {
-      setSelectedCategoryId(null);
-      navigate("/products");
+  const searchParams = new URLSearchParams(location.search);
+  const gender = searchParams.get("gender");
+
+  if (selectedCategoryId === categoryId) {
+    setSelectedCategoryId(null);
+    // Mantenemos el género si existía
+    if (gender) {
+      navigate(`/products?gender=${gender}`);
     } else {
-      setSelectedCategoryId(categoryId);
-      navigate(`/products?categoryId=${categoryId}`);
+      navigate("/products");
     }
-  };
+  } else {
+    setSelectedCategoryId(categoryId);
+    // Armamos la nueva URL con categoryId y, si aplica, el gender
+    const newParams = new URLSearchParams();
+    newParams.set("categoryId", categoryId);
+    if (gender) newParams.set("gender", gender);
+
+    navigate(`/products?${newParams.toString()}`);
+  }
+};
   const inactiveButtonClass =
     mode === "dark"
       ? "bg-gray-700 text-white hover:bg-gray-600"
-      : "bg-gray-200 text-black hover:bg-blue-300";
+      : "bg-gray-200 text-black hover:bg-green-400";
+
+  // Cuando se activa/desactiva el filtro de favoritos, recarga favoritos
+  useEffect(() => {
+    if (showOnlyFavorites) {
+      reloadFavorites();
+    }
+  }, [showOnlyFavorites, reloadFavorites]);
 
   return (
     <div className="products">
@@ -129,43 +175,53 @@ function Productos({ limit = null }) {
 
       <div className="flex flex-wrap justify-end gap-3 mb-6">
         <SearchProduct value={searchTerm} onChange={setSearchTerm} />
-        <div>
-          <div className="relative">
-            <select
-              id="sortOrder"
-              value={sortOrder}
-              onChange={e => setSortOrder(e.target.value)}
-              className={`
-                inline-block px-3 py-1 rounded-full text-sm font-medium
-                select-none transition-colors border-2 shadow
-                ${mode === "dark"
-                  ? "bg-gray-200 text-black border-green-600"
-                  : "bg-gray-200 text-black border-green-600"}
-                cursor-pointer
-              `}
-              style={{
-                minWidth: "180px",
-                fontSize: "1rem"
-              }}
+        <div className="flex justify-center gap-4 mb-4">
+          <button
+            onClick={() =>
+              setSortOrder((prev) => (prev === "asc" ? "default" : "asc"))
+            }
+            className={`px-3 py-1 rounded border ${
+              sortOrder === "asc" ? "bg-green-600 text-white" : inactiveButtonClass
+            }`}
+          >
+            Precio ↓
+          </button>
+          <button
+            onClick={() =>
+              setSortOrder((prev) => (prev === "desc" ? "default" : "desc"))
+            }
+            className={`px-3 py-1 rounded border ${
+              sortOrder === "desc" ? "bg-green-600 text-white" : inactiveButtonClass
+            }`}
+          >
+            Precio ↑
+          </button>
+          {auth.loggedIn && (
+            <button
+              onClick={() => setShowOnlyFavorites((prev) => !prev)}
+              className={`px-3 py-1 rounded border ${
+                showOnlyFavorites
+                  ? "bg-green-600 text-white"
+                  : inactiveButtonClass
+              }`}
+              title="Mostrar solo favoritos"
             >
-              <option value="default">Ordenar por</option>
-              <option value="price-asc">Precio ↓</option>
-              <option value="price-desc">Precio ↑</option>
-              <option value="name-asc">Nombre A-Z</option>
-              <option value="name-desc">Nombre Z-A</option>
-              <option value="discount">Mayor descuento</option>
-              <option value="newest">Más nuevo</option>
-            </select>
-          </div>
+              Favoritos
+            </button>
+        )}
         </div>
       </div>
 
       {loadingProducts ? (
         <p className="text-center">Cargando productos…</p>
+      ) : displayProducts.length === 0 ? (
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-6 rounded text-center">
+          No existen productos para los filtros seleccionados.
+        </div>
       ) : (
         <ul className="product-list">
           {displayProducts.map((p) => (
-            <li key={p.id} className="product-card flex flex-col items-end">
+            <li key={p.id} className="product-card">
               <PerfumeCard
                 id={p.id}
                 volume={p.description}

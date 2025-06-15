@@ -196,6 +196,7 @@ if (!response.ok) {
             firstName: loggedUser.firstName,
             lastName: loggedUser.lastName,
             phoneNumber: loggedUser.phoneNumber,
+            password: loggedUser.password,
             cuit: loggedUser?.cuit,
             categoria: loggedUser?.categoria,
             discountRate: loggedUser?.discountRate

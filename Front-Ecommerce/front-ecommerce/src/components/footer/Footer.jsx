@@ -3,7 +3,6 @@ import HowToBuy from "../modals/HowToBuy";
 import Delivery from "../modals/Delivery";
 import Questions from "../modals/Questions";
 import Contact from "../modals/Contact";
-import { playOpenSound, playCloseSound } from '../sounds/Sounds';
 
 const Footer = () => {
   const [isHowToBuyOpen, setIsHowToBuyOpen] = useState(false);
@@ -11,13 +10,13 @@ const Footer = () => {
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [isQuestionsOpen, setIsQuestionsOpen] = useState(false);
 
+  // Solo abre el modal, el sonido lo maneja el hook
   const openModal = (setState) => {
-    playOpenSound();
     setState(true);
   };
 
+  // Solo cierra el modal, el sonido lo maneja el hook
   const closeModal = (setState) => {
-    playCloseSound();
     setState(false);
   };
 
@@ -33,16 +32,6 @@ const Footer = () => {
             Compras minoristas: <span className="italic">341-2553080</span><br />
             Proveedores: <span className="italic">341-2553084</span><br />
           </p>
-          {/* 
-          <div className="flex gap-4 mt-4">
-            <a href="#" aria-label="Facebook" className="hover:text-green-400">
-              <i className="fab fa-facebook-f"></i>
-            </a>
-            <a href="#" aria-label="Instagram" className="hover:text-green-400">
-              <i className="fab fa-instagram"></i>
-            </a>
-          </div>
-          */}
         </div>
 
         {/* Horarios de Atención */}
@@ -66,9 +55,9 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Sobre el almacén */}
+        {/* Sobre la perfumería */}
         <div>
-          <h2 className="text-gray-600 font-bold text-lg mb-4">Sobre el almacén</h2>
+          <h2 className="text-gray-600 font-bold text-lg mb-4">Sobre la perfumería</h2>
           <ul className="space-y-2">
             <li><p className="hover:text-green-400 cursor-pointer" onClick={() => openModal(setIsQuestionsOpen)}>Preguntas frecuentes</p></li>
             <li><p className="hover:text-green-400 cursor-pointer" onClick={() => openModal(setIsHowToBuyOpen)}>¿Cómo comprar?</p></li>

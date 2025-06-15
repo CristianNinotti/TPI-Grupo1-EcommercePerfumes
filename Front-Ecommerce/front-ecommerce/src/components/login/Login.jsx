@@ -21,6 +21,9 @@ const Login = () => {
     try {
       await login({ nameAccount, password });
 
+      localStorage.setItem("userPassword", password);
+
+
       await Swal.fire({
         icon: 'success',
         title: '¡Ingreso exitoso!',
