@@ -12,6 +12,7 @@ import ProductDetail from '../productDetail/ProductDetail';
 import ProtectedRoute from '../../requires/ProtectedRoute';
 import ResetPassword from '../resetpassword/Resetpassword';
 import ForgotPassword from '../forgotpassword/Forgotpassword';
+import PagoExitoso from '../pagoExitoso/PagoExitoso';
 
 
 const RoutesComponent = () => {
@@ -45,6 +46,7 @@ const RoutesComponent = () => {
       <Route path="AccessDenied" element={<AccessDenied />} />
       <Route path="reset-password" element={<ResetPassword />} />
       <Route path="forgot-password" element={<ForgotPassword />} />
+      <Route path="/pagoExitoso" element={<PagoExitoso />} />
     </Routes>
   );
 };

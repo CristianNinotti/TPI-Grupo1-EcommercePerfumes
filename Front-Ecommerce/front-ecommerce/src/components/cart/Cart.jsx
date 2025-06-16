@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { initMercadoPago, Payment } from "@mercadopago/sdk-react";
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import useCart from "../../hooks/useCart";
 import { useTheme } from "../../context/ThemeContext";
 import Swal from "sweetalert2";
@@ -32,98 +32,62 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     setShowBrick(false);
-    setPreferenceId(null);
   }, [cartItems]);
 
-  const createPreference = async () => {
-    try {
-      const items = cartItems.map((item) => ({
-        title: item.product.name || "Producto sin nombre",
-        quantity: item.quantity,
-        unitPrice: item.price,
-      }));
-
-      const response = await fetch("https://localhost:7174/api/MercadoPago/create-preference", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(items),
-      });
-
-      const data = await response.json();
-      setPreferenceId(data.preferenceId);
-      setShowBrick(true);
-    } catch (error) {
-      console.error("Error creando la preferencia:", error);
-    }
-  };
+  // Desmontar el Brick cuando se oculta o desmonta el componente
+  useEffect(() => {
+    return () => {
+      if (window.walletBrickController && typeof window.walletBrickController.unmount === "function") {
+        window.walletBrickController.unmount();
+      }
+    };
+  }, [showBrick]);
 
   const initialization = {
-    amount: totalAmount,
     preferenceId: preferenceId,
   };
 
   const customization = {
-    paymentMethods: {
-      mercadoPago: "all",
+    theme: 'dark',
+    valueProp: 'security_safety',
+    customStyle: {
+      hideValueProp: true,
+      valuePropColor: 'blue', // blue, white, black
+      buttonHeight: '48px', // min 48px - max free
+      borderRadius: '6px',
+      verticalPadding: '8px', // min 8px - max free
+      horizontalPadding: '0px', // min 0px - max free
+    },
+    checkout: {
+      theme: {
+        elementsColor: '#4287F5', // color hex code
+        headerColor: '#4287F5', // color hex code
+      },
     },
   };
 
-  const onSubmit = async ({ selectedPaymentMethod, formData }) => {
-    try {
-      // hay que matchear bien al endpoint payment y dps
-      // hacer todo el proceso de guardado del pago
-      // y la ventana de pago correcto (en caso de que la hagamos, sino dejamos la swal alert)
-      const response = await fetch("/process_payment", { 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      console.log("data:", formData);
-      let result;
-      try {
-        result = await response.json();
-      } catch (jsonError) {
-        console.error("Error al parsear JSON:", jsonError);
-        throw new Error("Respuesta inválida del servidor");
-      }
+  const handlePagar = async () => {
+    const items = cartItems.map((item) => ({
+      title: item.product?.name || "Producto",
+      quantity: item.quantity,
+      unitPrice: item.price,
+    }));
 
-      console.log("Resultado del pago:", result);
+    console.log(items);
 
-      if (result.status === "approved" || result.status_detail === "accredited") {
-        await Swal.fire({
-          title: "Pago exitoso",
-          text: "Tu pago ha sido procesado correctamente.",
-          icon: "success",
-        });
-        clearCart();
-      } else {
-        await Swal.fire({
-          title: "Pago fallido",
-          text: "Hubo un problema al procesar tu pago.",
-          icon: "error",
-        });
-      }
+    const response = await fetch("https://localhost:7174/api/MercadoPago/create-preference", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(items),
+    });
 
-      return result;
-    } catch (error) {
-      console.error("Error en onSubmit:", error);
-      await Swal.fire({
-        title: "Error",
-        text: "Ocurrió un error inesperado.",
-        icon: "error",
-      });
-      throw error;
+    const data = await response.json();
+    if (data.preferenceId) {
+      setPreferenceId(data.preferenceId);
+      setShowBrick(true);
+    } else {
+      Swal.fire("Error", "No se pudo iniciar el pago.", "error");
     }
-  };
-
-
-
-  const onError = async (error) => {
-    console.log("Error en el Brick:", error);
-  };
-
-  const onReady = async () => {
-    console.log("Brick listo");
   };
 
   if (cartItems.length === 0) {
@@ -136,8 +100,6 @@ const CheckoutPage = () => {
       </div>
     );
   }
-
-  console.log("Cart items:", cartItems);
 
   return (
     <div className="w-full m-[25px] justify-center">
@@ -264,22 +226,22 @@ const CheckoutPage = () => {
               )}
             </div>
 
-
             {!showBrick ? (
               <button
                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
-                onClick={createPreference}
+                onClick={handlePagar}
               >
-                Confirmar pago
+                Pagar con Mercado Pago (dinero en cuenta)
               </button>
             ) : (
-              <Payment
-                initialization={initialization}
-                customization={customization}
-                onSubmit={onSubmit}
-                onReady={onReady}
-                onError={onError}
-              />
+              preferenceId && (
+                <Wallet
+                  initialization={initialization}
+                  customization={customization}
+                  onError={(error) => console.log("Error en el Brick:", error)}
+                  onReady={() => console.log("Brick listo")}
+                />
+              )
             )}
           </div>
         </div>

@@ -10,7 +10,8 @@ using MercadoPago.Config;
 using MercadoPago.Resource.Preference;
 using Microsoft.AspNetCore.Mvc;
 using Application.Models.Dtos;
-
+using MercadoPago.Client.Payment;
+using MercadoPago.Resource.Payment;
 
 namespace Infrastructure.ThirstService
 {
@@ -32,7 +33,14 @@ namespace Infrastructure.ThirstService
                     Quantity = dto.Quantity,
                     CurrencyId = "ARS",
                     UnitPrice = dto.UnitPrice
-                }).ToList()
+                }).ToList(),
+                BackUrls = new PreferenceBackUrlsRequest
+                {
+                    Success = "https://localhost:5173/pagoExitoso?status=success",
+                    Failure = "https://localhost:5173/pagoExitoso?status=failure",
+                    Pending = "https://localhost:5173/pagoExitoso?status=pending"
+                },
+                AutoReturn = "approved"
             };
 
             var client = new PreferenceClient();

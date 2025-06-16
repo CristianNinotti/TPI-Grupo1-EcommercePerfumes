@@ -1,4 +1,6 @@
 ﻿using Infrastructure.ThirstService;
+using MercadoPago.Client.Payment;
+using MercadoPago.Resource.Payment;
 using MercadoPago.Resource.Preference;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Text;
