@@ -366,3 +366,11 @@ FodyWeavers.xsd
 
 *.db-shm
 *.db-wal
+
+# Certificados locales generados por mkcert
+*.pem
+*.key
+
+# Si generas certificados con otros nombres
+localhost.pem
+localhost-key.pem

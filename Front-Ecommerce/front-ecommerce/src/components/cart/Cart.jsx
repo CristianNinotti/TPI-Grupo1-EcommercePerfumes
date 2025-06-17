@@ -67,11 +67,17 @@ const CheckoutPage = () => {
   };
 
   const handlePagar = async () => {
-    const items = cartItems.map((item) => ({
-      title: item.product?.name || "Producto",
-      quantity: item.quantity,
-      unitPrice: item.price,
-    }));
+    const items = cartItems.map((item) => {
+      let price = item.price;
+      if (isMayoristaConDescuento) {
+        price = price * discountRate;
+      }
+      return {
+        title: item.product?.name || "Producto",
+        quantity: item.quantity,
+        unitPrice: Number(price.toFixed(2)),
+      };
+    });
 
     console.log(items);
 

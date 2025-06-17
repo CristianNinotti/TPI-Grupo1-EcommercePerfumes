@@ -153,6 +153,12 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const clearCartFrontend = () => {
+    setCartItems([]);
+    localStorage.removeItem("cart");
+    localStorage.removeItem("orderId");
+  };
+
   const decreaseQuantity = async (productId) => {
     const token = localStorage.getItem("token");
     const orderId = localStorage.getItem("orderId");
@@ -190,8 +196,10 @@ export const CartProvider = ({ children }) => {
     addToCart,
     removeFromCart,
     clearCart,
+    clearCartFrontend,
     decreaseQuantity,
     totalItems: cartItems.reduce((sum, item) => sum + item.quantity, 0),
+    clearCartFrontend,
   };
 
 

@@ -9,6 +9,7 @@ const useCart = () => {
         clearCart,
         decreaseQuantity,
         totalItems,
+        clearCartFrontend,
     } = useContext(CartContext);
 
     return {
@@ -18,6 +19,7 @@ const useCart = () => {
         clearCart,
         decreaseQuantity,
         totalItems,
+        clearCartFrontend,
     };
 };
 
