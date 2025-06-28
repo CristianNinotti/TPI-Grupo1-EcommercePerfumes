@@ -45,7 +45,7 @@ Para habilitar HTTPS local en este proyecto, seguí estos pasos:
 
 - Renombralo EXACTAMENTE como: mkcert.exe.
 
-3. Agregar mkcert al PATH
+3. Agregar mkcert al PATH Ruta: C:\Mkcert
 
 - Abrí el menú de inicio y buscá “Variables de entorno”.
 
