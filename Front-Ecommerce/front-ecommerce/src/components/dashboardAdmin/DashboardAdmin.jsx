@@ -170,6 +170,15 @@ export default function DashboardAdmin() {
         if (activeTab === "categorias") fetchCategories();
     }, [activeTab, clientFilter, prodFilter]);
 
+    useEffect(() => {
+        if (modal.open && modal.entity === "cliente" && modal.type === "edit") {
+            const client = clients.find((u) => u.id === modal.id);
+            if (client) {
+                setEditClientData({ ...client });
+            }
+        }
+    }, [modal, clients]);
+
 
     const closeModal = () => {
         setModal({ open: false, entity: null, id: null, type: null });
@@ -280,7 +289,7 @@ export default function DashboardAdmin() {
 
             // Cliente
             if (entity === "cliente") {
-                const { firstName, lastName, email } = data;
+                const { firstName, lastName, email } = editClientData;
 
                 if (!firstName || !lastName || !email) {
                     Swal.fire("Campos incompletos", "Todos los campos son obligatorios", "warning");
@@ -295,7 +304,7 @@ export default function DashboardAdmin() {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ firstName, lastName, email }),
+                    body: JSON.stringify(editClientData),
                 });
 
                 if (!res.ok) throw new Error();
@@ -333,6 +342,12 @@ export default function DashboardAdmin() {
             Swal.fire("❌", "Ha ocurrido un error. Revisá los datos ingresados.", "error");
         }
     };
+
+    const [editClientData, setEditClientData] = useState({
+        firstName: "",
+        lastName: "",
+        email: ""
+    });
 
     const [adminData, setAdminData] = useState({
         firstName: "",
@@ -437,8 +452,8 @@ export default function DashboardAdmin() {
                                     key={opt}
                                     onClick={() => setClientFilter(clientFilter === opt ? null : opt)}
                                     className={`btn ${clientFilter === opt
-                                            ? "btn-active"
-                                            : "btn-inactive"
+                                        ? "btn-active"
+                                        : "btn-inactive"
                                         }`}
                                 >
                                     {opt.replace("All", "").replace("Available", " Disponibles").replace("Minorista", "Minoristas").replace("Mayorista", "Mayoristas")}
@@ -687,9 +702,34 @@ export default function DashboardAdmin() {
                                     <form onSubmit={confirmEdit} className="space-y-4">
                                         {modal.entity === "cliente" && (
                                             <>
-                                                <input name="firstName" defaultValue={currentClient?.firstName} placeholder="Nombre" className="w-full border rounded px-3 py-2" />
-                                                <input name="lastName" defaultValue={currentClient?.lastName} placeholder="Apellido" className="w-full border rounded px-3 py-2" />
-                                                <input type="email" name="email" defaultValue={currentClient?.email} placeholder="Email" className="w-full border rounded px-3 py-2" />
+                                                <input
+                                                    name="firstName"
+                                                    value={editClientData.firstName}
+                                                    onChange={(e) =>
+                                                        setEditClientData({ ...editClientData, firstName: e.target.value })
+                                                    }
+                                                    placeholder="Nombre"
+                                                    className="w-full border rounded px-3 py-2"
+                                                />
+                                                <input
+                                                    name="lastName"
+                                                    value={editClientData.lastName}
+                                                    onChange={(e) =>
+                                                        setEditClientData({ ...editClientData, lastName: e.target.value })
+                                                    }
+                                                    placeholder="Apellido"
+                                                    className="w-full border rounded px-3 py-2"
+                                                />
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    value={editClientData.email}
+                                                    onChange={(e) =>
+                                                        setEditClientData({ ...editClientData, email: e.target.value })
+                                                    }
+                                                    placeholder="Email"
+                                                    className="w-full border rounded px-3 py-2"
+                                                />
                                             </>
                                         )}
 
