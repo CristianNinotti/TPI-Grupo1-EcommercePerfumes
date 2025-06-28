@@ -34,7 +34,7 @@ const ForgotPassword = () => {
       }
 
       const token = await response.text();
-      const resetLink = `http://localhost:5173/reset-password?token=${token}`;
+      const resetLink = `https://localhost:5173/reset-password?token=${token}`;
 
       await emailjs.send(
         'service_798li2e',

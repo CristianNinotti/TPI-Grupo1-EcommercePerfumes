@@ -96,22 +96,13 @@ function Productos({ limit = null }) {
   const productosFiltradosPorNombre = useFilteredProductsByName(filtered, searchTerm);
 
   const productosOrdenados = useMemo(() => {
-    switch (sortOrder) {
-      case "price-asc":
-        return [...productosFiltradosPorNombre].sort((a, b) => a.price - b.price);
-      case "price-desc":
-        return [...productosFiltradosPorNombre].sort((a, b) => b.price - a.price);
-      case "name-asc":
-        return [...productosFiltradosPorNombre].sort((a, b) => a.name.localeCompare(b.name));
-      case "name-desc":
-        return [...productosFiltradosPorNombre].sort((a, b) => b.name.localeCompare(a.name));
-      case "discount":
-        return [...productosFiltradosPorNombre].sort((a, b) => (b.discountPercentage || 0) - (a.discountPercentage || 0));
-      case "newest":
-        return [...productosFiltradosPorNombre].sort((a, b) => b.id - a.id);
-      default:
-        return productosFiltradosPorNombre;
+    if (sortOrder === "asc") {
+      return [...productosFiltradosPorNombre].sort((a, b) => a.price - b.price);
     }
+    if (sortOrder === "desc") {
+      return [...productosFiltradosPorNombre].sort((a, b) => b.price - a.price);
+    }
+    return productosFiltradosPorNombre;
   }, [productosFiltradosPorNombre, sortOrder]);
 
   const displayProducts = limit ? productosOrdenados.slice(0, limit) : productosOrdenados;
