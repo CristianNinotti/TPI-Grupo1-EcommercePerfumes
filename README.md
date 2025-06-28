@@ -36,6 +36,7 @@ Para habilitar HTTPS local en este proyecto, seguí estos pasos:
 - Ingresá a esta [página](https://github.com/FiloSottile/mkcert/releases)
 
 - Descargá el archivo mkcert-vX.X.X-windows-amd64.exe (elegí la versión más reciente).
+- Link directo: https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-windows-amd64.exe
 
 2. Crear carpeta y mover el ejecutable
 
