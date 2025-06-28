@@ -16,7 +16,8 @@ namespace Application.Mappings
                 LastName = request.LastName,
                 Dni = request.Dni,
                 Email = request.Email,
-
+                PhoneNumber = request.PhoneNumber,
+                Address = request.Address
             };
         }
 

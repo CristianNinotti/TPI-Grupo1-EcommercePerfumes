@@ -31,7 +31,7 @@ export default function DashboardAdmin() {
     });
 
     const { mode } = useTheme()
-    
+
     const location = useLocation();
 
     useEffect(() => {
@@ -44,15 +44,15 @@ export default function DashboardAdmin() {
 
     const readClientEndpoint = () => {
         switch (clientFilter) {
-            case "MinoristaAll":       
+            case "MinoristaAll":
                 return `${URL}Minorista/AllMinoristas`;
-            case "MinoristaAvailable": 
+            case "MinoristaAvailable":
                 return `${URL}Minorista/AllMinoristasAvailable`;
-            case "MayoristaAll":       
+            case "MayoristaAll":
                 return `${URL}Mayorista/AllMayoristas`;
-            case "MayoristaAvailable": 
+            case "MayoristaAvailable":
                 return `${URL}Mayorista/AllMayoristasAvailable`;
-            default:                   
+            default:
                 return "";
         }
     };
@@ -64,7 +64,7 @@ export default function DashboardAdmin() {
         return user.tipo === "Minorista"
             ? `${URL}Minorista/SoftDeleteMinorista/${id}`
             : `${URL}Mayorista/SoftDelete/${id}`;
-        };
+    };
     const hardDeleteClientEndpoint = (id) => {
         const user = clients.find((u) => u.id === id);
         if (!user) throw new Error("Cliente no encontrado");
@@ -72,7 +72,7 @@ export default function DashboardAdmin() {
         return user.tipo === "Minorista"
             ? `${URL}Minorista/HardDeleteMinorista/${id}`
             : `${URL}Mayorista/HardDelete/${id}`;
-        };
+    };
     const editClientEndpoint = (id) => {
         const user = clients.find((u) => u.id === id);
         if (!user) throw new Error("Cliente no encontrado");
@@ -80,7 +80,7 @@ export default function DashboardAdmin() {
         return user.tipo === "Minorista"
             ? `${URL}Minorista/UpdateMinorista/${id}`
             : `${URL}Mayorista/UpdateMayorista/${id}`;
-        };
+    };
     const readProductEndpoint = () =>
         prodFilter === "AllProducts"
             ? `${URL}Product/AllProducts`
@@ -88,56 +88,56 @@ export default function DashboardAdmin() {
 
     const softDeleteProdEndpoint = id => `${URL}Product/SoftDeleteProduct/${id}`;
     const hardDeleteProdEndpoint = id => `${URL}Product/HardDeleteProduct/${id}`;
-    const editProdEndpoint   = (id) => `${URL}Product/UpdateProduct/${id}`;
+    const editProdEndpoint = (id) => `${URL}Product/UpdateProduct/${id}`;
     const createProdEndpoint = () => `${URL}Product/CreateProduct`;
 
     const fetchClients = async () => {
         try {
             if (!clientFilter) {
-            const [minoristasRes, mayoristasRes] = await Promise.all([
-                fetch(`${URL}Minorista/AllMinoristas`, {
-                headers: { Authorization: `Bearer ${token}` },
-                }),
-                fetch(`${URL}Mayorista/AllMayoristas`, {
-                headers: { Authorization: `Bearer ${token}` },
-                }),
-            ]);
+                const [minoristasRes, mayoristasRes] = await Promise.all([
+                    fetch(`${URL}Minorista/AllMinoristas`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                    fetch(`${URL}Mayorista/AllMayoristas`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                ]);
 
-            if (!minoristasRes.ok || !mayoristasRes.ok) throw new Error();
+                if (!minoristasRes.ok || !mayoristasRes.ok) throw new Error();
 
-            const [minoristas, mayoristas] = await Promise.all([
-                minoristasRes.json(),
-                mayoristasRes.json(),
-            ]);
+                const [minoristas, mayoristas] = await Promise.all([
+                    minoristasRes.json(),
+                    mayoristasRes.json(),
+                ]);
 
-            const minoristasWithType = minoristas.map((c) => ({ ...c, tipo: "Minorista" }));
-            const mayoristasWithType = mayoristas.map((c) => ({ ...c, tipo: "Mayorista" }));
+                const minoristasWithType = minoristas.map((c) => ({ ...c, tipo: "Minorista" }));
+                const mayoristasWithType = mayoristas.map((c) => ({ ...c, tipo: "Mayorista" }));
 
-            setClients([...minoristasWithType, ...mayoristasWithType]);
+                setClients([...minoristasWithType, ...mayoristasWithType]);
             } else {
-            const res = await fetch(readClientEndpoint(), {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+                const res = await fetch(readClientEndpoint(), {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
 
-            if (!res.ok) throw new Error();
-            const data = await res.json();
+                if (!res.ok) throw new Error();
+                const data = await res.json();
 
-            const tipo = clientFilter.includes("Minorista") ? "Minorista" : "Mayorista";
-            const dataWithType = data.map((c) => ({ ...c, tipo }));
+                const tipo = clientFilter.includes("Minorista") ? "Minorista" : "Mayorista";
+                const dataWithType = data.map((c) => ({ ...c, tipo }));
 
-            setClients(dataWithType);
+                setClients(dataWithType);
             }
         } catch {
             Swal.fire("Error", "No se pudieron cargar los clientes", "error");
         }
-        };
+    };
 
     const fetchProducts = async () => {
         try {
             const res = await fetch(readProductEndpoint(), {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            if (!res.ok) 
+            if (!res.ok)
                 throw new Error();
             const data = await res.json();
             setProducts(data);
@@ -151,7 +151,7 @@ export default function DashboardAdmin() {
             const res = await fetch(`${URL}Category/AllCategoriesAvailable`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            if (!res.ok) 
+            if (!res.ok)
                 throw new Error();
             const data = await res.json();
             setCategories(data);
@@ -160,7 +160,7 @@ export default function DashboardAdmin() {
         }
     };
 
-    
+
     useEffect(() => {
         if (activeTab === "clientes") fetchClients();
         if (activeTab === "productos") {
@@ -184,21 +184,21 @@ export default function DashboardAdmin() {
             if (entity === "cliente") {
                 url =
                     type === "disable"
-                    ? softDeleteClientEndpoint(id)
-                    : hardDeleteClientEndpoint(id);
+                        ? softDeleteClientEndpoint(id)
+                        : hardDeleteClientEndpoint(id);
                 successMsg =
                     type === "disable"
-                    ? "Cliente deshabilitado correctamente"
-                    : "Cliente eliminado permanentemente";
+                        ? "Cliente deshabilitado correctamente"
+                        : "Cliente eliminado permanentemente";
             } else if (entity === 'producto') {
                 url =
                     type === "disable"
-                    ? softDeleteProdEndpoint(id)
-                    : hardDeleteProdEndpoint(id);
+                        ? softDeleteProdEndpoint(id)
+                        : hardDeleteProdEndpoint(id);
                 successMsg =
                     type === "disable"
-                    ? "Producto deshabilitado correctamente"
-                    : "Producto eliminado permanentemente";
+                        ? "Producto deshabilitado correctamente"
+                        : "Producto eliminado permanentemente";
             } else if (entity === "categoria") {
                 url = `${URL}Category/HardDeleteCategory/${id}`;
                 successMsg = "Categoría eliminada correctamente";
@@ -209,15 +209,15 @@ export default function DashboardAdmin() {
             console.log("→ DELETE:", url);
 
             const res = await fetch(url, {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
             });
 
             const text = await res.text();
 
             if (!res.ok) {
-            console.error("Error del backend:", text);
-            throw new Error(text || "Falló el DELETE");
+                console.error("Error del backend:", text);
+                throw new Error(text || "Falló el DELETE");
             }
 
             closeModal();
@@ -244,38 +244,38 @@ export default function DashboardAdmin() {
 
             // Producto
             if (entity === "producto") {
-            if (data.photos) {
-                data.photos = data.photos.split(",").map((url) => url.trim());
-            }
-            if (data.price) data.price = parseFloat(data.price);
-            if (data.stock) data.stock = parseInt(data.stock);
+                if (data.photos) {
+                    data.photos = data.photos.split(",").map((url) => url.trim());
+                }
+                if (data.price) data.price = parseFloat(data.price);
+                if (data.stock) data.stock = parseInt(data.stock);
 
-            const url =
-                type === "edit"
-                ? editProdEndpoint(id)
-                : createProdEndpoint();
+                const url =
+                    type === "edit"
+                        ? editProdEndpoint(id)
+                        : createProdEndpoint();
 
-            const res = await fetch(url, {
-                method: type === "edit" ? "PUT" : "POST",
-                headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(data),
-            });
+                const res = await fetch(url, {
+                    method: type === "edit" ? "PUT" : "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(data),
+                });
 
-            if (!res.ok) throw new Error();
+                if (!res.ok) throw new Error();
 
-            closeModal();
-            fetchProducts();
+                closeModal();
+                fetchProducts();
 
-            Swal.fire(
-                "✔️",
-                type === "edit"
-                ? "Producto actualizado con éxito"
-                : "Producto creado con éxito",
-                "success"
-            );
+                Swal.fire(
+                    "✔️",
+                    type === "edit"
+                        ? "Producto actualizado con éxito"
+                        : "Producto creado con éxito",
+                    "success"
+                );
             }
 
             // Cliente
@@ -292,8 +292,8 @@ export default function DashboardAdmin() {
                 const res = await fetch(url, {
                     method: "PUT",
                     headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({ firstName, lastName, email }),
                 });
@@ -315,8 +315,8 @@ export default function DashboardAdmin() {
                 const res = await fetch(url, {
                     method: type === "create" ? "POST" : "PUT",
                     headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({ name: nombre }),
                 });
@@ -326,7 +326,7 @@ export default function DashboardAdmin() {
                 closeModal();
                 Swal.fire("✔️", `Categoría ${type === "create" ? "creada" : "actualizada"} con éxito`, "success");
                 return;
-                }
+            }
         } catch (err) {
             console.error("Error en confirmEdit:", err);
             closeModal();
@@ -353,18 +353,18 @@ export default function DashboardAdmin() {
         e.preventDefault()
         try {
             const res = await fetch(`${URL}superAdmin`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(adminData)
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(adminData)
             });
             if (!res.ok) throw new Error();
             Swal.fire("✔️", "Administrador creado", "success");
             setAdminData({
-            firstName: "", lastName: "", nameAccount: "", password: "",
-            email: "", dni: "", phoneNumber: "", address: ""
+                firstName: "", lastName: "", nameAccount: "", password: "",
+                email: "", dni: "", phoneNumber: "", address: ""
             });
         } catch {
             Swal.fire("❌", "Error al crear administrador", "error");
@@ -375,8 +375,8 @@ export default function DashboardAdmin() {
 
 
     const currentClient = clients.find((u) => u.id === modal.id);
-    const currentProd   = products.find((p) => p.id === modal.id);
-    const currentCategory = categories.find(c => c.id === modal.id);  
+    const currentProd = products.find((p) => p.id === modal.id);
+    const currentCategory = categories.find(c => c.id === modal.id);
 
     return (
         <div className="w-full">
@@ -393,26 +393,26 @@ export default function DashboardAdmin() {
                 <div className="flex justify-center space-x-4 mb-6">
                     <button
                         onClick={() => setActiveTab("clientes")}
-                          className={`btn ${activeTab === "clientes" ? "btn-active" : "btn-inactive"}`}
+                        className={`btn ${activeTab === "clientes" ? "btn-active" : "btn-inactive"}`}
 
                     >
                         Clientes
                     </button>
                     <button
                         onClick={() => setActiveTab("productos")}
-                        className={`btn ${ activeTab === "productos" ? "btn-active" : "btn-inactive" }`}
+                        className={`btn ${activeTab === "productos" ? "btn-active" : "btn-inactive"}`}
                     >
                         Productos
                     </button>
                     <button
                         onClick={() => setActiveTab("categorias")}
-                        className={`btn ${ activeTab === "categorias" ? "btn-active" : "btn-inactive" }`}
+                        className={`btn ${activeTab === "categorias" ? "btn-active" : "btn-inactive"}`}
                     >
                         Categorías
                     </button>
                     <button
                         onClick={() => setActiveTab("admins")}
-                        className={`btn ${ activeTab === "admins" ? "btn-active" : "btn-inactive" }`}
+                        className={`btn ${activeTab === "admins" ? "btn-active" : "btn-inactive"}`}
                     >
                         Agregar Administrador
                     </button>
@@ -436,11 +436,10 @@ export default function DashboardAdmin() {
                                 <button
                                     key={opt}
                                     onClick={() => setClientFilter(clientFilter === opt ? null : opt)}
-                                    className={`btn ${
-                                        clientFilter === opt
-                                        ? "btn-active"
-                                        : "btn-inactive"
-                                    }`}
+                                    className={`btn ${clientFilter === opt
+                                            ? "btn-active"
+                                            : "btn-inactive"
+                                        }`}
                                 >
                                     {opt.replace("All", "").replace("Available", " Disponibles").replace("Minorista", "Minoristas").replace("Mayorista", "Mayoristas")}
                                 </button>
@@ -461,61 +460,61 @@ export default function DashboardAdmin() {
                                     <div className="mt-4 flex justify-end space-x-4">
                                         {u.tipo === "Mayorista" && (
                                             <button
-                                            onClick={() => {
-                                                Swal.fire({
-                                                title: "Actualizar descuento",
-                                                input: "number",
-                                                inputLabel: "Nuevo descuento (%)",
-                                                inputPlaceholder: "Por ejemplo: 10 para 10%",
-                                                showCancelButton: true,
-                                                confirmButtonText: "Actualizar",
-                                                cancelButtonText: "Cancelar",
-                                                inputAttributes: {
-                                                    min: 0,
-                                                    max: 100,
-                                                    step: 1
-                                                }
-                                                }).then(async (result) => {
-                                                if (result.isConfirmed) {
-                                                    const newRate = parseFloat(result.value);
-                                                    if (isNaN(newRate) || newRate < 0 || newRate > 100) {
-                                                    Swal.fire("Error", "Ingrese un valor válido entre 0 y 100", "error");
-                                                    return;
-                                                    }
+                                                onClick={() => {
+                                                    Swal.fire({
+                                                        title: "Actualizar descuento",
+                                                        input: "number",
+                                                        inputLabel: "Nuevo descuento (%)",
+                                                        inputPlaceholder: "Por ejemplo: 10 para 10%",
+                                                        showCancelButton: true,
+                                                        confirmButtonText: "Actualizar",
+                                                        cancelButtonText: "Cancelar",
+                                                        inputAttributes: {
+                                                            min: 0,
+                                                            max: 100,
+                                                            step: 1
+                                                        }
+                                                    }).then(async (result) => {
+                                                        if (result.isConfirmed) {
+                                                            const newRate = parseFloat(result.value);
+                                                            if (isNaN(newRate) || newRate < 0 || newRate > 100) {
+                                                                Swal.fire("Error", "Ingrese un valor válido entre 0 y 100", "error");
+                                                                return;
+                                                            }
 
-                                                    try {
-                                                    const res = await fetch(`https://localhost:7174/api/Mayorista/${u.id}/discount`, {
-                                                        method: "PATCH",
-                                                        headers: {
-                                                        "Content-Type": "application/json",
-                                                        Authorization: `Bearer ${token}`,
-                                                        },
-                                                        body: JSON.stringify({ discountRate: newRate / 100 }),
+                                                            try {
+                                                                const res = await fetch(`https://localhost:7174/api/Mayorista/${u.id}/discount`, {
+                                                                    method: "PATCH",
+                                                                    headers: {
+                                                                        "Content-Type": "application/json",
+                                                                        Authorization: `Bearer ${token}`,
+                                                                    },
+                                                                    body: JSON.stringify({ discountRate: newRate / 100 }),
+                                                                });
+
+                                                                if (!res.ok) throw new Error();
+
+                                                                Swal.fire("✔️", "Descuento actualizado correctamente", "success");
+                                                                fetchClients(); // recargar los datos
+                                                            } catch {
+                                                                Swal.fire("Error", "No se pudo actualizar el descuento", "error");
+                                                            }
+                                                        }
                                                     });
-
-                                                    if (!res.ok) throw new Error();
-
-                                                    Swal.fire("✔️", "Descuento actualizado correctamente", "success");
-                                                    fetchClients(); // recargar los datos
-                                                    } catch {
-                                                    Swal.fire("Error", "No se pudo actualizar el descuento", "error");
-                                                    }
-                                                }
-                                                });
-                                            }}
-                                            aria-label="Editar descuento"
+                                                }}
+                                                aria-label="Editar descuento"
                                             >
-                                            <span className="text-green-400 hover:text-green-600 hover:scale-110 text-lg font-bold">%</span>
+                                                <span className="text-green-400 hover:text-green-600 hover:scale-110 text-lg font-bold">%</span>
                                             </button>
                                         )}
                                         <button
                                             onClick={() =>
-                                            setModal({
-                                                open: true,
-                                                entity: "cliente",
-                                                id: u.id,
-                                                type: "disable",
-                                            })
+                                                setModal({
+                                                    open: true,
+                                                    entity: "cliente",
+                                                    id: u.id,
+                                                    type: "disable",
+                                                })
                                             }
                                             aria-label="Deshabilitar cliente"
                                         >
@@ -523,12 +522,12 @@ export default function DashboardAdmin() {
                                         </button>
                                         <button
                                             onClick={() =>
-                                            setModal({
-                                                open: true,
-                                                entity: "cliente",
-                                                id: u.id,
-                                                type: "edit",
-                                            })
+                                                setModal({
+                                                    open: true,
+                                                    entity: "cliente",
+                                                    id: u.id,
+                                                    type: "edit",
+                                                })
                                             }
                                             aria-label="Editar cliente"
                                         >
@@ -536,12 +535,12 @@ export default function DashboardAdmin() {
                                         </button>
                                         <button
                                             onClick={() =>
-                                            setModal({
-                                                open: true,
-                                                entity: "cliente",
-                                                id: u.id,
-                                                type: "delete",
-                                            })
+                                                setModal({
+                                                    open: true,
+                                                    entity: "cliente",
+                                                    id: u.id,
+                                                    type: "delete",
+                                                })
                                             }
                                             aria-label="Eliminar cliente"
                                         >
@@ -560,9 +559,9 @@ export default function DashboardAdmin() {
                             <button
                                 onClick={() =>
                                     setModal({
-                                    open: true,
-                                    entity: "producto",
-                                    type: "create",
+                                        open: true,
+                                        entity: "producto",
+                                        type: "create",
                                     })
                                 }
                                 className="flex items-center px-4 py-2 bg-blue-400 hover:bg-blue-600 hover:text-white text-black rounded"
@@ -577,8 +576,8 @@ export default function DashboardAdmin() {
                                         onClick={() => setProdFilter(opt)}
                                         className={
                                             prodFilter === opt
-                                            ? "px-4 py-2 bg-green-600 text-gray rounded"
-                                            : "px-4 py-2 bg-gray-200 hover:bg-green-400 rounded"
+                                                ? "px-4 py-2 bg-green-600 text-gray rounded"
+                                                : "px-4 py-2 bg-gray-200 hover:bg-green-400 rounded"
                                         }
                                     >
                                         {opt === "AllProducts" ? "Todos" : "Disponibles"}
@@ -602,12 +601,12 @@ export default function DashboardAdmin() {
                                     <div className="mt-4 flex justify-end space-x-4">
                                         <button
                                             onClick={() =>
-                                            setModal({
-                                                open: true,
-                                                entity: "producto",
-                                                id: p.id,
-                                                type: "disable",
-                                            })
+                                                setModal({
+                                                    open: true,
+                                                    entity: "producto",
+                                                    id: p.id,
+                                                    type: "disable",
+                                                })
                                             }
                                             aria-label="Deshabilitar producto"
                                         >
@@ -615,12 +614,12 @@ export default function DashboardAdmin() {
                                         </button>
                                         <button
                                             onClick={() =>
-                                            setModal({
-                                                open: true,
-                                                entity: "producto",
-                                                id: p.id,
-                                                type: "edit",
-                                            })
+                                                setModal({
+                                                    open: true,
+                                                    entity: "producto",
+                                                    id: p.id,
+                                                    type: "edit",
+                                                })
                                             }
                                             aria-label="Editar producto"
                                         >
@@ -628,12 +627,12 @@ export default function DashboardAdmin() {
                                         </button>
                                         <button
                                             onClick={() =>
-                                            setModal({
-                                                open: true,
-                                                entity: "producto",
-                                                id: p.id,
-                                                type: "delete",
-                                            })
+                                                setModal({
+                                                    open: true,
+                                                    entity: "producto",
+                                                    id: p.id,
+                                                    type: "delete",
+                                                })
                                             }
                                             aria-label="Eliminar producto"
                                         >
@@ -650,83 +649,82 @@ export default function DashboardAdmin() {
                     <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
                         <div className="bg-white p-6 rounded w-11/12 max-w-lg">
                             {modal.type === "delete" || modal.type === "disable" ? (
-                            <>
-                                <h3 className="text-lg font-bold mb-4">
-                                {modal.type === "delete"
-                                    ? "Confirmar eliminación"
-                                    : "Confirmar deshabilitación"}
-                                </h3>
-                                <div className="flex justify-end space-x-4">
-                                <button
-                                    onClick={closeModal}
-                                    className="px-4 py-2 border rounded"
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    onClick={confirmDelete}
-                                    className={`px-4 py-2 rounded ${
-                                    modal.type === "delete" ? "bg-red-400 hover:bg-red-600 hover:text-white" : "bg-yellow-400 hover:bg-yellow-600 hover:text-white"
-                                    }`}
-                                >
-                                    {modal.type === "delete" ? "Eliminar" : "Deshabilitar"}
-                                </button>
-                                </div>
-                            </>
+                                <>
+                                    <h3 className="text-lg font-bold mb-4">
+                                        {modal.type === "delete"
+                                            ? "Confirmar eliminación"
+                                            : "Confirmar deshabilitación"}
+                                    </h3>
+                                    <div className="flex justify-end space-x-4">
+                                        <button
+                                            onClick={closeModal}
+                                            className="px-4 py-2 border rounded"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            onClick={confirmDelete}
+                                            className={`px-4 py-2 rounded ${modal.type === "delete" ? "bg-red-400 hover:bg-red-600 hover:text-white" : "bg-yellow-400 hover:bg-yellow-600 hover:text-white"
+                                                }`}
+                                        >
+                                            {modal.type === "delete" ? "Eliminar" : "Deshabilitar"}
+                                        </button>
+                                    </div>
+                                </>
                             ) : (
                                 <>
                                     <h3 className="text-lg font-bold mb-4">
                                         {modal.entity === "producto"
                                             ? modal.type === "create"
-                                            ? "Crear Producto"
-                                            : "Editar Producto"
+                                                ? "Crear Producto"
+                                                : "Editar Producto"
                                             : modal.entity === "cliente"
-                                            ? "Editar Cliente"
-                                            : modal.entity === "categoria"
-                                                ? (modal.type === "create" ? "Crear Categoría" : "Editar Categoría")
-                                                : ""}
+                                                ? "Editar Cliente"
+                                                : modal.entity === "categoria"
+                                                    ? (modal.type === "create" ? "Crear Categoría" : "Editar Categoría")
+                                                    : ""}
                                     </h3>
                                     <form onSubmit={confirmEdit} className="space-y-4">
                                         {modal.entity === "cliente" && (
                                             <>
-                                            <input name="firstName" defaultValue={currentClient?.firstName} placeholder="Nombre" className="w-full border rounded px-3 py-2" />
-                                            <input name="lastName" defaultValue={currentClient?.lastName} placeholder="Apellido" className="w-full border rounded px-3 py-2" />
-                                            <input type="email" name="email" defaultValue={currentClient?.email} placeholder="Email" className="w-full border rounded px-3 py-2" />
+                                                <input name="firstName" defaultValue={currentClient?.firstName} placeholder="Nombre" className="w-full border rounded px-3 py-2" />
+                                                <input name="lastName" defaultValue={currentClient?.lastName} placeholder="Apellido" className="w-full border rounded px-3 py-2" />
+                                                <input type="email" name="email" defaultValue={currentClient?.email} placeholder="Email" className="w-full border rounded px-3 py-2" />
                                             </>
                                         )}
 
                                         {modal.entity === "producto" && (
                                             <>
-                                            <input name="name" defaultValue={currentProd?.name} placeholder="Nombre" className="w-full border rounded px-3 py-2" />
-                                            <input name="description" defaultValue={currentProd?.description} placeholder="Descripción" className="w-full border rounded px-3 py-2" />
-                                            <input type="number" name="price" defaultValue={currentProd?.price} placeholder="Precio" className="w-full border rounded px-3 py-2" />
-                                            <input type="number" name="stock" defaultValue={currentProd?.stock} placeholder="Stock" className="w-full border rounded px-3 py-2" />
-                                            <input name="marca" defaultValue={currentProd?.marca} placeholder="Marca" className="w-full border rounded px-3 py-2" />
-                                            <input name="genero" defaultValue={currentProd?.genero} placeholder="Género" className="w-full border rounded px-3 py-2" />
-                                            <label className="block text-sm font-medium">Categoría</label>
-                                            <select name="categoryId" defaultValue={currentProd?.categoryId || ""} className="w-full border rounded px-3 py-2">
-                                                <option value="" disabled>– Selecciona categoría –</option>
-                                                {categories.map((cat) => (
-                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                                ))}
-                                            </select>
-                                            <input name="photos" defaultValue={currentProd?.photos?.join(",")} placeholder="Fotos (URLs separadas por coma)" className="w-full border rounded px-3 py-2" />
+                                                <input name="name" defaultValue={currentProd?.name} placeholder="Nombre" className="w-full border rounded px-3 py-2" />
+                                                <input name="description" defaultValue={currentProd?.description} placeholder="Descripción" className="w-full border rounded px-3 py-2" />
+                                                <input type="number" name="price" defaultValue={currentProd?.price} placeholder="Precio" className="w-full border rounded px-3 py-2" />
+                                                <input type="number" name="stock" defaultValue={currentProd?.stock} placeholder="Stock" className="w-full border rounded px-3 py-2" />
+                                                <input name="marca" defaultValue={currentProd?.marca} placeholder="Marca" className="w-full border rounded px-3 py-2" />
+                                                <input name="genero" defaultValue={currentProd?.genero} placeholder="Género" className="w-full border rounded px-3 py-2" />
+                                                <label className="block text-sm font-medium">Categoría</label>
+                                                <select name="categoryId" defaultValue={currentProd?.categoryId || ""} className="w-full border rounded px-3 py-2">
+                                                    <option value="" disabled>– Selecciona categoría –</option>
+                                                    {categories.map((cat) => (
+                                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                                    ))}
+                                                </select>
+                                                <input name="photos" defaultValue={currentProd?.photos?.join(",")} placeholder="Fotos (URLs separadas por coma)" className="w-full border rounded px-3 py-2" />
                                             </>
                                         )}
 
                                         {modal.entity === "categoria" && (
                                             <>
-                                            <input name="name" defaultValue={currentCategory?.name} placeholder="Nombre de la categoría" className="w-full border rounded px-3 py-2" />
+                                                <input name="name" defaultValue={currentCategory?.name} placeholder="Nombre de la categoría" className="w-full border rounded px-3 py-2" />
                                             </>
                                         )}
 
                                         <div className="flex justify-end space-x-4">
                                             <button type="button" onClick={closeModal} className="px-4 py-2 border rounded">Cancelar</button>
                                             <button type="submit" className="px-4 py-2 bg-blue-400 hover:bg-blue-600 hover:text-white rounded">
-                                            {modal.type === "create" ? "Crear" : "Guardar"}
+                                                {modal.type === "create" ? "Crear" : "Guardar"}
                                             </button>
                                         </div>
-                                        </form>
+                                    </form>
 
                                 </>
                             )}
@@ -739,11 +737,11 @@ export default function DashboardAdmin() {
                         <div className="mb-4 flex justify-between items-center">
                             <button
                                 onClick={() =>
-                                setModal({ open: true, entity: "categoria", type: "create" })
+                                    setModal({ open: true, entity: "categoria", type: "create" })
                                 }
                                 className="flex items-center px-4 py-2 bg-blue-400 hover:bg-blue-600 text-white rounded"
                             >
-                                <MdAdd className="w-5 h-5 mr-2" /> 
+                                <MdAdd className="w-5 h-5 mr-2" />
                                 Crear Categoría
                             </button>
                         </div>
@@ -752,14 +750,14 @@ export default function DashboardAdmin() {
                                 <div key={cat.id} className="border p-4 rounded shadow flex justify-between bg-gray-200 dark:bg-gray-800 dark:text-gray-100">
                                     <span className="font-semibold text-gray-900 dark:text-white">{cat.name}</span>
                                     <div className="flex space-x-2">
-                                        <button 
+                                        <button
                                             onClick={() =>
                                                 setModal({ open: true, entity: "categoria", id: cat.id, type: "edit" })
                                             }
                                         >
                                             <MdEdit className="w-6 h-6 text-blue-400 hover:text-blue-600" />
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() =>
                                                 setModal({ open: true, entity: "categoria", id: cat.id, type: "delete" })
                                             }
@@ -772,19 +770,28 @@ export default function DashboardAdmin() {
                         </div>
                     </>
                 )}
-            
+
                 {activeTab === "admins" && (
                     <form onSubmit={handleCreateAdmin} className="max-w-md mx-auto space-y-4">
-                        {["Nombre","Apellido","Nombre de usuario","Contraseña","email","dni","Número de teléfono","Dirección"].map(field => (
-                        <input
-                            key={field}
-                            name={field}
-                            type={field === "Contraseña" ? "Contraseña" : "text"}
-                            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                            value={adminData[field]}
-                            onChange={handleAdminChange}
-                            className="w-full border rounded px-3 py-2"
-                        />
+                        {[
+                            { name: "firstName", label: "Nombre" },
+                            { name: "lastName", label: "Apellido" },
+                            { name: "nameAccount", label: "Nombre de usuario" },
+                            { name: "password", label: "Contraseña", type: "password" },
+                            { name: "email", label: "Email", type: "email" },
+                            { name: "dni", label: "DNI" },
+                            { name: "phoneNumber", label: "Número de teléfono" },
+                            { name: "address", label: "Dirección" }
+                        ].map(({ name, label, type = "text" }) => (
+                            <input
+                                key={name}
+                                name={name}
+                                type={type}
+                                placeholder={label}
+                                value={adminData[name]}
+                                onChange={handleAdminChange}
+                                className="w-full border rounded px-3 py-2"
+                            />
                         ))}
                         <button
                             type="submit"
